@@ -15,10 +15,15 @@ Assume the project you are documenting is `~/code/old/rpi-doorbell` and you have
 `rpi-doorbell`. From the root of **this** repo:
 
 ```bash
+# 0. Get this repo. Skip if `git remote -v` already prints Michael-Lizzio/Portfolio.
+git clone https://github.com/Michael-Lizzio/Portfolio.git
+cd Portfolio
+
 git checkout main && git pull
 git checkout -b project/rpi-doorbell          # branch name is always project/<slug>
 
-npm ci                                        # Node 24+. Do this once per machine.
+npm ci                                        # Node 24 (§3). Once per machine, and again
+                                              # whenever package-lock.json changes on main.
 npm run new:project -- rpi-doorbell           # scaffolds content/projects/rpi-doorbell/
 
 # ... go run the actual project, screenshot it, record it ...
@@ -28,18 +33,29 @@ cp ~/shots/doorbell_demo.mov   content/projects/rpi-doorbell/media/
 
 npm run media -- rpi-doorbell                 # compresses IN PLACE: images -> .webp,
                                               # videos -> 720p .mp4 + <name>.poster.webp,
-                                              # and deletes the originals it replaced
+                                              # and deletes the originals it replaced.
+                                              # It keeps your filenames — §7.
 
-$EDITOR content/projects/rpi-doorbell/project.json   # write the real content (§4)
+# Now write the real content (§4) into content/projects/rpi-doorbell/project.json, using your
+# normal file-editing tool. Don't shell out to $EDITOR: it is unset on plenty of machines, and
+# where it is set it may open vi and hang a non-interactive session.
 
 npm run validate                              # schema gate. Fix everything it prints.
-npm run dev                                   # look at http://localhost:3000/work/rpi-doorbell
+npm run dev                                   # read the URL Next prints — a busy port 3000
+                                              # silently becomes 3001. /work/rpi-doorbell 404s
+                                              # while published is false; §9 has the three-line
+                                              # recipe for looking at a draft.
 npm run build                                 # must pass before you open the PR
 
+git status --short                            # nothing but content/projects/rpi-doorbell/
 git add content/projects/rpi-doorbell
 git commit -m "Add rpi-doorbell project"
 git push -u origin project/rpi-doorbell
-gh pr create --fill
+gh pr create --title "Add rpi-doorbell" --body-file .github/pull_request_template.md
+# Then edit the PR body and actually answer the checklist. Not `gh pr create --fill`: that
+# takes the body from your commit message and silently drops the template.
+# `gh` not logged in? Common — it is not logged in on this machine today. §3 has two
+# fallbacks, and neither one counts as failing.
 ```
 
 `published` defaults to `false`, so merging your PR does **not** put the project on the live site.
@@ -95,20 +111,94 @@ the thing this layout deletes.
 
 ## 3. Prerequisites and commands
 
-Node **24** (this was written on v24.15.0, npm 11.12.1). `npm ci`, not `npm install` — `npm install`
-can rewrite `package-lock.json`, which is a shared file (§5).
+### What has to be on the machine
+
+**Node 24.** This was written on v24.15.0, npm 11.12.1. `package.json` declares
+`"engines": { "node": ">=24" }`, but npm only *warns* about a mismatch
+(`npm warn EBADENGINE Unsupported engine`) and installs anyway — so `npm ci` succeeding tells you
+nothing. Check `node -v` yourself. On an old Node the first real failure comes later and looks
+unrelated: `npm run validate` runs `node --experimental-strip-types`, a flag that needs Node ≥ 22.6,
+and dies with `node: bad option: --experimental-strip-types`. There is no `.nvmrc`, `.node-version`
+or `.tool-versions` in this repo, so a bare `nvm use` will not work; use whatever the machine
+actually has — `nvm install 24 && nvm use 24`, `fnm use 24`, `volta install node@24`,
+`mise use node@24`, or `brew install node@24`. (Michael's current Mac has no version manager at all:
+`node` is `/usr/local/bin/node`.)
+
+`npm ci`, not `npm install` — `npm install` can rewrite `package-lock.json`, which is a shared file
+(§5). If `npm run validate` already runs, the dependencies are installed and you can skip `npm ci`.
+
+**ffmpeg and ffprobe on PATH.** `npm run media` is a thin wrapper around them and exits 1 without
+them. Before you start:
+
+```bash
+ffmpeg -version && ffprobe -version      # both must print a version
+
+# macOS    brew install ffmpeg
+# Debian   sudo apt install ffmpeg
+# Fedora   sudo dnf install ffmpeg
+# Windows  winget install Gyan.FFmpeg    (or: choco install ffmpeg) — then reopen the shell
+```
+
+The script needs the **encoders**, not just the binary: its preflight only runs `ffmpeg -version`,
+so a stripped build passes it and then fails on every single file with `Unknown encoder 'libwebp'`.
+Check once:
+
+```bash
+ffmpeg -hide_banner -encoders | grep -E "libx264|libwebp"    # macOS / Linux — both must appear
+ffmpeg -hide_banner -encoders | findstr "libx264 libwebp"    # PowerShell / cmd
+```
+
+(Michael's current Mac: ffmpeg 8.1.2, with both.) If ffmpeg cannot be installed at all, do **not**
+dead-end and do **not** commit raw files — §7 has a legal way to ship without it.
+
+**`gh`, installed and logged in.** `gh auth status` must say it is logged in to github.com. Expect
+it not to be: on this machine today it prints `The token in default is invalid.` That is normal, and
+there are two fallbacks, neither of which is a failure:
+
+1. `gh auth login` — which also sets up git's credential helper, via `gh auth setup-git`; or
+2. skip `gh` entirely. Push the branch, then open
+   `https://github.com/Michael-Lizzio/Portfolio/compare/project/<slug>?expand=1`
+   in a browser — that URL loads the PR template pre-filled.
+
+If you can do neither, stop after a successful `git push` and report the branch name. A pushed
+branch is a complete handoff; an unpushed one is not.
+
+**git able to commit and push as Michael.** On a machine that has never pushed this repo:
+
+```bash
+git config user.name && git config user.email   # both must print something
+git config user.name  "Michael Lizzio"          # only if they are empty
+git config user.email "<Michael's GitHub email>"
+```
+
+`origin` is HTTPS (`https://github.com/Michael-Lizzio/Portfolio.git`), so pushing needs a credential
+helper. This Mac has `credential.helper=osxkeychain`; an older one may have nothing, in which case
+`git push` prompts for a username and password and a non-interactive agent hangs. Fix that with
+`gh auth login`. Do **not** rewrite the remote to SSH, and do not paste a token onto a command line.
+If you still cannot push: commit locally, run `git format-patch main --stdout > ~/<slug>.patch`, and
+tell Michael where that file is. That is a legitimate finish, not a failure.
+
+### Commands
 
 | Command | What it does |
 |---|---|
 | `npm run new:project -- <slug>` | Creates `content/projects/<slug>/project.json` + `media/` with a valid skeleton. |
-| `npm run media -- <slug>` | Compresses `content/projects/<slug>/media/*` **in place**: images to `.webp` (max 1800px), videos to H.264 `.mp4` (max 1280px) plus a `.poster.webp` frame. Deletes the originals it replaced. Safe to re-run. |
-| `npm run validate` | Validates `content/profile.json` and every `content/projects/*/project.json` against `src/lib/schema.ts`. Non-zero exit on failure. |
-| `npm run dev` | Dev server on http://localhost:3000 |
-| `npm run build` | Production build. Runs `sync-media` first, which regenerates `public/media/` from `content/`. |
+| `npm run media -- <slug>` | Compresses `content/projects/<slug>/media/*` **in place**: images to `.webp` (max 1800px), videos to H.264 `.mp4` (max 1280px) plus a `.poster.webp` frame. Deletes the originals it replaced. Writes nothing outside `content/`. Safe to re-run. Exits non-zero if any file failed. |
+| `npm run validate` | Checks `content/profile.json` and every `content/projects/*/project.json` against `src/lib/schema.ts` — **and** the on-disk facts the schema cannot see (§8). Non-zero exit on any ERROR. |
+| `npm run dev` | Dev server. Usually http://localhost:3000, but if something already owns 3000 it takes the next free port and only *warns* (`Port 3000 is in use by process <pid>, using available port 3001 instead.`). Read the URL it prints. Pin it with `npm run dev -- -p 3210`. |
+| `npm run build` | Production build. Runs `prebuild` → `scripts/sync-media.mjs` first, which regenerates `public/media/` from `content/` — published projects only. |
+| `node scripts/sync-media.mjs` | The same sync, on its own. This is what decides whether your images exist at a URL. Run it after flipping `published` locally, or they 404 (§9). |
 | `npm run typecheck` | TypeScript, strict. |
 | `npm run lint` | ESLint. |
 
-CI runs `validate`, `typecheck`, `lint`, `build` on every PR. If those four pass locally, CI passes.
+CI (`.github/workflows/ci.yml`) runs on every PR **and** on every push to `main`. Before those four
+commands it runs one more gate: `find content public/media -type f -size +8M` must print nothing.
+Note that this covers *all* of `content/`, while `npm run validate`'s own size check only walks
+`content/projects/*/media/`. So the local equivalent is those four commands **plus**:
+
+```bash
+find content -type f -size +8M          # prints nothing = the ceiling is clear
+```
 
 ---
 
@@ -129,9 +219,9 @@ thing in English, and `npm run validate` quotes it back at you when you get it w
 | `featured` | boolean | no — defaults `false` | Promotes to the top of `/work` and onto the homepage. **Not yours to set.** Leave `false`. |
 | `date` | string \| null | no — defaults `null` | `"YYYY"` or `"YYYY-MM"` only. `"2022"`, `"2024-03"`. `"March 2024"` fails. Drives ordering. `null` sorts last — use `null` if you genuinely can't date it. |
 | `status` | string \| null | no — defaults `null` | Free text badge, e.g. `"In progress"`, `"Archived"`. `null` if the project doesn't say. |
-| `tech` | string[] | no — defaults `[]` | What it is actually **built with**, one entry each. Not file formats it happens to read. Entries can be phrases: `"22 word lists indexed by word length, ordered common-to-uncommon"`. |
+| `tech` | string[] | no — defaults `[]` | What it is actually **built with**, one entry each. Not file formats it happens to read. **Max 40 characters per entry** — each one renders as a pill label, not a sentence; the explanation belongs in a section. Over 40 fails validate with `a tech entry is a pill label, not a sentence`. Real entries, from cryptogram: `"Backtracking algorithm"`, `"Frequency-ordered word lists"`. |
 | `links` | Link[] | no — defaults `[]` | `{ "label": "Repo", "href": "https://github.com/..." }`. `href` must be a **full absolute URL** — `github.com/x` fails, `https://github.com/x` passes. Empty array if there is no public repo or demo. |
-| `hero` | Media \| null | no — defaults `null` | The big image at the top of the detail page and the card image. One image (not a video). `null` is allowed and renders fine. |
+| `hero` | Media \| null | no — defaults `null` | The big image at the top of the detail page and the card image. **Use an image.** That is a convention, not a constraint: a `kind: "video"` hero parses, validates, and renders (the page falls back to its poster frame for the share image) — it is just not what this slot is for. `null` is allowed and renders fine. |
 | `sections` | Section[] | no — defaults `[]` | The body of the page, in order. See below. |
 | `notes` | string \| null | no — defaults `null` | **Internal. Never rendered.** Where you record provenance, uncertainty, and what you could not verify. Use it generously — see §6. |
 
@@ -150,7 +240,7 @@ thing in English, and `npm run validate` quotes it back at you when you get it w
 | `src` | string | **yes** | Relative to the project folder and flat: `"media/cover.webp"`. Regex: `^media/[A-Za-z0-9._-]+\.(webp\|jpg\|jpeg\|png\|mp4\|webm)$`. **No subfolders, no leading slash, no `public/`, no `../`.** `"/media/cryptogram/cover.webp"` ✘ `"media/shots/a.webp"` ✘ |
 | `kind` | `"image"` \| `"video"` | **yes** | Exactly one of those two strings. |
 | `poster` | string \| null | no — defaults `null` | Videos only. Same `media/...` shape. `npm run media` generates `<name>.poster.webp` next to the video — point at that. `null` for images. |
-| `alt` | string \| null | no — defaults `null` | **Write it on every image.** Describe what is actually in the frame, not the medium. `"Screenshot of the program's output showing the class handout cryptogram solved"` ✔ `"screenshot of app"` ✘ `"Image 1"` ✘ |
+| `alt` | string \| null | **yes for images** — the schema allows `null`, validate rejects it | An image with `alt` null or blank is a hard ERROR: `<path>.alt: images need alt text`. Describe what is actually in the frame, not the medium. `"Screenshot of the program's output showing the class handout cryptogram solved"` ✔ `"screenshot of app"` ✘ `"Image 1"` ✘. `null` is for videos. |
 | `caption` | string \| null | no — defaults `null` | Visible text under the media. Optional. |
 
 Every path you write is relative. The build rewrites `media/cover.webp` →
@@ -158,8 +248,11 @@ Every path you write is relative. The build rewrites `media/cover.webp` →
 
 ### A real, filled-in example
 
-This is the actual top of `content/projects/cryptogram/project.json`, unedited. Read the whole file
-— it is the best model in the repo (8 sections, images, videos with posters, a long `notes`).
+The best model in the repo is `content/projects/cryptogram/project.json` — 155 lines, 8 sections,
+images, videos with posters, and a long `notes`. Open it. What follows are two **verbatim** slices
+of that file, copied as-is:
+
+**Lines 1–34** — the top of the file, down through the first media item of the first section:
 
 ```jsonc
 {
@@ -174,7 +267,7 @@ This is the actual top of `content/projects/cryptogram/project.json`, unedited. 
   "tech": [
     "Backtracking algorithm",
     "Brute-force search",
-    "22 word lists indexed by word length, ordered common-to-uncommon"
+    "Frequency-ordered word lists"
   ],
   "links": [],
   "hero": {
@@ -186,24 +279,32 @@ This is the actual top of `content/projects/cryptogram/project.json`, unedited. 
   },
   "sections": [
     {
-      "heading": "Teacher's Original Handout",
-      "body": [
-        "The photo to the left is the exact cryptogram that started this. The solved puzzle to the left in the photo is my dad's work, and the other one is mine. ..."
-      ],
+      "heading": "Cryptogram Examples",
+      "body": [],
       "media": [
         {
-          "src": "media/original_quote.webp",
+          "src": "media/example_quote_0.webp",
           "kind": "image",
           "poster": null,
-          "alt": "Photo of the cryptogram handout from computer science class, solved twice by hand — the author's dad's solution alongside the author's own",
-          "caption": "(To view the image larger, just click on it!)"
-        }
-      ]
-    },
+          "alt": "Example cryptogram 1; this is the image loaded in the large viewer by default",
+          "caption": null
+        },
+```
+
+**Lines 112–131** — the "Videos" section, which is how a video and its generated poster look:
+
+```jsonc
     {
       "heading": "Videos",
       "body": [],
       "media": [
+        {
+          "src": "media/compressed_splitscreen_cryptogram.mp4",
+          "kind": "video",
+          "poster": "media/compressed_splitscreen_cryptogram.poster.webp",
+          "alt": "Split-screen screen recording of the solver running against puzzles on a puzzle website",
+          "caption": "This shows a modified version of my code solving cryptograms on a puzzle website I found."
+        },
         {
           "src": "media/fullscreen_cryptogram.mp4",
           "kind": "video",
@@ -212,14 +313,26 @@ This is the actual top of `content/projects/cryptogram/project.json`, unedited. 
           "caption": "This is the cryptogram solving the same puzzles from the website shown in the other video, just showing the webpage."
         }
       ]
-    }
-  ],
-  "notes": "LANGUAGE / LINKS: the page never says what the solver is written in — do not label it Python. There are no outbound links, no repo link and no demo link anywhere on the page, and the 'puzzle website' in the videos is never named, so links is empty. ..."
-}
+    },
 ```
 
-Note what that `notes` field is doing: recording, permanently, *why* `tech` does not say "Python"
-and *why* `links` is empty. That is the standard.
+What is cut between and after those two slices, so you are not guessing: the other three images of
+section 1 (lines 35–55), five sections — "The Backstory", "Teacher's Original Handout",
+"Solved Quote", "My Whiteboard" (lines 58–111) and "Epilogue", "Worked Example" (lines 132–152) —
+the `notes` field (line 154), and the closing brace (line 155). Nothing inside the two blocks above
+is edited, abridged or reordered. If you reformat or re-key anything from them, you are no longer
+quoting the file.
+
+The `notes` field is 9,313 bytes and does not fit here. One paragraph of it — wrapped to fit this
+page, otherwise word-for-word — is the point of the whole field:
+
+> LANGUAGE / LINKS: the page never says what the solver is written in — do not label it Python (the
+> homepage bio mentions Python experience generally, but that is not a claim about this project).
+> There are no outbound links, no repo link and no demo link anywhere on the page, and the 'puzzle
+> website' in the videos is never named, so links is empty.
+
+That is the standard: `notes` records, permanently, *why* `tech` does not say "Python" and *why*
+`links` is empty.
 
 Voice: `summary` and section `body` are written as Michael, first person, past tense, plain. If you
 are documenting a project by running it rather than transcribing his old page, prefer neutral
@@ -256,11 +369,17 @@ The files your commit is allowed to contain:
 
 ```
 content/projects/<slug>/project.json
-content/projects/<slug>/media/*
-AGENTS.md                        # ONLY if `next dev` re-added its managed block (see §9)
+content/projects/<slug>/media/*        # the scaffold's media/.gitkeep can stay or go — compress,
+                                       # sync and validate all skip dotfiles either way
+AGENTS.md                              # ONLY if `next dev` re-added its managed block (see §9)
 ```
 
-`git diff --stat main...HEAD` should show nothing else. Check it before you push.
+Two checks, not one:
+
+- **While you work**, `git status --short` should show nothing but `content/projects/<slug>/`. This
+  is the one that catches a stray `npm install`, an edited `content/profile.json` or a leftover
+  scratch file while undoing it is still free.
+- **Before you push**, `git diff --stat main...HEAD` should show nothing else either.
 
 ---
 
@@ -298,7 +417,8 @@ So, concretely:
   `published: false`. Do not fabricate a working demo.
 
 Every uncertainty goes in `notes`. `notes` is never rendered, costs nothing, and is the next agent's
-only way to know what you were unsure about. The cryptogram `notes` field is ~4 KB of exactly this.
+only way to know what you were unsure about. The cryptogram `notes` field is 9,313 bytes of exactly
+this.
 
 ---
 

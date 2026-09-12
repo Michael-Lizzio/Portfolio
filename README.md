@@ -31,7 +31,7 @@ npm run dev        # http://localhost:3000
 | `npm run typecheck` | route types + `tsc --noEmit` |
 | `npm run lint` | ESLint |
 | `npm run new:project -- <slug>` | scaffold a new project folder |
-| `npm run media -- <slug>` | publish a project's media and generate video posters |
+| `npm run media -- <slug>` | compress a project's media in place and generate video posters |
 
 ## How content works
 
@@ -48,8 +48,10 @@ content/
   Adding a project is adding a folder — no registry to update, no route to write. Two people (or two
   agents on two machines) can add two projects without ever touching the same file.
 - **Media paths are relative.** `"media/cover.webp"` in `project.json` is copied to
-  `public/media/cryptogram/cover.webp` by `npm run media` and rewritten to the public URL
-  `/media/cryptogram/cover.webp` before any component sees it.
+  `public/media/cryptogram/cover.webp` by `npm run build` — the `prebuild` hook runs
+  `scripts/sync-media.mjs`, and only for `published: true` projects — and rewritten to the public URL
+  `/media/cryptogram/cover.webp` before any component sees it. `npm run media` does something
+  different: it compresses the files in `content/`, and never writes to `public/`.
 - **`published: false` is the default.** Work can be merged and left staged; it appears on the site
   only when the flag is flipped. `featured: true` promotes a project to the homepage.
 - **`src/lib/content.ts` is the only module that reads the filesystem for content.** Everything else

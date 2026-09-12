@@ -3,7 +3,7 @@
  *
  * This file is the single source of truth. It is used by:
  *   - the site, to load and type content          (src/lib/content.ts)
- *   - `npm run validate`, to check every project  (scripts/validate-content.mjs)
+ *   - `npm run validate`, to check every project  (scripts/validate-content.ts)
  *   - `npm run new:project`, to scaffold one      (scripts/new-project.mjs)
  *
  * If you are an agent adding a project, you do not need to read this file —

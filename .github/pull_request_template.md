@@ -28,8 +28,8 @@ Anything I could not verify is written as "unknown" or recorded in `notes`.
 - [ ] `npm run build` passes
 - [ ] `npm run typecheck` passes
 - [ ] `npm run lint` passes
-- [ ] `npm run media -- <slug>` was run after the last media change, and `public/media/<slug>/`
-      matches `content/projects/<slug>/media/`
+- [ ] `npm run media -- <slug>` was run after the last media change, and every path in
+      `project.json` matches the filenames it left in `content/projects/<slug>/media/`
 - [ ] I loaded the page in `npm run dev` and looked at it
 
 ## Media
@@ -42,8 +42,9 @@ Anything I could not verify is written as "unknown" or recorded in `notes`.
 
 ## Scope
 
-- [ ] **This PR touches only `content/projects/<slug>/` and `public/media/<slug>/`.**
-      Verified with `git diff --stat main...HEAD`.
+- [ ] **This PR touches only `content/projects/<slug>/`.** Verified with
+      `git diff --stat main...HEAD`. (`public/media/<slug>/` is generated at build time and
+      gitignored — it is never part of a diff.)
 - [ ] No other project's folder was edited.
 - [ ] Nothing under `src/` was edited.
 - [ ] `package.json`, `package-lock.json`, `next.config.ts` and `content/profile.json` are untouched.
@@ -51,7 +52,7 @@ Anything I could not verify is written as "unknown" or recorded in `notes`.
 - [ ] `published` is `false` and `featured` is `false`.
 
 <!-- The one legitimate exception: `next dev` may re-add its managed block to AGENTS.md. Committing
-     that single hunk is fine. Anything else outside the two folders above needs explaining here. -->
+     that single hunk is fine. Anything else outside that folder needs explaining here. -->
 
 ## Notes for review
 

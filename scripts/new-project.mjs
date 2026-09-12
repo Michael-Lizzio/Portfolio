@@ -146,7 +146,8 @@ async function main() {
   console.log(MEDIA_EXAMPLE);
   console.log("");
   console.log(`  4. npm run validate          fix whatever it lists`);
-  console.log(`  5. set "published": true     and, if it deserves the homepage, "featured": true`);
+  console.log(`  5. leave "published" and "featured" false — they are Michael's switches,`);
+  console.log(`     and he flips them once he has looked at the project himself (AGENTS.md §5).`);
 }
 
 main().catch((error) => {

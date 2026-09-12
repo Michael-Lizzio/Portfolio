@@ -42,6 +42,9 @@ next-env.d.ts
 
 # media working files
 /public/media/**/*.orig.*
+# scratch files scripts/compress-media.mjs writes next to its target; a killed run
+# leaves them behind (e.g. cover.webp.compress-tmp.webp)
+*.compress-tmp.*
 
 # Generated from content/projects/*/media by scripts/sync-media.mjs (runs on prebuild)
 /public/media
