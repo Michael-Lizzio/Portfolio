@@ -1,0 +1,155 @@
+{
+  "slug": "cryptogram",
+  "title": "Cryptogram Solver",
+  "tagline": "A backtracking program that cracks cryptogram puzzles word by word",
+  "summary": "A program that solves cryptogram (substitution-cipher) puzzles automatically. It started just before February school break 2022, after the author grabbed an unsolved puzzle from an optional computer science lesson on cryptography and his dad challenged him to solve it with him; it grew into a backtracking search worked out on a whiteboard before he knew the technique had a name. The solver organizes the puzzle's words to try the largest ones first, tries candidate words from 22 word lists indexed by word length and ordered from common to uncommon, and backtracks whenever a guess leaves no possibilities. The page collects the original class handout, the program's solved output, the whiteboard photo, and two videos of the solver running against puzzles from a puzzle website.",
+  "published": true,
+  "featured": true,
+  "date": "2022",
+  "status": null,
+  "tech": [
+    "Backtracking algorithm",
+    "Brute-force search",
+    "Frequency-ordered word lists"
+  ],
+  "links": [],
+  "hero": {
+    "src": "media/cryptogram_cover.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "Cover image for the Cryptogram Solver project",
+    "caption": null
+  },
+  "sections": [
+    {
+      "heading": "Cryptogram Examples",
+      "body": [],
+      "media": [
+        {
+          "src": "media/example_quote_0.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Example cryptogram 1; this is the image loaded in the large viewer by default",
+          "caption": null
+        },
+        {
+          "src": "media/example_quote_1.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Example cryptogram 2",
+          "caption": null
+        },
+        {
+          "src": "media/example_quote_2.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Example cryptogram 3",
+          "caption": null
+        },
+        {
+          "src": "media/example_quote_3.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Example cryptogram 4",
+          "caption": null
+        }
+      ]
+    },
+    {
+      "heading": "The Backstory",
+      "body": [
+        "First, let me explain how this all started. It was just before February school break 2022 and I had just finished my first big project, a Wordle solver, and had learned a lot in the process (this is another one of my projects that will soon be displayed on the home page). The day before school break, my computer science teacher had an optional fun lesson about cryptography; I already knew about cryptograms from my dad and wanted to do some more work on my other projects, but, as class ended I grabbed an unsolved puzzle on my way out, because I knew my dad likes doing them.",
+        "After I got home I showed it to my dad and he challenged me to solve it with him. So I made another copy and we began. My dad was flying through it; I started to solve it, only to get lost in the idea of creating a computer algorithm to solve one. So during the school break I spent most of my time in front of my white board creating a backtracking algorithm without even knowing what one was!",
+        "I got really far and almost had it working. I showed what I had to my dad and he suggested that I try a very simple puzzle with only one long word to see if it would work. I used the encrypted version of the word “BEGINNING”… AND IT WORKED! I was so happy, it was already late at night but I was willing to stay up until I got it to work. The next day I got a rough version to solve all sorts of puzzles. From there I only continued to improve and optimize the program."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Teacher's Original Handout",
+      "body": [
+        "The photo to the left is the exact cryptogram that started this. The solved puzzle to the left in the photo is my dad's work, and the other one is mine. I'm very happy that I had my dad to encourage me, though he was pretty skeptical after he saw what looked like hieroglyphics on my white board. After school break when I went back to school I was excited to show my computer science teacher the completed program and tell her that she inspired me to make it."
+      ],
+      "media": [
+        {
+          "src": "media/original_quote.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Photo of the cryptogram handout from computer science class, solved twice by hand — the author's dad's solution alongside the author's own",
+          "caption": "(To view the image larger, just click on it!)"
+        }
+      ]
+    },
+    {
+      "heading": "Solved Quote",
+      "body": [
+        "The snapshot of my program on the right is the solved cryptogram puzzle from above. It was solved by my computer program rather than a human (my dad). If you would like to know more on how this works check out the epilogue at the bottom of this page which goes into the overall functionality."
+      ],
+      "media": [
+        {
+          "src": "media/solved_original_quote.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Screenshot of the program's output showing the class handout cryptogram solved",
+          "caption": "(To view the image larger, just click on it!)"
+        }
+      ]
+    },
+    {
+      "heading": "My Whiteboard",
+      "body": [
+        "I don't know what I would do without my whiteboard! The whiteboard in the photo was on its way to the curb before I saved it. Now it's in my room in an unobtrusive spot. It is a crucial part of my planning process, I often write my quick thoughts on it before I finalize them on paper."
+      ],
+      "media": [
+        {
+          "src": "media/whiteboard.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Photo of the author's rescued whiteboard, used to plan the cryptogram algorithm",
+          "caption": "(To view the image larger, just click on it!)"
+        }
+      ]
+    },
+    {
+      "heading": "Videos",
+      "body": [],
+      "media": [
+        {
+          "src": "media/compressed_splitscreen_cryptogram.mp4",
+          "kind": "video",
+          "poster": "media/compressed_splitscreen_cryptogram.poster.webp",
+          "alt": "Split-screen screen recording of the solver running against puzzles on a puzzle website",
+          "caption": "This shows a modified version of my code solving cryptograms on a puzzle website I found."
+        },
+        {
+          "src": "media/fullscreen_cryptogram.mp4",
+          "kind": "video",
+          "poster": "media/fullscreen_cryptogram.poster.webp",
+          "alt": "Full-screen screen recording of the puzzle website being solved, without the program window in view",
+          "caption": "This is the cryptogram solving the same puzzles from the website shown in the other video, just showing the webpage."
+        }
+      ]
+    },
+    {
+      "heading": "Epilogue",
+      "body": [
+        "My program uses what some would call a brute force approach and consists of a few main parts. First we have the organizer; this organizes the words in a way to make more efficient guesses. It usually starts with the largest words of the puzzle first, contrary to a typical human’s strategy.",
+        "My code has access to 22 word lists organized by word length. The lists are optimized in order of common to uncommon words; this is one of my optimization strategies. For example the beginning of word_list2 would have AS, AT, BE, BY, DO, GO…",
+        "My code starts with an encrypted word like BWGQHFTL, and then tries every 8 letter word to see if their letters match up. For example, QUESTION would work. Then it would move onto the next word like OFLWHGQ and find that MINUTES works with QUESTION because their letters line up. The more we progress through the puzzle, the less likely a word will work because our vocabulary expands. For example right now we have (QUESTION = BWGQHFTL and MINUTES = OFLWHGQ) F=I, H=T, L=N, Q=S, G=E, W=U in both words.",
+        "The issue is when there are no more possibilities. At some point there were 2 or more possibilities and the algorithm just chose the first one it came across. We would then have to back track to where we made that wrong guess and try to find another one that would work further along in the program. It does this until it makes it to the end, where in some cases there might be a wrong word or two. For example, FP could be either IF or ID (my program doesn't take apostrophes into account). My program handles this by allowing the user to say which word they would like to try again, and then it usually fixes it."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Worked Example",
+      "body": [
+        "Just by guessing QUESTION for the first encoded word (BWGQHFTL), it partially fills in a bunch of the other encrypted words.",
+        "BWGQHFTL OFLWHGQ PGOZFLQ CTPGDGP ETGQ",
+        "QUESTION _INUTES _E__INS _O_E_E_ _OES",
+        "LTH ZQUQ CTTV CFDG FQ SMT CTP ZQU MG Z",
+        "NOT _S_S _OO_ _I_E IS __O _O_ _S_ _E _"
+      ],
+      "media": []
+    }
+  ],
+  "notes": "HOMEPAGE LISTING: yes. data/projects.json lists cryptogram with title \"Cryptogram Solver\", description \"\" (empty), images [\"cryptogram_cover.png\"], page \"cryptogram\". The card image resolves to data/project_images/cryptogram/cryptogram_cover.png (exists in the manifest). That cover is NOT referenced anywhere in cryptogram.html — I used it as the hero; the page's own opening image is example_quote_0.png, so use that instead if you prefer to match the legacy page.\n\nMEDIA PATHS: every media reference in cryptogram.html is written as ../../data/... relative to project_pages/cryptogram/, which does resolve to the repo-root data/ directory. I normalised all of them to repo-relative paths (data/project_images/cryptogram/..., data/project_videos/cryptogram/...). All 8 referenced files plus the cover exist in the manifest — no broken media references on this page.\n\nBROKEN SCRIPT REFERENCE: <script src=\"../scripts.js\"> resolves to project_pages/scripts.js, which does not exist (the shared script lives at the repo root as scripts.js). It 404s on this page today; nothing on the page depends on it, so it can be dropped. Related root-level breakage worth knowing: root scripts.js fetches '../data/projects.json' and builds card images from '../data/project_images/...', both one level too high when loaded from index.html at the repo root; and index.html calls an undefined displayProjects() (index.html line 74).\n\nNAVBAR: injected client-side via fetch('../../tools/navbar/navbar.html') (resolves correctly). navbar.html links to /index.html, /pages/about.html, /pages/connect.html, /live_projects/symposium/home.html, with an /pages/archive.html link commented out. Replace with the Next.js layout nav.\n\nINTERACTIVE BEHAVIOUR IN cryptogram.js:\n  1. changeMainImage(src) — inline onclick on each of the four thumbnails swaps #mainImage's src. Port as a simple gallery/lightbox with the four examples in the order example_quote_0 → 1 → 2 → 3, with _0 shown by default.\n  2. An IntersectionObserver (threshold 0.5) adds class 'animate-typing' to every .typing-effect paragraph (The Backstory and the Epilogue) as it scrolls into view, then unobserves it. There is NO 'animate-typing' rule in cryptogram.css — the .typing-effect rule explicitly sets animation:none, white-space:normal, max-height:none, overflow:visible, leaving only a 1px right border in the section's own background colour. The typing animation is effectively dead code; do not try to reproduce a typewriter effect.\n  3. Grid images toggle a .full-screen class on click (position:fixed, 100vw/100vh, object-fit:contain, z-index:9999) and Escape exits. The caption \"(To view the image larger, just click on it!)\" refers to this — keep a lightbox or reword the caption.\n\nNO PROSE IN THE EXAMPLES SECTION: the legacy \"Cryptogram Examples\" section is an <h2> plus images only — the author wrote no body text there, so its body is empty. (An earlier draft of this file put two sentences of editorial description about the legacy layout into that body; that was invented prose and has been removed. The layout facts live here in notes instead.)\n\nCOMMENTED-OUT CONTENT: <!--<h3>[Unsolved, Solved]</h3>--> sits between the big image and the thumbnail row, and <!--if you want to check it out on the home page--> sits above the Backstory paragraph. The first suggests the example images show each puzzle unsolved and solved, but it is commented out and the binary images are not available to verify, so I did NOT assert it in the alt text or body — treat it as a hint for whoever writes real alt text after looking at the files.\n\nALT TEXT CAVEAT: the binary media is not checked out, so no image or video could be viewed. The legacy alt attributes are placeholders (\"Main Image\", \"Image 1\"–\"Image 4\", \"Cryptogram Image 1\"–\"3\"). The alt text in this file is inferred conservatively from the surrounding prose, headings and filenames only — verify and tighten it against the actual files before shipping.\n\n\"WEB SCRAPING\" REMOVED FROM tech: an earlier draft listed \"Web scraping\" as a technology. The only basis was the wrapper id=\"webscraping-video\" on the first video, and that id is copy-paste template boilerplate — the identical <div class=\"video-box\" id=\"webscraping-video\"> appears in wordle_solver.html, blackjack.html and cyber_TTM.html (cyber_TTM.html even embeds these same two cryptogram videos). No prose on the page mentions scraping. The only sourced statement is the caption: \"a modified version of my code solving cryptograms on a puzzle website I found.\" Do not label this project a scraper.\n\nLANGUAGE / LINKS: the page never says what the solver is written in — do not label it Python (the homepage bio mentions Python experience generally, but that is not a claim about this project). There are no outbound links, no repo link and no demo link anywhere on the page, and the 'puzzle website' in the videos is never named, so links is empty. The word \"substitution\" never appears in the source either; the \"(substitution-cipher)\" gloss in the summary is my editorial definition of what a cryptogram is, not a claim about the code — drop it if you want the summary strictly source-worded.\n\nLAYOUT QUIRKS: the legacy \"Images\" section is a single <h2>Images</h2> over a 2-column CSS grid that alternates image cells and grey 'paragraph-box' text cells: row 1 = handout image | text about it; row 2 = text about the solver snapshot | solved-quote image; row 3 = whiteboard image | text about the whiteboard. I split that into three sections (Teacher's Original Handout, Solved Quote, My Whiteboard) to keep each image paired with its own paragraph; the wrapping \"Images\" heading is therefore not represented — nest them under one \"Images\" heading if you want the legacy structure. Important: the prose says \"the photo to the left\", \"the solved puzzle to the left in the photo\" and \"the snapshot of my program on the right\", which are true only in that 2-column desktop grid. In a single-column or mobile layout those directions are wrong — either keep the side-by-side pairing at desktop width or reword. (index.html carries a banner, \"For the full experience when viewing projects, switch your phone to landscape mode!\", for this reason.)\n\nEPILOGUE WORKED EXAMPLE: the \"Worked Example\" heading is mine — in the source these lines are an <h3> plus four <h4> elements sitting at the end of the Epilogue section with no heading of their own. Merge them back into Epilogue if you prefer. The h3 (\"Just by guessing QUESTION…\") is verbatim source text and is the first body line. The four cipher lines are monospace (font-family:monospace, line-height:1.2) and depend on character alignment — each ciphertext line sits directly above its partially-decoded line, with matching word lengths and single spaces between words (verified against the source). Render them in a <pre> or monospace block with exact spacing preserved and do not let them wrap; they are byte-for-byte unedited. In the source a .hr-line divider (1px top border, 50% width, centred) separates the first pair (lines 2-3 of the body) from the second pair (lines 4-5) — render a real <hr> between them. An earlier draft carried a literal \"———\" string in the body as a stand-in for that divider; it was not source text and has been removed.\n\nTYPO FIXES (everything else is verbatim): \"my dads work\" → \"my dad's work\"; \"human(my dad)\" → \"human (my dad)\"; \"a encrypted word\" → \"an encrypted word\"; \"where In some cases\" → \"where in some cases\"; \"G=E W=U\" → \"G=E, W=U\"; heading \"Teachers Original Handout\" → \"Teacher's Original Handout\". The Backstory and Epilogue were each one giant <p> in the source; I split them into paragraphs at sentence boundaries without changing wording. Curly apostrophes, the “BEGINNING” quotes and the … ellipses are kept as in the source.\n\n'COPY' VARIANTS: there are none inside project_pages/cryptogram/ (only cryptogram.html/.js/.css). Repo-wide copies exist: 'data/projects copy.json' lists six projects (foosball, cryptogram, blackjack, cyber_TTM, alarm_system, wordle_solver) while the live data/projects.json lists only foosball and cryptogram — the cryptogram entry is byte-identical in both, so nothing was dropped for this project. ('styles copy.css', 'data/archive copy.json' and 'project_pages/foosball/foosball copy.css' also exist but do not touch this page.)\n\nSTATUS/YEAR: the page states no status, so status is null. Year 2022 comes from \"It was just before February school break 2022\". The homepage footer reads \"Last Update 7/20/24 © 2024 Michael Lizzio\".\n\nSTALE CROSS-REFERENCE: the Backstory calls the Wordle solver \"another one of my projects that will soon be displayed on the home page\". project_pages/wordle_solver/ exists but wordle_solver is NOT in the live data/projects.json. If the port publishes the Wordle solver, that sentence needs updating and could become a real link.\n\nASSET WEIGHT: compressed_splitscreen_cryptogram.mp4 is 21,084,324 bytes — despite the 'compressed' filename it is 2.6x larger than fullscreen_cryptogram.mp4 (8,047,847 bytes). The example/original PNGs and JPGs are 0.7-2.3 MB each. Re-encode and serve responsive sizes; the videos are <video controls> with no poster, preload hint, autoplay or muted attribute in the source."
+}

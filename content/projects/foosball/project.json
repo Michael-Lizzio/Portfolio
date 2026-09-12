@@ -1,0 +1,265 @@
+{
+  "slug": "foosball",
+  "title": "Automated Foosball Goalie",
+  "tagline": "KURT (Killer.Ultimate.Robot.Teammate), a camera-tracked robotic foosball goalie",
+  "summary": "A build log for KURT (Killer.Ultimate.Robot.Teammate), an automated foosball goalie built onto a $50 secondhand foosball table. A Raspberry Pi and an overhead camera track the ball with an OpenCV color tracker and a Kalman filter predicts where it is heading, while a stepper motor and driver move the goalie back and forth. The page is a dated timeline of seven videos from hauling the table upstairs in October 2022 to a working goalie on December 25, 2022, followed by a click-to-fullscreen photo gallery of the same milestones.",
+  "published": true,
+  "featured": true,
+  "date": "2022",
+  "status": "Working version by the end of December 2022",
+  "tech": [
+    "Raspberry Pi",
+    "OpenCV color tracking",
+    "Kalman filter",
+    "Stepper motor",
+    "Stepper motor driver",
+    "Custom motor controller",
+    "Overhead camera mount",
+    "T-slot framing hardware",
+    "Lego + cardboard prototypes"
+  ],
+  "links": [],
+  "hero": {
+    "src": "media/cover_photo.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "Wide view of the finished build: the foosball table with the dowel camera rig suspended overhead, KURT's rail and electronics on the near side, and the tracker running on the monitor at the left",
+    "caption": null
+  },
+  "sections": [
+    {
+      "heading": "Making an Automated Foosball Goalie!",
+      "body": [
+        "Below are some videos and descriptions detailing the process of constructing my automated foosball goalie KURT (Killer.Ultimate.Robot.Teammate). I started the project after being inspired by a similar project that I saw on a college tour. It was a long journey from obtaining the foosball table in October to me creating a working version towards the end of December. So please feel free to jump around and check out the project below."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Bringing the Table Home (October 18, 2022)",
+      "body": [
+        "So this was the day where we picked up the foosball table from Facebook Marketplace for $50. After that we had the fun time of hauling it all the way up the stairs so I could start putting it back together."
+      ],
+      "media": [
+        {
+          "src": "media/bringing_it.mp4",
+          "kind": "video",
+          "poster": "media/bringing_it.poster.webp",
+          "alt": "Video of the secondhand foosball table being picked up and hauled up the stairs",
+          "caption": "October 18, 2022"
+        }
+      ]
+    },
+    {
+      "heading": "First Setup: Raspberry Pi and a Janky Camera Mount (December 3, 2022)",
+      "body": [
+        "After setting up the foosball table, Raspberry Pi (the brains of this thing), and a very janky camera mount made out of dowels and a Chinese food container, I was able to focus on the software that would be used to track the ball across the foosball table. This was kind of a big deal because it would be the decider if this whole project was actually possible."
+      ],
+      "media": [
+        {
+          "src": "media/first_setup.mp4",
+          "kind": "video",
+          "poster": "media/first_setup.poster.webp",
+          "alt": "Video of the first setup: the reassembled table, a Raspberry Pi, and a camera mount made from dowels and a Chinese food container",
+          "caption": "December 3, 2022"
+        }
+      ]
+    },
+    {
+      "heading": "Ball Tracking with OpenCV and a Kalman Filter (December 9, 2022)",
+      "body": [
+        "I did plenty of research on all sorts of object tracking software, even testing out some AI object recognition software. I ended up settling on a simple color tracker (OpenCV) mainly because it could quickly display the ball's coordinates (red circle, and red text), which were derived from the live camera feed. Finally, I used the Kalman Filter to predict the future estimated position of the ball (the white circle in the video that's leading the ball)."
+      ],
+      "media": [
+        {
+          "src": "media/ball_tracking.mp4",
+          "kind": "video",
+          "poster": "media/ball_tracking.poster.webp",
+          "alt": "Screen recording of the ball tracker: a red circle and coordinate text follow the foosball while a white circle leads it as the Kalman filter prediction",
+          "caption": "December 9, 2022"
+        }
+      ]
+    },
+    {
+      "heading": "Stepper Motor, Motor Driver, and a Jingle Bells Melody (December 19, 2022)",
+      "body": [
+        "Happy with the state of the object tracking software, I started to play around with the stepper motor and motor driver. It was a complex system, but utilizing resources found on the internet and with some guidance from my dad, an electrical engineer, I was able to construct the circuit that made the motor function. Having this isn't everything though, I need to write the software that would control the motor which includes direction, activation, and the speed. I would go on to make a few versions of the motor controller software, and finally got one to work well enough for testing.",
+        "Throughout this I was fascinated by the sound it made as I increased the speed. It sounded just like a musical scale, which makes sense because to change the speed you set it to a different frequency, or in musical terms a different note. Knowing this I was able to create the jingle bells melody. In the video you are able to hear the melody and also see the frequencies used, which are displayed on the monitor."
+      ],
+      "media": [
+        {
+          "src": "media/stepper_motor.mp4",
+          "kind": "video",
+          "poster": "media/stepper_motor.poster.webp",
+          "alt": "Video of the stepper motor playing the Jingle Bells melody, with the driving frequencies shown on the monitor",
+          "caption": "December 19, 2022"
+        }
+      ]
+    },
+    {
+      "heading": "Designing and Building the Rig (December 22, 2022)",
+      "body": [
+        "As a part of the planning process, I designed multiple prototypes of the contraption that would attach to the side of the table and move the goalie back and forth. Some were made out of Legos, and some cardboard. Once I was happy with the design, I added the parts to my Amazon cart and placed the order, praying that they would all work together. On receiving the parts I was thrilled to start putting the contraption (or KURT) together. After assembling and disassembling KURT many times, and a few runs to Home Depot, I was able to mount it and get almost everything setup and ready for the goalie to be moving!"
+      ],
+      "media": [
+        {
+          "src": "media/t_slot_setup.mp4",
+          "kind": "video",
+          "poster": "media/t_slot_setup.poster.webp",
+          "alt": "Video of the assembled rig mounted to the side of the foosball table",
+          "caption": "December 22, 2022"
+        }
+      ]
+    },
+    {
+      "heading": "First Movement (December 22, 2022)",
+      "body": [
+        "Working motor controller connected to the table."
+      ],
+      "media": [
+        {
+          "src": "media/first_movement.mp4",
+          "kind": "video",
+          "poster": "media/first_movement.poster.webp",
+          "alt": "Video of the goalie rod moving for the first time, driven by the working motor controller",
+          "caption": "December 22, 2022"
+        }
+      ]
+    },
+    {
+      "heading": "Final Setup: A Functional Foosball Goalie (December 25, 2022)",
+      "body": [
+        "Finally, I was able to combine the ball tracking software with the motor controller to create a functional foosball goalie. A lot of tweaking and tinkering went into getting the optimal positioning strategy down, but in the end he makes more saves than I would."
+      ],
+      "media": [
+        {
+          "src": "media/final_setup.mp4",
+          "kind": "video",
+          "poster": "media/final_setup.poster.webp",
+          "alt": "Video of the finished goalie in play, moving on its own to follow the ball across the table",
+          "caption": "December 25, 2022"
+        }
+      ]
+    },
+    {
+      "heading": "Thanks for having a visit with KURT, my Automated Foosball Goalie!",
+      "body": [
+        "There are still plenty of flaws, and many improvements to be made. But in the end, I'm happy that I took on this challenge, and even more so, I'm thrilled about all the knowledge that I gained."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Photo Gallery",
+      "body": [
+        "Click on The Image to View Them Fullscreen!"
+      ],
+      "media": [
+        {
+          "src": "media/backyard.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The foosball table outside on pickup day, part way through reassembly, with clamps, a screwdriver and pliers lying on the playfield",
+          "caption": "October 18, 2022"
+        },
+        {
+          "src": "media/first_setup.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The first setup: the reassembled table in the bedroom with the improvised dowel-and-takeout-container camera mount suspended above it and a monitor and keyboard on a side table",
+          "caption": "December 3, 2022"
+        },
+        {
+          "src": "media/new_mount.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The rebuilt camera mount standing on the floor: taped dowel legs holding a plastic takeout container for the camera at the top",
+          "caption": "December 9, 2022"
+        },
+        {
+          "src": "media/image_tracking.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "A monitor showing the KURT_V2.py source in the Thonny editor beside the OpenCV 'Object Tracker' window, where the overhead view of the table is marked up with a green bounding box, the ball circled in red with its coordinates, and a red box around the goalie",
+          "caption": "December 9, 2022"
+        },
+        {
+          "src": "media/stepper_motor.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The stepper motor bolted to a board next to a breadboard with LEDs and a ribbon cable, surrounded by tools, bolts and mounting hardware",
+          "caption": "December 19, 2022"
+        },
+        {
+          "src": "media/messy_desk.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "A desk covered in electronics and parts during the motor controller work",
+          "caption": "December 19, 2022"
+        },
+        {
+          "src": "media/whiteboard.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "A whiteboard marker sketch of the drive mechanism - motor, rail and carriage clamped to the table - with a sketch of the goal end of the table above it",
+          "caption": "December 3, 2022"
+        },
+        {
+          "src": "media/models.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Prototype models of the goalie mechanism built from Legos and taped cardboard, on a counter in front of a pegboard of pliers and cutters",
+          "caption": "December 5, 2022"
+        },
+        {
+          "src": "media/t_slot_parts.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The ordered parts laid out before assembly: aluminium extrusion rails, brackets, mounting plates and hardware",
+          "caption": "December 21, 2022"
+        },
+        {
+          "src": "media/t_slot_bulit.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The aluminium extrusion rails mounted to the side of the table, carrying the plate that rides along them",
+          "caption": "December 21, 2022"
+        },
+        {
+          "src": "media/cart.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Close-up of the carriage plate clamped to the goalie rod, riding the rail on wheels and driven by a toothed belt",
+          "caption": "December 22, 2022"
+        },
+        {
+          "src": "media/wires.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The wiring panel: a breadboard fed by the Raspberry Pi GPIO breakout ribbon, mounted above a DM542T digital stepper driver",
+          "caption": "December 22, 2022"
+        },
+        {
+          "src": "media/kurt_cool.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "KURT fully mounted to the side of the table - electronics panel, stepper motor and a cooling fan - with the rail extending out past a bench power supply",
+          "caption": "December 22, 2022"
+        },
+        {
+          "src": "media/final_view.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The finished setup in use: the table with the camera rig overhead and the electronics on the right, and the tracker view running on the monitor at the left",
+          "caption": "December 25, 2022"
+        },
+        {
+          "src": "media/cover_photo.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Wide view of the whole build in the bedroom: the table under the dowel camera rig, KURT mounted on the near side, and the tracker running on the monitor at the left",
+          "caption": "December 25, 2022"
+        }
+      ]
+    }
+  ],
+  "notes": "MEDIA PATHS: every media reference on this page is written as ../../data/... from project_pages/foosball/, which resolves correctly to the repo-relative data/... paths used here. All 22 referenced files (7 videos, 15 images) exist in media-manifest.tsv; there are no broken references and no unused foosball assets in the manifest. HOMEPAGE: data/projects.json lists this project first, key \"foosball\", title \"Automated Foosball Goalie\", empty description, images: [\"cover_photo.jpeg\"], page: \"foosball\"; scripts.js builds the card src as `../data/project_images/${projectId}/${project.images[0]}`, i.e. the repo-relative data/project_images/foosball/cover_photo.jpeg (in manifest) once the stray ../ is dropped; clicking the card navigates to project_pages/foosball/foosball.html. There is no per-project description text anywhere except this page, so any homepage blurb must be written fresh or pulled from the intro paragraph. COPY FILES: data/projects copy.json is a SUPERSET of the live file - it also lists blackjack, cyber_TTM, alarm_system and wordle_solver (whose project_pages directories all exist), and its cyber_TTM entry has page: \"blackjack\", which looks like a copy/paste bug; the live projects.json shows only foosball and cryptogram on the homepage. project_pages/foosball/foosball copy.css is the OLDER draft of the stylesheet (LF line endings and heavy inline comments; the live foosball.css is the CRLF file): it has a commented-out alternate palette (--primary-text #eceff1, --secondary-bg #ffffff, --date-bg #d27e64), separate .project-introduction and .project-conclusion blocks that the live CSS consolidated into one .project-text-box class, and nth-child rules staggering the video boxes (odd margin-left 5%, even 15%, every 3rd 10%) that the live CSS dropped in favour of a plain centred column. Neither copy file contains prose the live page lost. BROKEN JS WIRING: the page loads ../../scripts.js, which is the homepage script - it fetches '../data/projects.json' (from this page that resolves to project_pages/data/projects.json, a 404) and queries .project-grid and .mobile-exclaimer-container, neither of which exists here, so it throws in the console and does nothing. The same relative fetch is also wrong on index.html at the repo root (it resolves above the root). Do not port this. PAGE JS (foosball.js): isInViewport/handleScroll toggle an 'in-view' class on .image-box elements - that class does not exist in this HTML, so it is dead code (probably left over from an earlier layout). The live interaction is the gallery: clicking a gallery image toggles a .full-screen class (position: fixed, full viewport, object-fit: contain, z-index 1000, cursor zoom-out) and Escape exits. Only one image can be fullscreen at a time in practice; there is no next/prev, no backdrop element, and clicking the image again closes it - a real lightbox would be a fair modern replacement. LAYOUT INTENT: dark slate panel (#263238) with rounded 50px corners over a white page, white-bordered 'video frame' wrapping a single centred column of video cards (max-width 400px), each card carrying an absolutely positioned white date badge in its top-left corner; below it a white-framed 'pathway' grid of 200x150 cover-fit thumbnails that scale 1.2x on hover. CSS BUGS TO NOT PORT LITERALLY: live foosball.css .date-box has 'color: var (--date-text)' (space after var, so the declaration is invalid and the badge text falls back to inherited colour - the copy file has it correct); the max-width 768px block sets .section-title { font-size: 164px } which is almost certainly a typo for 16px, and also sets .section-description to 12px while the nested .project-text-box overrides later in the same block put them back to 30px/20px. HEADINGS: only two headings are the author's - \"Making an Automated Foosball Goalie!\" and \"Thanks for having a visit with KURT, my Automated Foosball Goalie!\". The per-video headings (and \"Photo Gallery\") are editorial, derived from the HTML box ids (bringing_it, first_setup, ball_tracking, stepper_motor, t_slot_setup, first_movement, final_setup) and the date badges; the source marks each video with a date badge only. GALLERY ORDER: the grid order is preserved above exactly as authored, and its dates are NOT chronological - items 7 and 8 (whiteboard.jpg December 3, models.jpg December 5) appear after the December 19 items. HTML comments in the source group gallery images to the matching video milestone: bringing_it -> backyard.png; first_setup -> first_setup.png (new_mount.jpg follows uncommented); ball_tracking -> image_tracking.jpeg; stepper_motor -> stepper_motor.jpg (messy_desk.jpg follows); t_slot_setup -> whiteboard.jpg, models.jpg, t_slot_parts.jpg, t_slot_bulit.png; first_movement -> cart.png, wires.png, kurt_cool.png; final_setup -> final_view.jpg, cover_photo.jpeg. A rebuild could interleave the photos into their milestone sections using that mapping instead of keeping one flat grid. OTHER: every gallery img shares the same placeholder alt text, \"Automated Foosball Goalie Image 1\", so all alt text here was written fresh - and then checked frame by frame against the actual image and video files, which ARE present in this checkout, so the descriptions match what is really in each shot. Details visible in the photos but never mentioned in the prose (a DM542T digital stepper driver, a toothed-belt carriage, a bench power supply, a cooling fan, the Thonny editor and a KURT_V2.py file on a Raspberry Pi) are described in alt text only and deliberately NOT promoted into tech or summary claims. The page has no hero image of its own - there is an empty gap under the h1 where one was clearly intended - so cover_photo.jpeg is used as hero because it is the homepage cover. Videos have no poster frames; first_setup.png and stepper_motor.jpg share names with their videos and would make natural posters. There are no links on the page at all (no repo, no demo); navigation comes only from the injected navbar at tools/navbar/navbar.html (Home, About, Connect, Symposium; an Archive link is commented out). The navbar is fetched at runtime and its stylesheet uses a root-absolute /tools/navbar/navbar.css, so it only renders correctly when served from the site root. 'status' is taken from the intro line 'me creating a working version towards the end of December'; the page never says 'finished' or 'completed', and the conclusion explicitly says 'There are still plenty of flaws, and many improvements to be made', so do not render this project as completed. The T-slot framing in 'tech' comes from the asset filenames (t_slot_setup.mp4, t_slot_parts.jpg, t_slot_bulit.png) and is confirmed by the photos, which clearly show slotted aluminium extrusion rails; the prose only ever calls it 'the contraption'. Prose is verbatim apart from whitespace normalisation and two typo fixes: 'Facebook market place' -> 'Facebook Marketplace' and 'planing' -> 'planning'. The tense slip 'Having this isn't everything though, I need to write the software' was left as written. The misspelled filename t_slot_bulit.png is preserved because the asset itself is misspelled."
+}

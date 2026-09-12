@@ -1,0 +1,77 @@
+{
+  "slug": "alarm-system",
+  "title": "Automated Alarm System",
+  "tagline": "An off-the-shelf home alarm rebuilt around a Raspberry Pi and a custom Pygame panel",
+  "summary": "A budget 4-channel RFID home alarm system upgraded into a smarter security setup driven by a Raspberry Pi. The Pi reads the alarm panel's LED alert lights as voltages to work out which door is open and when the battery is low, and it controls the alarm's power cord and onboard beeper through relays. A first version used a simple LCD screen and a single mode button; a subsequent version further expanded the user interface and available features with a fully customized Pygame GUI offering mode selection, color-coded sensor status, configurable per-mode behavior, lifetime statistics, and email and SMS alerts.",
+  "published": true,
+  "featured": false,
+  "date": null,
+  "status": null,
+  "tech": [
+    "Raspberry Pi",
+    "Pygame",
+    "Pi Hat (reads LED voltages)",
+    "Relays",
+    "LCD screen",
+    "Motion sensor",
+    "4-channel RFID alarm system",
+    "UPS",
+    "HDMI",
+    "Home network / router",
+    "Email and SMS notifications"
+  ],
+  "links": [],
+  "hero": {
+    "src": "media/alarm_system_cover.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "Cover image for the Automated Alarm System project",
+    "caption": null
+  },
+  "sections": [
+    {
+      "heading": "Overview",
+      "body": [
+        "This project upgrades a basic alarm system into a sophisticated security solution using a Raspberry Pi. The enhanced system features advanced alert capabilities, a customizable user experience, and improved functionality for monitoring and managing home security."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Project Story",
+      "body": [
+        "The original alarm system was limited to indicating which door was open by lighting up corresponding LEDs. To enhance its capabilities, I developed a system that integrates a Raspberry Pi to monitor and respond to various events. The initial version involved soldering wires to the alert lights, connecting them to a Raspberry Pi, which measured voltages to detect open doors and low battery conditions through LED flash patterns. This system utilized a simple LCD screen to display modes and a button to switch between the modes.",
+        "The subsequent version further expanded the user interface and available features. A fully customized GUI was created using Pygame, offering complex, reusable, and configurable parameters to suit user needs."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Hardware Components",
+      "body": [
+        "Alarm System: Utilized a budget-friendly 4-channel RFID alarm system from Amazon.",
+        "Integration: LED leads are connected to a Pi Hat on the Raspberry Pi, which reads voltages. The alarm system’s power cord and onboard beeper are routed through relays controlled by the Raspberry Pi.",
+        "Connectivity: The system connects to the home network via a router and is powered by a UPS, with an HDMI cable linking to the control panel.",
+        "Additional Sensors: Integrated a motion sensor for enhanced detection capabilities."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Main Screen Features",
+      "body": [
+        "Top Buttons: Settings, mode selector (Auto Home, Home Day and Night, Away, Out), and Wi-Fi status indicator.",
+        "Bottom Status Bar: Displays the status of sensors with color-coded indicators: open (red), closed (green), errors (yellow), no power (black), and unknown (gray)."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Settings Screen Enhancements",
+      "body": [
+        "Master Sound Settings: Adjust sound alerts for various conditions.",
+        "Mode Behavior Configuration: Customize how each mode responds to detected events.",
+        "Lifetime Statistics: View detailed analytics on system performance and usage.",
+        "Notification Management: Configure email and SMS alert behavior."
+      ],
+      "media": []
+    }
+  ],
+  "notes": "REMOVED SECTION \"Project Photos\": it had a heading, zero media and a body that was a porting note rather than published copy, so it rendered on /work/alarm-system as a photo section with no photos and an explanation aimed at the author. Kept verbatim here: The legacy page opens with a large display image and a row of five clickable thumbnails; clicking a thumbnail swaps it into the big display slot above. Every one of those images points into data/project_images/blackjack/, a copy-paste leftover from the Blackjack page — they are Blackjack card-game screenshots, not alarm system photos, so none of them are carried over here. No alarm system photos exist anywhere in the repo, so this section has no media until the author supplies some. Restore it as a section only once real alarm system photos exist. || HOMEPAGE LISTING: this project is NOT in the live data/projects.json, which contains only foosball and cryptogram, so the homepage grid never renders an Alarm System card. It IS present in the duplicate data/projects copy.json as key \"alarm_system\" with title \"Home Alarm System\", images [\"alarm_system_cover.png\"], page \"alarm_system\". The copy file is the fuller list (it also carries blackjack, cyber_TTM and wordle_solver); the live file appears to have been trimmed. Cover image resolves via scripts.js as data/project_images/<projectId>/<images[0]> = data/project_images/alarm_system/alarm_system_cover.png, which exists in the manifest and is the only alarm_system media file in the repo. TITLE DISCREPANCY: three different names exist — <title>Alarm System</title>, on-page <h2>Automated Alarm System</h2>, and \"Home Alarm System\" in projects copy.json. I used the on-page h2. PLACEHOLDER MEDIA (important): every one of the 9 <img> tags on this page points into data/project_images/blackjack/, because alarm_system.html was cloned from project_pages/blackjack/blackjack.html and the image paths were never repointed. The ../../ prefix itself is correct from project_pages/<slug>/; only the folder name is wrong. Five of those files exist in the manifest but are Blackjack card-game screenshots, not alarm system photos, so I deliberately left them out of \"media\": data/project_images/blackjack/screen_0.png (used as #mainImage and thumbnail 1), screen_1.png, screen_2.png, screen_3.png, screen_4.png — all in the \"Project Photos\" section. BROKEN REFERENCES (not in the manifest at all, 404s), with the alt text that says what each was meant to show: ../../data/project_images/blackjack/hardware.png alt=\"Hardware Image\" (Project Story section), .../hardware_components.png alt=\"Hardware Components\" (Hardware Components), .../main_screen.png alt=\"Main Screen\" (Main Screen Features), .../settings_screen.png alt=\"Settings Screen\" (Settings Screen Enhancements). The five placeholder Blackjack images carry only generic alt text: \"Main Image\" on #mainImage and \"Image 1\" through \"Image 5\" on the thumbnails. No real alarm system screenshots, hardware photos or videos exist anywhere in the repo — a porter must either source new images from the author or ship these sections text-only. There is no data/project_videos/alarm_system directory. JS BEHAVIOUR: alarm_system.js is 4 lines and defines only changeMainImage(newSrc), which sets #mainImage.src; the thumbnails call it via inline onclick=\"changeMainImage(this.src)\". So the gallery is a click-to-enlarge swap with no lightbox, no keyboard navigation, no captions and no slideshow ordering beyond DOM order (screen_0 through screen_4, with screen_0 also the initial large image). CSS / DROPPED SECTIONS: alarm_system.css is a verbatim copy of the shared project-page stylesheet and still carries rules for #project-videos, .videos-container, .video-box (including a .video-box p caption style) and #project-epilogue — none of which appear in alarm_system.html. Blackjack’s page does use #project-videos and cryptogram.html uses #project-epilogue, so a videos section and an epilogue may have been planned here and never written — that is inference from the shared stylesheet, not something the source states. LAYOUT INTENT: navy page background (#365175) with off-white rounded cards (#f9f9f9, 10px radius, soft shadow) per section; the title card is centered with a pill-shaped bordered heading; .project-section stacks image-over-text on mobile and becomes a row at >=768px with the image on the left and left-aligned text (max-width 800px); .big-image gets a 4px #333 border; .image-row thumbnails are max 150px wide, flex-wrapped with 20px gaps and scale to 1.1 on hover. MARKUP QUIRKS: the Overview and the four story sections all use class=\"project-story\" rather than the id=\"project-story\" used in blackjack.html. The Hardware/Main Screen/Settings bullets are div.bullet-point elements with a <strong> label, but alarm_system.css defines no .bullet-point rule at all, so they render as unstyled stacked divs — rebuild them as a real list. The Project Story section's prose lives in a single <p> that actually holds two paragraphs; I split it at \"The subsequent version...\". SCRIPT WIRING: the page loads <script src=\"../scripts.js\">, i.e. project_pages/scripts.js, which does not exist (the only scripts.js is at the repo root), so it 404s; even if it loaded, it calls document.querySelector('.project-grid') and .mobile-exclaimer-container, neither of which exists on a project page, and fetches '../data/projects.json' with a prefix that is wrong from this depth. The navbar is injected at runtime by fetching ../../tools/navbar/navbar.html into #navbar-container, and that navbar links its stylesheet with an absolute /tools/navbar/navbar.css path that breaks under file:// or any non-root deploy; its nav links (/index.html, /pages/about.html, /pages/connect.html, /live_projects/symposium/home.html) are likewise root-absolute, and an Archive link is commented out. DATES/STATUS: the page states no year, no status, no external or repository links, and no captions anywhere; year and status are null. The only date signal on the whole site is the homepage footer \"Last Update 7/20/24 © 2024 Michael Lizzio\", which is site-wide, not project-specific. No lorem ipsum or placeholder prose — all text is real authored copy. No \"copy\" variants of the alarm_system html/js/css exist (unlike foosball, which has a \"foosball copy.css\"). Curly apostrophe U+2019 preserved in \"alarm system’s power cord\". CRITIC PASS: removed \"GPIO\" from the tech list (the source only says the Pi Hat \"reads voltages\"; GPIO is never mentioned) and reworded the summary, which had said the Pygame GUI \"replaced\" the LCD-and-button version — the source only says the subsequent version \"further expanded the user interface and available features\", and never says the LCD was removed. Everything else checked out verbatim against the source."
+}

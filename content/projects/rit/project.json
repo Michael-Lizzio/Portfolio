@@ -1,0 +1,54 @@
+{
+  "slug": "rit",
+  "title": "RIT Dorm Dashboard & SWEN 101",
+  "tagline": "Two standalone RIT pages: a dorm control-panel UI and an intro page that flees the cursor.",
+  "summary": "The RIT folder holds two unrelated coursework-era pages that happen to share a directory. dorm-dashboard.html is a dark, RIT-orange control panel for a dorm room: light ON/OFF buttons, a current/target temperature readout and an activity log table with Download and Load More controls. swen101.html is a personal introduction page for SWEN 101 whose four content boxes scatter to random positions on load and physically run away from the mouse pointer. Both are plain HTML, CSS and vanilla JavaScript with no build step, no framework and no shared navigation; neither page is linked from anywhere else in the site.",
+  "published": false,
+  "featured": false,
+  "date": null,
+  "status": null,
+  "tech": [
+    "HTML",
+    "CSS",
+    "CSS custom properties",
+    "Vanilla JavaScript",
+    "DOM API"
+  ],
+  "links": [
+    {
+      "label": "SE Website",
+      "href": "https://www.rit.edu/computing/department-software-engineering"
+    }
+  ],
+  "hero": null,
+  "sections": [
+    {
+      "heading": "Dorm Dashboard: a dorm-room control panel",
+      "body": [
+        "The page is headed \"Dorm Dashboard\" and splits into a control panel and a log. The control panel has Lights with OFF and ON buttons, a Temperature block showing \"Current: 71°F\", a number input labelled \"Set\" that defaults to 70, and a line reading \"Current Action: Cooling\". The log section, headed \"Log\", is a three-column table of Action, Notes and Time, wrapped by a Download button above and a Load More button below.",
+        "The styling is where most of the effort went: a dark palette driven entirely by CSS custom properties, with the author's own comment marking #ff6600 as \"Subtle touch of RIT's orange\" for the heading, and the matching hover colour commented as an \"Orange hover effect to reflect RIT colors without overpowering\". Sections are centred cards with rounded corners and a soft shadow, and the log table gets a dark header row and alternating row colours.",
+        "Under the hood it is a front-end shell rather than a working system. loadLogs() runs on DOMContentLoaded and iterates an array of log entries that is currently empty, so the table always renders with headers only. toggleLights(), downloadLog() and loadMoreLogs() do nothing but console.log, and setTemperature() only reads the input's value and logs it. The comments state the intent — download the log \"as a CSV or JSON file\" and load more logs \"(e.g., from a server or additional JSON)\". The current temperature and current action are hardcoded in the HTML, and there is no hardware, backend or persistence anywhere in the code."
+      ],
+      "media": []
+    },
+    {
+      "heading": "SWEN 101: an intro page that runs away",
+      "body": [
+        "The SWEN 101 page is four floating boxes: an introduction, a photo of a favourite food (alt text \"Empanada\"), a box holding a single link labelled \"SE Website\" that opens RIT's Software Engineering department page in a new tab, and a list of things to learn. The intro reads: \"Hello, I'm Michael Lizzio, and I attended Massapequa High School on Long Island. Some of my hobbies include... well programming, legos, and other fun stuff like skiing, mountain biking, ice skating, and hiking.\"",
+        "The list is the course wish-list: \"How to communicate with a team\", \"How to set up and manage Git with multiple people\", \"How to write requirements for software\", \"How to use my previous knowledge to get ahead\", and \"How to make text run away ahahahaha\".",
+        "That last item is the page's actual mechanic. On load the script absolutely positions every .box at a random spot in the viewport, then listens for mousemove: for each box it measures the distance from the cursor to the box centre, and when that distance drops under 150 pixels it pushes the box away along the cursor-to-centre vector by half the delta, clamping the new left/top so the box stays inside the window. The author's comment on that multiplier reads \"Adjust the multiplier to change the speed of movement\". The body is set to overflow: hidden — commented \"Prevents scrollbars when elements move\" — so the moving boxes never produce scrollbars."
+      ],
+      "media": []
+    },
+    {
+      "heading": "How it is built",
+      "body": [
+        "Both pages are hand-written static files with no dependencies: one HTML file, one stylesheet and one script each, loaded directly with <link> and <script> tags. There is no framework, bundler, package manifest or data fetch of any kind in the folder.",
+        "The dashboard leans on CSS custom properties for a themeable dark palette and wires its controls with inline attributes — onclick on the buttons, onchange on the temperature input — that call global functions. swen101.css is much plainer: a pale #f0f0f5 page, lavender #e0e0ff boxes with rounded corners and a soft shadow, square list bullets, and the SE Website link dressed as a white pill with blue text.",
+        "The SWEN 101 page drives everything from JavaScript geometry — getBoundingClientRect plus absolute left/top — rather than CSS animation. Between them they cover the two halves of a beginner front-end exercise: a laid-out, themed interface with stubbed behaviour, and a tiny piece of real interaction logic."
+      ],
+      "media": []
+    }
+  ],
+  "notes": "TWO UNRELATED THINGS IN ONE ENTRY: dorm-dashboard.html and swen101.html share the branch/RIT folder but have no shared markup, styles, scripts, navigation or links between them; they are described together only because they live in the same directory. Neither page is referenced from anywhere else in the legacy site (index.html, pages/, project_pages/ and live_projects/ contain no link to branch/RIT), so both are effectively orphaned. NO SCREENSHOT EXISTS: the only media file in the folder is branch/RIT/images/fav_food.jpg (the \"Empanada\" photo used inside the SWEN 101 page), so \"hero\" is null — a fresh screenshot of the dorm dashboard would make the best hero and needs to be captured from the legacy page. MEDIA PATHS: swen101.html references images/fav_food.jpg relative to its own folder, which resolves correctly to branch/RIT/images/fav_food.jpg in the manifest; no broken media references found. MEDIA PIPELINE GAP: branch/RIT/images/fav_food.jpg has no entry in media-map.tsv (compress-media.sh does not cover branch/, the same gap that affects branch/la2028), so build-content.mjs will drop this image until it is compressed and mapped. LINK LABEL: the only outbound link is the anchor text \"SE Website\" in swen101.html, target=\"_blank\", pointing at https://www.rit.edu/computing/department-software-engineering — the label in \"links\" is the author's own wording, not a description of the destination. WINDOWS PATH SEPARATOR: swen101.html loads its script as <script src=\"scripts\\swen101.js\"> with a backslash. Browsers normalise backslashes to forward slashes in http(s)/file URLs, so this most likely still resolves; it was not verified in a browser here. Write it as scripts/swen101.js when porting. DASHBOARD IS NON-FUNCTIONAL: toggleLights, downloadLog and loadMoreLogs are console.log stubs, setTemperature only reads the input value and logs it, the logEntries array in dorm-dashboard.js is empty so the log table renders headers with no rows, and the 71°F current temperature plus \"Cooling\" current action are hardcoded in the HTML. Do not describe it as a working smart-home or IoT system. MISSING DATA FILE: .gitignore excludes branch/RIT/data/dorm-dashboard_example.json, a sample log file that was never committed and does not exist in the checkout — it explains the empty log array and is unrecoverable. DEAD CSS: dorm-dashboard.css styles #statistics h2, but there is no #statistics section in the HTML — leftover from a planned statistics panel. CSS QUIRK: .box in swen101.css declares transition: transform 0.3s ease, but the script animates left/top rather than transform, so box movement is not actually eased. LAYOUT QUIRKS: swen101 boxes are given random start positions on every load and can overlap or stack; the page has no heading element and body overflow is hidden; the run-away effect is mousemove-only, so it does nothing on touch devices. The dashboard uses inline onclick/onchange attributes, which will need converting to React handlers if it is ever ported. ACCURACY: the legacy checkout is shallow (depth 1) and shows one commit dated 2026-04-09 that does not reflect when these pages were written; neither page states a year or a completion status, so \"year\" and \"status\" are null."
+}

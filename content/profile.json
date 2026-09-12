@@ -1,0 +1,39 @@
+{
+  "name": "Michael Lizzio",
+  "headline": "Software Engineering Major at RIT",
+  "bio": "Aspiring software engineer with strong communication skills and a passion for sharing knowledge and collaborating on complex and challenging problems. I work mostly in Python, with a foundational understanding of several other languages, and I'm eager to expand my knowledge and keep learning new skills.",
+  "location": null,
+  "email": "michaeljlizzio@gmail.com",
+  "resume": "/resume.pdf",
+  "links": [
+    {
+      "label": "GitHub",
+      "href": "https://github.com/michael-lizzio"
+    },
+    {
+      "label": "Linkedin",
+      "href": "https://linkedin.com/in/michael-lizzio-4a803931a"
+    },
+    {
+      "label": "Facebook",
+      "href": "https://www.facebook.com/michael.lizzio.52"
+    },
+    {
+      "label": "Snapchat",
+      "href": "https://www.snapchat.com/add/michael.lizzio"
+    },
+    {
+      "label": "Instagram",
+      "href": "https://www.instagram.com/michael.lizzio"
+    },
+    {
+      "label": "Discord",
+      "href": "https://discordapp.com/users/743934191850487910"
+    }
+  ],
+  "about": [
+    "I'm a passionate computer programmer. When I got a Raspberry Pi for Christmas of 2018, I was super excited. Looking back on it, I am grateful that I had the unique opportunity to learn computer programming by just messing around and exploring the environment while making silly and sometimes complex projects.",
+    "As my knowledge of computer science has grown over the years I have gradually realized how crucial syntax, code structure, and careful planning gives you the ability to create anything you can imagine.",
+    "What I find exciting about computer science is that there's always something new to learn. I'm looking forward to picking up more programming skills to improve my abilities."
+  ]
+}

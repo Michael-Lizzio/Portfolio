@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A new push to a PR cancels the previous run; main always runs to completion.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  verify:
+    name: validate / typecheck / lint / build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      # Cheapest gate first, and it needs no install: the repo's hard ceiling is
+      # 8 MB per media file. Raw screen recordings and phone photos blow past it.
+      - name: Enforce the 8 MB media ceiling
+        run: |
+          oversized=$(find content public/media -type f -size +8M 2>/dev/null || true)
+          if [ -n "$oversized" ]; then
+            echo "::error::Media files over the 8 MB ceiling. Re-encode them (see AGENTS.md §7)."
+            echo "$oversized" | while read -r f; do
+              echo "  $(du -h "$f" | cut -f1)  $f"
+            done
+            exit 1
+          fi
+          echo "All media within the 8 MB ceiling."
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # Content gate: every project.json and profile.json must satisfy src/lib/schema.ts.
+      # This is what stops a malformed agent-authored project from reaching main.
+      - name: Validate content
+        run: npm run validate
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build

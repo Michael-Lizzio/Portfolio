@@ -1,0 +1,349 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Design tokens
+
+   One type scale, one spacing scale, one neutral ramp, one accent.
+   Two fonts, three radii, two shadows, two breakpoints.
+
+   Every value here either already existed in the legacy stylesheets or is
+   derived from one that did — the accent ramp is generated from #13294B,
+   the navbar/Resume-button colour that was the site's real brand colour.
+
+   Rules that keep it uniform:
+     1. No raw hex in components. Colour only ever comes from a semantic token.
+     2. One accent. Emphasis that is not a link, a primary button or a focus
+        ring uses weight or --bg-subtle, never a second hue.
+     3. --radius-md unless there is a reason. Radii are never nested.
+     4. --shadow-sm at rest, --shadow-md on hover. Borders do the separating.
+     5. Design against md (768px) and lg (1024px). Below md is one column.
+     6. Motion is opacity and <= 2px of transform, hover/focus only, and always
+        behind motion-safe:.
+   ========================================================================== */
+
+@theme {
+  /* ── Type ───────────────────────────────────────────────────────────────
+     The faces themselves are loaded by next/font in src/app/layout.tsx,
+     which exposes them on <html> as --font-inter and --font-jetbrains-mono.
+     Never @import a font URL here: it blocks first render. */
+  --font-sans: var(--font-inter, "Inter"), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-jetbrains-mono, "JetBrains Mono"), ui-monospace, SFMono-Regular,
+    Menlo, monospace;
+
+  /* 16 ad-hoc sizes collapsed to 9; six of them are sizes the old site used. */
+  --text-xs: 0.75rem;         /* 12px  captions, dates            */
+  --text-xs--line-height: 1.5;
+  --text-sm: 0.875rem;        /* 14px  meta, pills, nav           */
+  --text-sm--line-height: 1.5;
+  --text-base: 1rem;          /* 16px  body                       */
+  --text-base--line-height: 1.65;
+  --text-lg: 1.125rem;        /* 18px  prose                      */
+  --text-lg--line-height: 1.7;
+  --text-xl: 1.25rem;         /* 20px  card title                 */
+  --text-xl--line-height: 1.45;
+  --text-2xl: 1.5rem;         /* 24px  h3                         */
+  --text-2xl--line-height: 1.3;
+  --text-3xl: 1.875rem;       /* 30px  h2 / section heading       */
+  --text-3xl--line-height: 1.2;
+  --text-4xl: 2.25rem;        /* 36px  h1 / project title         */
+  --text-4xl--line-height: 1.15;
+  --text-5xl: 3rem;           /* 48px  hero name only             */
+  --text-5xl--line-height: 1.05;
+
+  --tracking-tight: -0.015em; /* headings >= 30px only */
+
+  /* ── Spacing: 4px base. The old rhythm was 10/20/40; 2.5/5/10 preserve it. */
+  --spacing: 0.25rem;
+
+  /* ── Layout ── */
+  --container-page: 72rem;    /* 1152px — replaces the old 1200px    */
+  --container-prose: 45rem;   /*  720px — replaces the old 800px     */
+  /* max-w-prose resolves from --max-width-prose, not --container-prose,
+     so it has to be set here too or it falls back to Tailwind's 65ch. */
+  --max-width-prose: 45rem;
+
+  /* ── Radii: 12 values down to 3. 10px is kept verbatim — it was 71 of 116. */
+  --radius-sm: 0.375rem;      /*  6px — inputs, small chips          */
+  --radius-md: 0.625rem;      /* 10px — cards, media, panels (house) */
+  --radius-lg: 0.875rem;      /* 14px — hero / detail header         */
+
+  /* ── Breakpoints: 10 down to the 2 that are actually designed against. ── */
+  --breakpoint-sm: 40rem;     /*  640px */
+  --breakpoint-md: 48rem;     /*  768px — the old de-facto breakpoint, kept */
+  --breakpoint-lg: 64rem;     /* 1024px */
+
+  /* ── Motion: one duration, one easing. No pulsate, no typing, no fades. ── */
+  --ease-out-quick: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --duration-quick: 150ms;
+  --default-transition-duration: var(--duration-quick);
+  --default-transition-timing-function: var(--ease-out-quick);
+
+  /* ── Neutral ramp, H 218°, replacing 14 unrelated greys ── */
+  --color-n-0: #ffffff;
+  --color-n-50: #f9fafb;      /* ~ the old #f9f9f9  */
+  --color-n-100: #f3f4f7;     /* ~ #f0f0f0 / #f4f4f4 */
+  --color-n-200: #e4e7ec;     /* ~ #ddd  */
+  --color-n-300: #ced2da;     /* ~ #ccc  */
+  --color-n-400: #98a0ae;
+  --color-n-500: #6c7689;     /* ~ #888  */
+  --color-n-600: #535d6e;     /* ~ #666  */
+  --color-n-700: #3c4453;     /* ~ #555  */
+  --color-n-800: #282e39;
+  --color-n-900: #1b1f28;     /* ~ #333  */
+  --color-n-950: #12161c;
+
+  /* ── Accent ramp "ink", H 217°, derived from #13294B ── */
+  --color-ink-50: #eff3fb;
+  --color-ink-100: #dae5f6;
+  --color-ink-200: #b6cbec;
+  --color-ink-300: #88a9dd;
+  --color-ink-400: #5c87cc;
+  --color-ink-500: #3566b6;
+  --color-ink-600: #274f91;
+  --color-ink-700: #1c3b6e;   /* the old #1E3A61 */
+  --color-ink-800: #152e56;   /* the old #13294B */
+  --color-ink-900: #102341;
+}
+
+/* ==========================================================================
+   Semantic tokens
+
+   Both themes resolve from one place, then get re-exported through
+   @theme inline so bg-surface / text-fg-muted / border-border-default work as
+   ordinary utilities. Components reference these, never the ramps above.
+
+   Dark mode follows the system preference. There is no toggle and no JS; the
+   [data-theme] selectors are only here so one could be added later without
+   restructuring anything.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  --bg: var(--color-n-0);
+  --bg-subtle: var(--color-n-50);
+  --surface: var(--color-n-0);
+  --surface-hover: var(--color-n-50);
+  --border: var(--color-n-200);
+  --border-strong: var(--color-n-300);
+
+  --text: var(--color-n-900);        /* 16.5:1 on --bg */
+  --text-muted: var(--color-n-600);  /*  6.7:1 */
+  /* Not n-500: at 4.57:1 on --bg it cleared AA only on white, and it is used
+     almost exclusively at 12px ON --bg-subtle (page-header meta, breadcrumb,
+     the prev/next band, the no-cover card), where n-500 measured 4.38:1 and
+     failed. This value is 5.07:1 on --bg and 4.85:1 on --bg-subtle. */
+  --text-faint: #656f81;
+
+  --accent: var(--color-ink-600);    /*  8.0:1 */
+  --accent-hover: var(--color-ink-700);
+  --accent-contrast: var(--color-n-0);
+  --accent-surface: var(--color-ink-50);
+  --accent-border: var(--color-ink-100);
+  --ring: var(--color-ink-400);      /*  3.6:1 on --bg — 1.4.11 focus ring */
+
+  /* The only thing marking .btn-outline as a control: its text is --text, the
+     same as body copy, and it has no fill. --border-strong (1.52:1) is a
+     divider weight and fails 1.4.11's 3:1 for a control boundary. 3.48:1 on
+     --bg, 3.33:1 on --bg-subtle. Dividers keep using --border-strong. */
+  --border-control: #818a99;
+
+  --shadow-sm: 0 1px 2px rgb(19 41 75 / 0.06);
+  --shadow-md: 0 4px 12px rgb(19 41 75 / 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg: #0e1218;
+    --bg-subtle: #12161c;
+    --surface: #171b23;
+    --surface-hover: #1f242e;
+    --border: #2a313d;
+    --border-strong: var(--color-n-700);
+
+    --text: var(--color-n-200);        /* 15.2:1 on --bg */
+    --text-muted: var(--color-n-400);  /*  7.1:1 */
+    --text-faint: #828b9c;             /*  5.5:1 */
+
+    --accent: var(--color-ink-300);    /*  7.8:1 */
+    --accent-hover: #a8c0e8;
+    --accent-contrast: #0e1218;
+    --accent-surface: rgb(136 169 221 / 0.12);
+    --accent-border: #2a3f63;
+    --ring: var(--color-ink-400);      /*  5.2:1 on --bg */
+
+    /* n-700 was 1.76:1 on --surface. 3.26:1 there, 3.55:1 on --bg. */
+    --border-control: #616c80;
+
+    --shadow-sm: none;                 /* dark UI separates by border, not shadow */
+    --shadow-md: 0 8px 24px rgb(0 0 0 / 0.4);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0e1218;
+  --bg-subtle: #12161c;
+  --surface: #171b23;
+  --surface-hover: #1f242e;
+  --border: #2a313d;
+  --border-strong: var(--color-n-700);
+
+  --text: var(--color-n-200);
+  --text-muted: var(--color-n-400);
+  --text-faint: #828b9c;
+
+  --accent: var(--color-ink-300);
+  --accent-hover: #a8c0e8;
+  --accent-contrast: #0e1218;
+  --accent-surface: rgb(136 169 221 / 0.12);
+  --accent-border: #2a3f63;
+  --ring: var(--color-ink-400);
+  --border-control: #616c80;
+
+  --shadow-sm: none;
+  --shadow-md: 0 8px 24px rgb(0 0 0 / 0.4);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-border-default: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-fg: var(--text);
+  --color-fg-muted: var(--text-muted);
+  --color-fg-faint: var(--text-faint);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-accent-surface: var(--accent-surface);
+  --color-accent-border: var(--accent-border);
+  --color-ring: var(--ring);
+
+  --shadow-card: var(--shadow-sm);
+  --shadow-raised: var(--shadow-md);
+}
+
+/* ========================================================================== */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+  }
+
+  /* One focus treatment for the whole site, always visible. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--accent-surface);
+    color: var(--text);
+  }
+
+  /* The legacy site had an infinite pulsate with no guard. Never again. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ==========================================================================
+   Two shared recipes. These are the only class names on the site that are not
+   utilities — they exist so a link and a button look the same everywhere,
+   which is the thing the old site never managed.
+   ========================================================================== */
+
+@layer components {
+  .link {
+    color: var(--accent);
+    text-decoration-line: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: var(--accent-border);
+    transition-property: color, text-decoration-color;
+    transition-duration: var(--duration-quick);
+    transition-timing-function: var(--ease-out-quick);
+  }
+
+  .link:hover {
+    color: var(--accent-hover);
+    text-decoration-color: var(--accent);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(var(--spacing) * 10);
+    padding-inline: calc(var(--spacing) * 5);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    transition-property: color, background-color, border-color;
+    transition-duration: var(--duration-quick);
+    transition-timing-function: var(--ease-out-quick);
+  }
+
+  .btn-primary {
+    background-color: var(--accent);
+    color: var(--accent-contrast);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--accent-hover);
+  }
+
+  .btn-outline {
+    border: 1px solid var(--border-control);
+    color: var(--text);
+  }
+
+  .btn-outline:hover {
+    background-color: var(--surface-hover);
+  }
+}

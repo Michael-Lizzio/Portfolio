@@ -1,0 +1,60 @@
+{
+  "slug": "cyber-ttm",
+  "title": "Cybersecurity XML CKL CSV Editor",
+  "tagline": "An editor for cybersecurity files in XML, CKL and CSV formats",
+  "summary": "The legacy page is an unfinished stub. Its only project-specific content is the heading \"Cybersecurity XML CKL CVS Editor\", three screenshots and the author's placeholder line \"Cybersecurity!!!\" - no write-up was ever written. The page is a template clone: its CSS and JS are byte-identical to the Blackjack project page's, and its Videos section still holds the Cryptogram Solver's two videos and their cryptogram captions, which were never swapped out. Beyond the heading and the screenshots the source says nothing about what the tool does or how it was built, so the real write-up will have to come from the author.",
+  "published": false,
+  "featured": false,
+  "date": null,
+  "status": null,
+  "tech": [
+    "XML",
+    "CKL",
+    "CSV"
+  ],
+  "links": [],
+  "hero": {
+    "src": "media/cyber_ttm_cover.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "Cover image for the Cybersecurity XML CKL CSV Editor project",
+    "caption": null
+  },
+  "sections": [
+    {
+      "heading": "Project Photos",
+      "body": [],
+      "media": [
+        {
+          "src": "media/screen_2.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Screenshot from the Cybersecurity XML CKL CSV Editor project - the page's large lead image (legacy alt text: \"Main Image\")",
+          "caption": null
+        },
+        {
+          "src": "media/screen_0.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Screenshot from the Cybersecurity XML CKL CSV Editor project - first thumbnail in the row (legacy alt text: \"Image 1\")",
+          "caption": null
+        },
+        {
+          "src": "media/screen_1.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Screenshot from the Cybersecurity XML CKL CSV Editor project - second thumbnail in the row (legacy alt text: \"Image 2\")",
+          "caption": null
+        }
+      ]
+    },
+    {
+      "heading": "Cybersecurity",
+      "body": [
+        "Cybersecurity!!!"
+      ],
+      "media": []
+    }
+  ],
+  "notes": "THIS PAGE IS A STUB, NOT A FINISHED WRITE-UP. Everything captured above is the complete text of the page - there is no other prose anywhere in the HTML, JS or CSS. Do not let the rebuild invent a description of what this tool does; nothing in the source says.\n\nPLACEHOLDER TEXT: the entire #project-story section reads exactly \"Cybersecurity!!!\" under the heading \"Cybersecurity\". That is the author's literal placeholder, kept verbatim. A ported page should either carry it through as-is or (better) leave the story section empty until the author writes it.\n\nTEMPLATE LINEAGE (verified by byte comparison): cyber_TTM.css is byte-identical to project_pages/blackjack/blackjack.css, and cyber_TTM.js is byte-identical to blackjack.js. cyber_TTM.html (92 lines) differs from blackjack.html (87 lines) only in the title, heading, image paths, thumbnail count and video block; cryptogram.html is a much longer, later-reworked page (188 lines with extra #project-image-board and #project-epilogue sections) and is NOT a line-for-line match. The shared ancestry shows up in leftover markup: the commented-out '<!--<h3>[Unsolved, Solved]</h3>-->' above the Project Photos heading and the '<!--if you want to check it out on the home page-->' comment in #project-story are both cryptogram leftovers, as are the cryptogram videos below.\n\nLEFTOVER CRYPTOGRAM VIDEOS: the #project-videos section still points at data/project_videos/cryptogram/compressed_splitscreen_cryptogram.mp4 and data/project_videos/cryptogram/fullscreen_cryptogram.mp4 with the Cryptogram Solver's own captions ('...solving cryptograms on a puzzle website I found', '...just showing the webpage'). Both files DO exist in the manifest, so the paths resolve, but they have nothing to do with this project - the author never replaced the template's videos. They are recorded here for fidelity; the rebuild should almost certainly drop this whole section (there are no cyber_TTM videos in the manifest at all). The <div> ids are also cryptogram leftovers: id=\"webscraping-video\" and id=\"program-video\".\n\nMEDIA PATH NORMALISATION: every media reference in the HTML uses the relative prefix ../../ (e.g. ../../data/project_images/cyber_TTM/screen_2.png). All have been normalised to repo-relative paths (data/project_images/... , data/project_videos/...). All four cyber_TTM images and both videos exist in the manifest; there are no broken media references on this page.\n\nORIGINAL ALT TEXT: the legacy alt attributes are generic placeholders - \"Main Image\" on the lead image and \"Image 1\" / \"Image 2\" / \"Image 3\" on the three thumbnails. The alt strings above are descriptive replacements written for the rebuild; they are not authored copy, and the images themselves were not viewable during extraction (binary media is not checked out), so they describe only what the filenames and page structure support.\n\nHERO CHOICE: the page's own lead image is screen_2.png (it is also the third thumbnail in the row, so screen_2 appears twice in the legacy DOM; it is listed once here, first in Project Photos). data/project_images/cyber_TTM/cyber_TTM_cover.png exists in the manifest and is the designated cover art, so it is used as the hero. Swap them if the rebuild prefers the in-page lead image. Legacy thumbnail order is screen_0, screen_1, screen_2.\n\nHOMEPAGE LISTING: this project is NOT in the live data/projects.json - that file lists only 'foosball' and 'cryptogram', so cyber_TTM never appeared on the homepage grid. It IS in 'data/projects copy.json' (a fuller six-project variant that also adds blackjack, alarm_system and wordle_solver) as: title \"Cybersecurity File Editor\", description \"\" (empty), images [\"cyber_TTM_cover.png\"], page \"blackjack\". That \"page\": \"blackjack\" value is a copy-paste BUG - it should be \"cyber_TTM\". Note also that scripts.js ignores the 'page' field entirely and builds the URL as project_pages/${projectId}/${projectId}.html, so the bad value would not have broken navigation, but do not carry it forward.\n\nTITLE DISCREPANCY: three spellings exist for this project - <title> and projects copy.json both say \"Cybersecurity File Editor\"; the on-page <h2> says \"Cybersecurity XML CKL CVS Editor\". 'CVS' is a typo for 'CSV' and has been corrected in the \"title\" field; the section heading preserves the original spelling so the discrepancy is visible. Pick one canonical title during the port.\n\nNO DATE OR STATUS: nothing on the page or in the JSON data files gives a year, a date or a status, so both are null. (The homepage footer's \"Last Update 7/20/24 (c) 2024 Michael Lizzio\" is site-wide, not this project's date, and should not be attributed to it.) No external links, repo links or demo links exist for this project anywhere in the source.\n\nINTERACTIVE BEHAVIOUR (cyber_TTM.js): the file contains ONLY changeMainImage(newSrc), which sets #mainImage.src - clicking any thumbnail in .image-row swaps the big display image (wired via inline onclick=\"changeMainImage(this.src)\"). Unlike cryptogram.js, this file has NO IntersectionObserver typing-effect and NO click-to-fullscreen grid handler, even though cyber_TTM.css still carries .typing-effect / .animate-typing / @keyframes typing / .grid-item img.full-screen rules for them. Correspondingly the story paragraph is marked class=\"no-typing-effect\" (a class with no CSS rule anywhere), so it just renders as plain static text. In a Next.js rebuild the thumbnail-swaps-lead-image behaviour is the only thing worth reproducing.\n\nDEAD CSS: cyber_TTM.css is the un-slimmed original template. It styles #project-image-board (a two-column .project-images .grid of .grid-item cards with .paragraph-box captions) and #project-epilogue (h2/h3/h4, monospace h4, blockquote) - neither section exists in this page's HTML. @keyframes fadeAndSlide is defined three times in the same file. cryptogram.css by contrast was later reworked with a @media (max-width: 600px) block; cyber_TTM.css has no media query at all, so this page has no responsive tuning.\n\nNO 'COPY' VARIANTS in the cyber_TTM folder itself - the directory holds exactly three files. The 'copy' files that matter are at the data layer: 'data/projects copy.json' (described above) and 'data/archive copy.json' (13 entries that are entirely blank except one date '2016-12-1' - pure skeleton, no cyber content). The live data/archive.json holds only a 'Coming Soon' placeholder. 'styles copy.css' and 'project_pages/foosball/foosball copy.css' are unrelated to this page.\n\nSHARED CHROME: the page injects tools/navbar/navbar.html at runtime via fetch into #navbar-container (that path resolves - the file exists). It also has <script src=\"../scripts.js\">, which from project_pages/cyber_TTM/ resolves to project_pages/scripts.js - a file that does NOT exist (the homepage script lives at the repo root, i.e. ../../scripts.js). So that script 404s and never runs on this page; its homepage-only logic (fetch of data/projects.json, .project-grid, .mobile-exclaimer-container) never executes here. Either way it is dead weight - do not port it.\n\nRECOMMENDATION FOR THE PORT: treat this as a thin placeholder entry. The only genuinely project-specific assets are the four cyber_TTM images and the title. If the rebuild requires real copy, flag it back to the author rather than generating any."
+}
