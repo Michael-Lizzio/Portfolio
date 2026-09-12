@@ -110,8 +110,9 @@ project doesn't declare one; don't invent a status to fill the field.
 
 **`tech`** — what the project is *built with*, one item per entry, rendered as pills. Not file
 formats it happens to read, not tools you used to document it. Entries don't have to be single
-words; `"22 word lists indexed by word length, ordered common-to-uncommon"` is a real and useful
-entry. An empty array is honest; a guessed language is not. If the source never says what it's
+words, but the schema caps each one at **40 characters** — they are pill labels, not sentences.
+`"Frequency-ordered word lists"` is a real entry; the sentence it was condensed from belongs in a
+section. An empty array is honest; a guessed language is not. If the source never says what it's
 written in, leave it out and record that in `notes`.
 
 **`links`** — `{ label, href }`. `href` is validated as a URL, so it needs the scheme:
@@ -197,8 +198,10 @@ in the repo has `null`.
 
 Everything written in `project.json` is relative. Two things then happen:
 
-1. `scripts/sync-media.mjs` (via `npm run media`, and again during `npm run build`) copies
-   `content/projects/<slug>/media/*` to `public/media/<slug>/*` and generates video posters.
+1. `scripts/sync-media.mjs` — the `prebuild` hook, so it runs on every `npm run build` — copies
+   `content/projects/<slug>/media/*` to `public/media/<slug>/*`, for `published: true` projects
+   only. (`npm run media` is a different script: `scripts/compress-media.mjs`, which compresses
+   files in place inside `content/` and generates the video posters. It never writes to `public/`.)
 2. `src/lib/content.ts` rewrites every `src` and `poster` on the way out, from `media/cover.webp` to
    the public URL `/media/<slug>/cover.webp`.
 
@@ -273,5 +276,5 @@ What would *break* the seam, and is therefore prohibited: reading `content/` fro
 importing a `project.json` directly, hardcoding a `/media/...` path, or letting `Project` (rather
 than `ResolvedProject`) reach a component. Keep all four out and the migration is one file.
 
-`scripts/validate-content.mjs` and `scripts/new-project.mjs` also read `content/` — deliberately.
+`scripts/validate-content.ts` and `scripts/new-project.mjs` also read `content/` — deliberately.
 They are build tooling, not the site; after a migration they become seed/export scripts or go away.

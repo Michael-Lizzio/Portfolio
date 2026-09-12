@@ -35,7 +35,8 @@ Anything I could not verify is written as "unknown" or recorded in `notes`.
 ## Media
 
 - [ ] All media is compressed — WebP for images, MP4 (H.264) for video. No `.mov`, `.HEIC`, `.gif`,
-      or straight-off-the-clipboard PNGs.
+      or straight-off-the-clipboard PNGs. *(Exception: if the machine had no ffmpeg, AGENTS.md §7
+      sanctions committing sub-8 MB `.png`/`.jpg` instead. Tick this and say so in Notes.)*
 - [ ] **Every file is under 8 MB.** Verified with
       `find content/projects/<slug>/media -type f -size +8M` (prints nothing).
 - [ ] Every video has a generated `poster` pointing at its `<name>.poster.webp`.

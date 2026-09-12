@@ -32,7 +32,7 @@ cp ~/shots/doorbell_cover.png  content/projects/rpi-doorbell/media/
 cp ~/shots/doorbell_demo.mov   content/projects/rpi-doorbell/media/
 
 npm run media -- rpi-doorbell                 # compresses IN PLACE: images -> .webp,
-                                              # videos -> 720p .mp4 + <name>.poster.webp,
+                                              # videos -> .mp4 capped at 1280px wide + a poster,
                                               # and deletes the originals it replaced.
                                               # It keeps your filenames — §7.
 
@@ -102,6 +102,13 @@ This is the architectural reason parallel agents are safe here:
 The guarantee only holds while you stay inside your own two folders. The moment two agents both
 edit `package.json`, `package-lock.json`, `src/lib/content.ts`, or any shared component, git has to
 merge and the guarantee is gone. **So don't.** See §5.
+
+It is a guarantee about *git*, and it assumes one agent per checkout — which is the normal case,
+since agents run on different machines. If two of you ever share a working copy, note that
+`public/media/` and port 3000 are not yours alone: the preview step in §9 regenerates
+`public/media/` from **every** project, so running it wipes the other agent's draft media
+mid-preview. Nothing is lost — `content/` is the source of truth and another sync restores it —
+but it is confusing if you do not expect it.
 
 The legacy site this replaces did have a central `data/projects.json`, and it rotted: the live copy
 listed two projects while a `data/projects copy.json` next to it listed six. That failure mode is
@@ -191,10 +198,11 @@ tell Michael where that file is. That is a legitimate finish, not a failure.
 | `npm run typecheck` | TypeScript, strict. |
 | `npm run lint` | ESLint. |
 
-CI (`.github/workflows/ci.yml`) runs on every PR **and** on every push to `main`. Before those four
-commands it runs one more gate: `find content public/media -type f -size +8M` must print nothing.
-Note that this covers *all* of `content/`, while `npm run validate`'s own size check only walks
-`content/projects/*/media/`. So the local equivalent is those four commands **plus**:
+CI (`.github/workflows/ci.yml`) runs `validate`, `typecheck`, `lint` and `build` on every PR **and**
+on every push to `main`. Before those four it runs one more gate:
+`find content public/media -type f -size +8M` must print nothing. Note that this covers *all* of
+`content/`, while `npm run validate`'s own size check only walks `content/projects/*/media/`. So the
+local equivalent is those four commands **plus**:
 
 ```bash
 find content -type f -size +8M          # prints nothing = the ceiling is clear
@@ -317,7 +325,7 @@ of that file, copied as-is:
 ```
 
 What is cut between and after those two slices, so you are not guessing: the other three images of
-section 1 (lines 35–55), five sections — "The Backstory", "Teacher's Original Handout",
+section 1 (lines 35–55), six sections — "The Backstory", "Teacher's Original Handout",
 "Solved Quote", "My Whiteboard" (lines 58–111) and "Epilogue", "Worked Example" (lines 132–152) —
 the `notes` field (line 154), and the closing brace (line 155). Nothing inside the two blocks above
 is edited, abridged or reordered. If you reformat or re-key anything from them, you are no longer
@@ -460,24 +468,28 @@ wiring, the whiteboard plan, plus short clips of it moving.
 
 | | Format | Target | Ceiling |
 |---|---|---|---|
-| Images | **WebP** (`.webp`) | ≤ 1920 px wide, 100–400 KB | 8 MB |
+| Images | **WebP** (`.webp`) | ≤ 1800 px wide, 100–400 KB | 8 MB |
 | Videos | **MP4**, H.264 + AAC | ≤ 1280 px wide, under ~5 MB | 8 MB |
 | Posters | generated — don't make them by hand | | |
+
+1800 px is not a round number picked for taste: it is `MAX_IMAGE_WIDTH` in
+`scripts/compress-media.mjs`. A `.webp` wider than that is not skipped on the next
+`npm run media` — it is re-encoded, which is a second lossy pass.
 
 Aspect: landscape 16:9 or 4:3. Avoid ultrawide and avoid tall portrait screenshots — they render as
 a skinny column. `.png`, `.jpg`, `.jpeg` and `.webm` are accepted by the schema, but **prefer WebP
 and MP4**; convert rather than committing a PNG screenshot straight off the clipboard.
 
-Concrete conversions (all of these are on Michael's Mac already; `brew install ffmpeg webp` if not):
+Concrete conversions. `npm run media` already does all of this — reach for these only for a one-off,
+or to rescue a file the script could not handle. Every recipe here is ffmpeg, which is the only tool
+`npm run media` uses and which behaves the same on macOS, Linux and Windows. (`sips` is macOS-only
+and `cwebp` is a separate package; neither is needed. Do not assume either exists — the machine you
+are on may not be Michael's current Mac.)
 
 ```bash
-# PNG/JPEG screenshot -> WebP, capped at 1920px wide
-sips -Z 1920 shot.png --out /tmp/shot.png            # resize (macOS built-in)
-cwebp -q 80 /tmp/shot.png -o content/projects/rpi-doorbell/media/doorbell_ui.webp
-
-# HEIC phone photo -> WebP
-sips -s format jpeg -Z 1920 IMG_1234.HEIC --out /tmp/p.jpg
-cwebp -q 80 /tmp/p.jpg -o content/projects/rpi-doorbell/media/bench.webp
+# any image (PNG/JPEG/HEIC/…) -> WebP, capped at 1800px wide
+ffmpeg -i shot.png -vf "scale='min(1800,iw)':-1" -c:v libwebp -quality 80 \
+       content/projects/rpi-doorbell/media/doorbell_ui.webp
 
 # .mov screen recording -> compressed MP4, 1280 wide, web-friendly
 ffmpeg -i screen.mov -vf "scale=1280:-2" -c:v libx264 -crf 26 -preset slow \
@@ -492,10 +504,34 @@ ffmpeg -i clip.mov -vf "scale=1280:-2" -c:v libx264 -crf 26 -preset slow \
 # still too big? raise the CRF (28-32) and/or scale to 960:
 #   -vf "scale=960:-2" -crf 30
 
-# check before committing:
+# check before committing (macOS / Linux):
 find content/projects/rpi-doorbell/media -type f -size +8M
 du -h content/projects/rpi-doorbell/media/*
 ```
+
+On Windows, `find` is an unrelated program and there is no `/tmp`. Same size check in PowerShell:
+
+```powershell
+Get-ChildItem content\projects\rpi-doorbell\media -Recurse |
+  Where-Object Length -gt 8MB | Select-Object Name, Length
+```
+
+The npm scripts themselves — `new:project`, `media`, `validate`, `build` — are plain Node and run
+unchanged on all three platforms.
+
+### No ffmpeg, and you cannot install one
+
+Don't dead-end, and don't commit raw files either. Downgrade the media, not the honesty:
+
+- **Images:** `.png`, `.jpg` and `.jpeg` are accepted by the schema, by `npm run validate` and by
+  CI. Export or resize them under 8 MB with whatever the machine has, commit those instead of WebP,
+  and skip `npm run media`.
+- **Video:** skip it entirely. Two honest stills beat a page that never ships.
+- **Write it down in `notes`:** "no ffmpeg available on the machine used to document this — images
+  are PNG rather than WebP and no video is included; re-run `npm run media -- <slug>` on a machine
+  with ffmpeg to compress them."
+
+Then open the PR normally. `npm run validate` and CI both pass on that.
 
 ### Naming
 
@@ -509,8 +545,19 @@ Then:
 npm run media -- rpi-doorbell
 ```
 
-which rewrites them in place as `doorbell_cover.webp` and `doorbell_demo.mp4`, and writes
-`doorbell_demo.poster.webp` next to the video. Point the video's `poster` field at `"media/doorbell_demo.poster.webp"`.
+It rewrites each file in place, **keeping your filename and changing only the extension**:
+`doorbell_cover.png` → `doorbell_cover.webp`, `doorbell_demo.mov` → `doorbell_demo.mp4`, plus a
+`doorbell_demo.poster.webp` frame next to the video. It will not tidy a careless name for you, so
+pick the final filenames when you capture. Where an extension changed it prints "These filenames
+changed — update project.json to match"; point the video's `poster` field at
+`"media/doorbell_demo.poster.webp"`.
+
+Anything it could **not** convert is left untouched in `media/`, listed under "Problems", and the
+command exits non-zero. Run `ls content/projects/<slug>/media` afterwards and look:
+`npm run validate` does not ERROR on a stray file you never reference, but it does WARN — it maps
+every non-dotfile in `media/` and flags anything `project.json` does not point at. So an unconverted
+`.mov` left in the folder shows up as `not referenced by project.json — it ships but nothing shows
+it`, and it would be copied to `public/` verbatim if the project were ever published. Delete it.
 
 ---
 
@@ -526,18 +573,39 @@ character often produces several.
 
 Each failure names a **path into your JSON** plus the rule. The path indexes exactly like JavaScript:
 `sections[2].media[0].alt` = the third section, its first media item, its `alt` field. Open the file,
-go to that spot, fix the value, run it again. The messages are the ones written in `schema.ts`, so
-they say what is wanted:
+go to that spot, fix the value, run it again.
+
+Some messages are written in `schema.ts`, some come from zod itself — this repo is on **zod 4**, so
+the wording differs from the zod 3 strings you may have seen elsewhere:
 
 - `must look like "media/name.webp" — relative to the project folder, no subfolders`
 - `lowercase-kebab-case only`
 - `use "YYYY" or "YYYY-MM"`
-- `String must contain at least 1 character(s)` — you have an empty string where content is required
+- `a tech entry is a pill label, not a sentence` — a `tech` entry over 40 characters.
+- `Too small: expected string to have >=1 characters` — an empty string where content is required
   (usually an empty `""` left in a `body` array; delete the element).
-- `Invalid url` — an `href` without `https://`.
+- `Too big: expected string to have <=140 characters` — the `tagline` cap.
+- `Invalid URL` — a `links[].href` without `https://`.
 
-`validate` checks the JSON against the schema. It does not know whether your screenshots are of the
-right project — §6 is on you.
+**`validate` is not only a schema check.** `scripts/validate-content.ts` also checks the things the
+schema cannot see, and those are the errors agents actually trip:
+
+- `slug` equals the folder name, and no two projects claim the same slug
+- every media `src` and `poster` resolves to a file that is really on disk
+- `kind` matches the file extension, and a `poster` is an image
+- every image has non-empty alt text — `<path>.alt: images need alt text`
+- no media file is over 8 MB
+
+It also prints WARNs: a video with no poster, a media file nothing references, a subfolder under
+`media/`, a résumé path with no file behind it. **WARNs do not fail the run.** Fix them anyway.
+
+The last line is the summary. A clean tree today:
+
+```
+OK  0 errors, 0 warnings  —  9 projects (5 published), 60 media files, 39.5 MB
+```
+
+What validate cannot know is whether your screenshots are of the right project. §6 is on you.
 
 ---
 
@@ -546,16 +614,52 @@ right project — §6 is on you.
 **`npm error Missing script: "validate"`** — you are on a stale `main`. `git checkout main && git pull`,
 then `npm ci`.
 
-**`npm ci` fails / engine errors** — you are not on Node 24. `node -v` must print `v24.x`. `nvm use 24`.
+**Node is too old** — and `npm ci` will not stop you. `package.json` declares
+`"engines": { "node": ">=24" }`, but npm treats that as advice: it prints
+`npm warn EBADENGINE Unsupported engine` and installs anyway. The first hard failure comes later and
+looks unrelated — `npm run validate` dies with `node: bad option: --experimental-strip-types` (that
+flag needs Node ≥ 22.6; this repo targets 24). Next itself only requires ≥ 20.9, so `dev` and
+`build` can look healthy while validate cannot run at all. So check first: `node -v` must print
+`v24.x`. §3 lists the ways to get there — there is no `.nvmrc` here, so a bare `nvm use` will not
+work.
+
+**`gh pr create` fails with an auth error** — expected, not a failed task: `gh auth status` does not
+pass on this machine today. §3 has the two fallbacks (log in, or push the branch and open the
+compare URL in a browser). Report the pushed branch name either way.
 
 **`slug` must equal the folder name** — you renamed the folder after scaffolding, or vice versa. Both
 must match exactly, including hyphens. Rename the folder to the slug, not the other way round, and
 re-run `npm run media -- <slug>`.
 
-**Images 404 / broken in `npm run dev`** — `public/media/` is generated, and only for projects with
-`published: true`. Restart `npm run dev` (it runs the sync), and check `ls public/media/<slug>/`. If
-the project is still a draft this is expected: view it with `npm run build && npm start`, or flip
-`published` locally to look at it. Never commit a `published: true` flip you were not asked for.
+**Draft project 404s, or its images are broken, in `npm run dev`** — one root cause: nothing about
+an unpublished project is served.
+
+- *The page.* `/work/<slug>` 404s while `published` is `false` — under `npm run dev` **and** under
+  `npm run build && npm start`. `getProject()` returns null for an unpublished slug, and
+  `generateStaticParams()` only emits published ones. Building and starting does not help.
+- *The images.* `public/media/` is generated and gitignored, so on a fresh clone it does not exist
+  at all. Only `prebuild` regenerates it — there is **no `predev`**, so `npm run dev` never runs the
+  sync no matter how often you restart it. And the sync copies `published: true` projects only.
+
+The only way to look at a draft is to flip it locally, and put it back:
+
+```bash
+# 1. set "published": true in content/projects/<slug>/project.json
+node scripts/sync-media.mjs          # now public/media/<slug>/ exists
+ls public/media/<slug>/              # confirm the files landed
+npm run dev                          # look at /work/<slug>
+# 2. set "published" back to false before you stage anything
+```
+
+Never commit a `published: true` flip you were not asked for (§5, rule 7). `git status --short` and
+`git diff main...HEAD -- content/projects/<slug>/project.json` will both show it if you forget.
+
+**You are looking at the wrong server** — `next dev` does not fail when port 3000 is taken. It warns
+(`Port 3000 is in use by process <pid>, using available port 3001 instead.`) and carries on, so a
+leftover `npm start` from an earlier step will serve you a stale 404 that is byte-identical to the
+draft 404 above. Read the URL Next actually prints, or pin one: `npm run dev -- -p 3210`. To stop a
+stray server, `pkill -f next-server` — the process is titled `next-server (v16.3.5)`, so
+`pkill -f "next start"` finds nothing.
 
 **Video shows a black box with no preview** — the `poster` field is `null`, or points at a file that
 doesn't exist. Run `npm run media -- <slug>`, confirm `<name>.poster.webp` exists, and set
@@ -573,10 +677,15 @@ JSON, re-run `npm run media`.
 `git checkout main -- package-lock.json` and make sure no dependency change is in your diff.
 
 **`git status` shows `AGENTS.md` modified and you didn't touch it** — `next dev` re-adds its managed
-managed `nextjs-agent-rules` block at the bottom of this file. That is expected. Commit it
+`nextjs-agent-rules` block at the bottom of this file. That is expected. Commit it
 along with your work rather than reverting it; reverting only makes it come back.
 
-**`.DS_Store` or `*.orig.*` files appear** — both are gitignored. If one is staged, unstage it.
+**Stray files in `git status`** — `.DS_Store` is gitignored. So, now, is
+`<name>.compress-tmp.<ext>`: that is the scratch file `npm run media` encodes into next to its
+target, and a run killed mid-encode leaves one behind. Delete it anyway rather than relying on the
+ignore rule — `sync-media` copies every non-hidden file in `media/`, so a leftover scratch file
+would ship to `public/`, and validate would WARN that nothing references it. Nothing in this repo
+writes `*.orig.*` files.
 
 **Your PR diff shows files outside `content/projects/<slug>/`** — stop.
 `git diff --stat main...HEAD`, and remove everything that is not yours. This is the single most

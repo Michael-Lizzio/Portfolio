@@ -124,9 +124,14 @@ async function main() {
 
   const mb = (bytes / 1024 / 1024).toFixed(1);
   const stale = removed > 0 ? `, ${removed} stale folder${removed === 1 ? "" : "s"} removed` : "";
-  const skipped = drafts > 0 ? `, ${drafts} unpublished skipped` : "";
+  // Published projects with no media contribute no directory, so withMedia + drafts
+  // can be less than the total. Name that gap rather than leaving it to be puzzled over.
+  const empty = slugs.length - withMedia - drafts;
+  const skipped =
+    (drafts > 0 ? `, ${drafts} unpublished skipped` : "") +
+    (empty > 0 ? `, ${empty} published with no media` : "");
   console.log(
-    `sync-media: ${files} file${files === 1 ? "" : "s"} (${mb} MB) from ${withMedia}/${slugs.length} projects -> public/media${stale}${skipped}`,
+    `sync-media: ${files} file${files === 1 ? "" : "s"} (${mb} MB) from ${withMedia} of ${slugs.length} projects -> public/media${stale}${skipped}`,
   );
 }
 

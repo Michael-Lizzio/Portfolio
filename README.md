@@ -58,7 +58,8 @@ content/
   imports from it. That indirection is the seam for moving this to Supabase later — see
   [docs/CONTENT_MODEL.md](docs/CONTENT_MODEL.md).
 
-`npm run validate` checks every file against `src/lib/schema.ts` and is the first thing CI runs.
+`npm run validate` checks every file against `src/lib/schema.ts` — plus the on-disk facts the schema
+cannot see — and is the first thing CI runs after the 8 MB media-ceiling check.
 
 ## Adding a project
 
@@ -80,9 +81,9 @@ the repo. Pull requests get preview deployments automatically.
 
 ```
 src/app/          routes (/, /work, /work/[slug], /about, /contact) and globals.css
-src/components/   Container, SiteNav, SiteFooter, PageHeader, ProjectCard, MediaFigure, TechPill, Prose
+src/components/   Container, SiteNav, SiteFooter, PageHeader, ProjectCard, MediaFigure, TechPill, Prose, …
 src/lib/          schema.ts (the zod contract) and content.ts (the only content reader)
-scripts/          new-project, sync-media, validate-content
+scripts/          new-project, compress-media, sync-media, validate-content
 content/          the actual content
 docs/             CONTENT_MODEL.md — the schema in prose
 ```

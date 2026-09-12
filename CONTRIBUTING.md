@@ -53,8 +53,9 @@ Flipping either is a one-line edit — `content/projects/<slug>/project.json` �
 The PR checklist covers the mechanics; CI enforces `validate`, `typecheck`, `lint`, `build` and the
 8 MB media ceiling. What CI cannot check, and what you should:
 
-1. `git diff --stat main...HEAD` — does it touch anything outside
-   `content/projects/<slug>/` and `public/media/<slug>/`? If yes, send it back.
+1. `git diff --stat main...HEAD` — does it touch anything outside `content/projects/<slug>/`? If
+   yes, send it back. (`public/media/` is generated at build time and gitignored; it should never
+   appear in a diff.)
 2. **Are the screenshots actually of this project?** The old site shipped one project's videos on
    another project's page. Assume nothing.
 3. **Does the copy claim anything the agent couldn't have observed?** A language in `tech`, a repo
