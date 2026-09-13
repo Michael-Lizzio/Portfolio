@@ -70,12 +70,38 @@ Every PR runs `validate`, `typecheck`, `lint` and `build`, and fails on any medi
 
 ## Deploy
 
-Vercel, from `main` — merging is deploying.
+Cloudflare Pages, from `main` — merging is deploying.
 
-First-time setup: import the repo at [vercel.com/new](https://vercel.com/new). Framework preset
-**Next.js**, build command `npm run build`, install command `npm ci`, Node **24.x** under
-*Settings → General → Node.js Version*. No environment variables are required — the content is in
-the repo. Pull requests get preview deployments automatically.
+The site is a **static export**. Every route is prerendered at build time — no API routes, no
+middleware, no server actions — so `npm run build` writes plain HTML to `out/` and Cloudflare
+serves files. That is why it fits the free tier with unlimited bandwidth.
+
+First-time setup: **Workers & Pages → Create → Pages → Connect to Git**, pick this repo, then
+
+| Setting | Value |
+|---|---|
+| Framework preset | Next.js (Static HTML Export) |
+| Build command | `npm run build` |
+| Build output directory | `out` |
+| Environment variable | `NODE_VERSION` = `24` |
+
+No other environment variables — the content is in the repo. Pull requests get preview deployments
+automatically.
+
+Two consequences of exporting statically, both handled in `next.config.ts`:
+
+- `next/image`'s optimizer needs a server, so it is off (`images.unoptimized`). It costs little
+  here, because `npm run media` already caps images at 1800px and converts them to WebP before
+  they are committed.
+- `redirects()` needs a server too. The legacy `michael-lizzio.github.io` URLs are redirected by
+  [`public/_redirects`](public/_redirects) instead, which Cloudflare reads natively. Keep that file
+  current as projects are published — it deliberately sends an unpublished project's old URL to
+  `/work/` rather than 301-ing a visitor onto a 404.
+
+**When the Supabase admin panel arrives**, an authenticated write path needs a server and the
+static export stops being enough. That is a migration to [`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare)
+on Workers — a config and adapter change, not a rewrite, since `src/lib/content.ts` is already the
+only module that touches content.
 
 ## Layout
 

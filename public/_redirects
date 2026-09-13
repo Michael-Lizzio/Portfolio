@@ -1,0 +1,32 @@
+# Cloudflare Pages redirects.
+#
+# These keep inbound links to the old michael-lizzio.github.io site working if
+# that domain is ever pointed here. next.config.ts cannot do this job because
+# `redirects()` needs a server and this site is a static export.
+#
+# Format: <from>  <to>  <status>.  :placeholder matches one segment, * matches
+# the rest of the path. First match wins, so order matters.
+
+/index.html                    /                      301
+
+/pages/about.html              /about/                301
+/pages/connect.html            /contact/              301
+/pages/archive.html            /work/                 301
+
+# Project pages that exist today. The legacy folders used underscores and the
+# new slugs use hyphens, so these cannot be done with one placeholder rule.
+/project_pages/foosball/*      /work/foosball/        301
+/project_pages/cryptogram/*    /work/cryptogram/      301
+/project_pages/alarm_system/*  /work/alarm-system/    301
+
+# Projects still unpublished — sending these to their own page would 301 a
+# visitor onto a 404. Move each one down to the block above as it goes live.
+/project_pages/blackjack/*     /work/                 302
+/project_pages/wordle_solver/* /work/                 302
+/project_pages/cyber_TTM/*     /work/                 302
+
+# Anything else under the old project tree.
+/project_pages/*               /work/                 301
+
+# The legacy site hand-promoted one project into its navbar.
+/live_projects/symposium/*     /work/symposium/       301

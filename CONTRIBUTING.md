@@ -75,4 +75,4 @@ See [docs/CONTENT_MODEL.md](./docs/CONTENT_MODEL.md).
 
 ## Deploying
 
-Vercel builds `main`. Merging is deploying. See the README.
+Cloudflare Pages builds `main` as a static export. Merging is deploying. See the README.

@@ -48,3 +48,6 @@ next-env.d.ts
 
 # Generated from content/projects/*/media by scripts/sync-media.mjs (runs on prebuild)
 /public/media
+
+# static export output
+/out
