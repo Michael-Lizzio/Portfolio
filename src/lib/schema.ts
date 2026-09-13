@@ -67,6 +67,9 @@ export const ProjectSchema = z.object({
     .default(null),
   status: z.string().nullable().default(null),
 
+  /** How the implementation was produced, not whether the finished product contains AI. */
+  development: z.enum(["human-led", "ai-assisted", "ai-generated"]).nullable().default(null),
+
   /**
    * What it is actually built with. Not file formats it happens to read.
    * Each entry renders as a pill, so it is a label, not a sentence — put the

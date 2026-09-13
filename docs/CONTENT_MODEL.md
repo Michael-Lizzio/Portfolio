@@ -70,6 +70,7 @@ it, how does it actually work, and what is on this page. It is the only prose ma
 | `featured` | `boolean` | no | `false` |
 | `date` | `string \| null` | no | `null` |
 | `status` | `string \| null` | no | `null` |
+| `development` | `"human-led" \| "ai-assisted" \| "ai-generated" \| null` | no | `null` |
 
 **`published`** defaults to `false`, and that default is load-bearing. A project can be merged,
 reviewed, and left sitting in the repo indefinitely without appearing anywhere on the site. It is
@@ -97,6 +98,13 @@ stays chronological.
 
 **`status`** is a free-text badge — `"In progress"`, `"Archived"`, `"Shipped 2024"`. `null` when the
 project doesn't declare one; don't invent a status to fill the field.
+
+**`development`** is a quiet disclosure of how the implementation was produced. It describes the
+development process, not whether the finished product contains an AI feature. Use `"human-led"`
+when the implementation was written primarily by the developer, `"ai-assisted"` when the developer
+led the work and used AI as a coding or review tool, and `"ai-generated"` when AI generated most of
+the implementation under human direction. Leave it `null` until the author has classified the
+project; do not infer it from the technology stack.
 
 ### Substance
 

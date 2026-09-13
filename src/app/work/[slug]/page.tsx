@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Fragment } from "react";
 
 import { Container } from "@/components/Container";
+import { DevelopmentBadge } from "@/components/DevelopmentBadge";
 import { MediaFigure } from "@/components/MediaFigure";
 import { PageHeader } from "@/components/PageHeader";
 import { Prose } from "@/components/Prose";
@@ -133,6 +134,10 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
                 {date && project.status ? <span aria-hidden="true"> · </span> : null}
                 {project.status}
               </p>
+            ) : null}
+
+            {project.development ? (
+              <DevelopmentBadge development={project.development} />
             ) : null}
 
             {/* basis-full puts links on their own line under the meta row,

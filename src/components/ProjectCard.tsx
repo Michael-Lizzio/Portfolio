@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ResolvedProject } from "@/lib/schema";
+import { DevelopmentBadge } from "./DevelopmentBadge";
 import { TechPill } from "./TechPill";
 import { formatProjectDate } from "./date";
 
@@ -77,10 +78,17 @@ export function ProjectCard({ project }: { project: ResolvedProject }) {
               </ul>
             ) : null}
 
-            {project.date ? (
-              <p className="font-mono text-xs text-fg-faint">
-                <time dateTime={project.date}>{formatProjectDate(project.date)}</time>
-              </p>
+            {project.date || project.development ? (
+              <div className="flex flex-wrap items-center gap-2">
+                {project.date ? (
+                  <p className="font-mono text-xs text-fg-faint">
+                    <time dateTime={project.date}>{formatProjectDate(project.date)}</time>
+                  </p>
+                ) : null}
+                {project.development ? (
+                  <DevelopmentBadge development={project.development} />
+                ) : null}
+              </div>
             ) : null}
           </div>
         </div>

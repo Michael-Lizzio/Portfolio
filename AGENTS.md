@@ -227,6 +227,7 @@ thing in English, and `npm run validate` quotes it back at you when you get it w
 | `featured` | boolean | no — defaults `false` | Promotes to the top of `/work` and onto the homepage. **Not yours to set.** Leave `false`. |
 | `date` | string \| null | no — defaults `null` | `"YYYY"` or `"YYYY-MM"` only. `"2022"`, `"2024-03"`. `"March 2024"` fails. Drives ordering. `null` sorts last — use `null` if you genuinely can't date it. |
 | `status` | string \| null | no — defaults `null` | Free text badge, e.g. `"In progress"`, `"Archived"`. `null` if the project doesn't say. |
+| `development` | `"human-led"` \| `"ai-assisted"` \| `"ai-generated"` \| null | no — defaults `null` | A quiet disclosure of how the implementation was produced. It describes the development process, not whether the product contains an AI feature. Do not infer it; leave `null` until Michael classifies the project. |
 | `tech` | string[] | no — defaults `[]` | What it is actually **built with**, one entry each. Not file formats it happens to read. **Max 40 characters per entry** — each one renders as a pill label, not a sentence; the explanation belongs in a section. Over 40 fails validate with `a tech entry is a pill label, not a sentence`. Real entries, from cryptogram: `"Backtracking algorithm"`, `"Frequency-ordered word lists"`. |
 | `links` | Link[] | no — defaults `[]` | `{ "label": "Repo", "href": "https://github.com/..." }`. `href` must be a **full absolute URL** — `github.com/x` fails, `https://github.com/x` passes. Empty array if there is no public repo or demo. |
 | `hero` | Media \| null | no — defaults `null` | The big image at the top of the detail page and the card image. **Use an image.** That is a convention, not a constraint: a `kind: "video"` hero parses, validates, and renders (the page falls back to its poster frame for the share image) — it is just not what this slot is for. `null` is allowed and renders fine. |
@@ -274,6 +275,7 @@ of that file, copied as-is:
   "featured": true,
   "date": "2022",
   "status": null,
+  "development": null,
   "tech": [
     "Backtracking algorithm",
     "Brute-force search",

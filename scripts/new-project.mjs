@@ -35,6 +35,7 @@ function template(slug) {
 
     date: null,
     status: null,
+    development: null,
 
     // Max 40 chars per entry — these are pill labels, not sentences.
     tech: ["TODO: e.g. Python (max 40 chars)"],
