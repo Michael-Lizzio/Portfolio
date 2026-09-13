@@ -1,60 +1,105 @@
 {
   "slug": "symposium",
   "title": "Symposium Notes",
-  "tagline": "Your AI-Powered Note Taking Assistant",
-  "summary": "Symposium Notes is a browser-based lecture capture tool that listens through the microphone, decides on its own when someone is speaking, and sends each speech segment to OpenAI's Whisper API for transcription. Each returned chunk of transcript is appended to a running transcript, summarised into bullet-point notes by GPT-4o, and scanned for questions the speaker may have asked. The whole thing is static HTML, CSS and vanilla JavaScript with no backend — the audio and OpenAI code as ES modules, the panes and settings as plain scripts — and transcript, notes, settings and the user's own OpenAI API key all live in localStorage, with the home screen stitching the notes and transcript panes together as iframes.",
+  "tagline": "An AI-powered assistant that records, transcribes, and summarizes lectures",
+  "summary": "Imagine never having to take notes again. Symposium Notes is an AI-powered assistant that records, transcribes, and summarizes lectures and meetings, allowing you to pay full attention. I created the listener logic and the AI interfaces that populated the display during BrickHack 11.",
   "published": true,
   "featured": true,
-  "date": null,
-  "status": null,
+  "date": "2025-02",
+  "status": "BrickHack 11 project",
   "tech": [
     "HTML",
     "CSS",
     "Vanilla JavaScript",
-    "Web Audio API (AnalyserNode)",
+    "Web Audio API",
     "MediaRecorder API",
-    "getUserMedia",
     "localStorage",
     "OpenAI Whisper API",
     "OpenAI GPT-4o"
   ],
-  "links": [],
+  "links": [
+    {
+      "label": "Video demo",
+      "href": "https://www.youtube.com/watch?v=bPjYdenq_go"
+    },
+    {
+      "label": "Devpost",
+      "href": "https://devpost.com/software/symposium-notes"
+    },
+    {
+      "label": "Repo",
+      "href": "https://github.com/Michael-Lizzio/SynapsisNotes"
+    },
+    {
+      "label": "Live demo",
+      "href": "https://michael-lizzio.github.io/live_projects/symposium/home.html"
+    }
+  ],
   "hero": {
-    "src": "media/bricky.webp",
+    "src": "media/demo-transcript.webp",
     "kind": "image",
     "poster": null,
-    "alt": "Bricky, the app's mascot: a cartoon orange brick with stick arms and legs, winking and giving a thumbs-up, used as the floating chat-assistant button",
-    "caption": null
+    "alt": "Symposium Notes showing a recorded conversation transcribed on the right and summarized into bullet-point notes on the left",
+    "caption": "The working hackathon demo with a transcript and generated notes."
   },
   "sections": [
     {
+      "heading": "Inspiration",
+      "body": [
+        "I've wanted to create this project since before coming to RIT. Back in high school, I would’ve loved to have a tool like this, especially for English and social studies, where lectures were a big part of learning. I always struggled with juggling note-taking and actively listening, often missing key points because I was too busy writing.",
+        "Originally, I planned to use Glean, a software with similar functionality. However, I discovered that it doesn’t allow data exports. Even after emailing their support team back in October, I never received a response. So, I figured why not build it myself?"
+      ],
+      "media": []
+    },
+    {
       "heading": "What it does",
       "body": [
-        "The home screen is a two-panel workspace: AI-generated notes on the left, the live transcription on the right, both loaded as iframes so each pane owns its own buttons and styling. A header carries Start Recording, Stop Recording and a gear icon that opens the settings page.",
-        "Pressing Start Recording opens the microphone and begins watching the input level. When the tool decides a stretch of speech has ended, it bundles that audio into a webm blob and POSTs it to OpenAI's audio transcription endpoint using the whisper-1 model. The returned text is appended to the stored transcript, handed to GPT-4o to be summarised into bullet points, and checked for a question — all from the browser, with the user's own API key.",
-        "How many bullet points come back is worked out from the length of the chunk — one bullet per fifty words, with a floor of three — and the last two notes already on screen are pasted into the prompt as context so the new summary carries on from where the previous one left off. The system message is just \"You are a helpful assistant that takes notes concisely.\"",
-        "Notes and transcript are both plain text in localStorage, and each pane can copy to the clipboard, import a .txt file, export a .txt file, or clear itself. The notes pane confirms each of those with a green toast that slides in from the top-right (\"Notes copied to clipboard!\", \"Notes imported successfully!\", \"Notes cleared.\"); the transcript pane does the same job with plain alert() dialogs. Because the panes are separate documents on the same origin, they refresh each other through the browser's storage event."
+        "Users can start and stop recording at any time. The system automatically detects speech, breaks recordings into segments based on pauses, and converts the audio to text using OpenAI’s Whisper API.",
+        "It generates AI-powered summaries in bullet points, and users can choose how many bullet points they want. Notes and transcripts are stored locally, with separate views where they can be edited, imported, exported, or cleared.",
+        "A floating chat assistant answers follow-up questions using the transcript as context. Users can also adjust calibration time, silence detection, and segment length in the settings."
       ],
       "media": []
     },
     {
-      "heading": "Deciding when someone is talking",
+      "heading": "Challenges and accomplishments",
       "body": [
-        "Rather than streaming audio continuously, Symposium Notes cuts the microphone feed into segments itself. An AnalyserNode averages the frequency data each animation frame to get a normalised volume, and that volume is compared against a calibrated room baseline: crossing the start threshold begins a candidate recording immediately (so no audio is lost while the tool makes up its mind), sustained loudness past speechStartDuration confirms it as real speech, and sustained quiet past silenceDuration ends the segment. Candidates that were never confirmed are discarded.",
-        "Segments shorter than the minimum recording length are not thrown away — they go into a backlog that accumulates until it is long enough to be worth transcribing, or gets prepended to the next long segment. Stopping the recording flushes whatever is left in the backlog.",
-        "The settings page exposes every one of those knobs with its own tooltip, in the author's own words: \"ms for initial baseline volume calibration\", \"multiplier above baseline to consider speech start\", \"multiplier above baseline to consider speech still ongoing (if below, it's silence)\", \"ms of sustained loudness above start threshold to confirm speech\", \"ms of sustained silence (below stop threshold) before ending a segment\", \"discard very short segments\" and \"ms, minimum total length for a finalized recording segment\". The defaults are a 5000 ms calibration, a 2× start multiplier and a 1.2× stop multiplier, 2300 ms of loudness to confirm speech, 1900 ms of silence to end a segment, a 1000 ms minimum segment, a 10000 ms minimum recording length and a 0.19 baseline.",
-        "Above the form sits a Baseline Calibration panel that starts out reading \"Not calibrated\". Pressing Calibrate Baseline records the room for the configured duration, fills a green progress bar as it goes, reports \"Calibration Complete\" with the measured figure, and writes that average volume straight into the Baseline field — whose own tooltip explains it as \"This is the average volume without anyone main person talking.\" Below the knobs, past a horizontal rule, is the OpenAI API Key field (\"Your OpenAI API key for authentication\"), then Save Settings and Reset to Default buttons and a \"← Back to Home\" link."
+        "Limited experience with JavaScript and CSS made certain features tricky. The biggest challenge was dividing tasks efficiently. We had to figure out how to integrate our individual work without stepping on each other’s toes.",
+        "The system was fully functional, and we completed it in time for the hackathon. We built a working AI-powered tool in a short time, and working as a team was a fun and rewarding experience."
+      ],
+      "media": [
+        {
+          "src": "media/symposium_notes.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Empty Symposium Notes workspace with note and transcription panes, recording controls, settings, and the Bricky assistant",
+          "caption": "The two-pane workspace before recording begins."
+        }
+      ],
+      "layout": "media-right"
+    },
+    {
+      "heading": "What we learned",
+      "body": [
+        "Don’t leave the Devpost submission for the last minute. Collaborating on a team project can be challenging, but it’s also incredibly rewarding. Helping and teaching each other made the experience even more valuable."
       ],
       "media": []
     },
     {
-      "heading": "Question detector and the Bricky assistant",
+      "heading": "What’s next",
       "body": [
-        "A collapsible Question Detector sits above the notes pane. It is forced off on every page load, and expanding it flips a detectQuestion flag in localStorage; while it is on, every new chunk of transcript is sent to GPT-4o with the author's own instruction: \"Please analyze the following transcript. If it contains a question (e.g., a teacher asking something), answer that question be pretty sensitive even if it might not be a question assume it might be; if not, reply with “No”.\" Anything that is not a refusal is shown in the detector panel and cached as current_question — the idea being that if the lecturer asks the room something, the answer is already waiting on screen.",
-        "In the bottom-right corner a cartoon mascot called Bricky jiggles on a loop as the button for a chat popup. The popup opens in an iframe, headed \"AI Chat Assistant\", and is little more than a textarea (\"Type your message here...\") above a green Send button; anything typed into it is sent to GPT-4o with the entire stored transcript prepended as context, so questions can be asked about the lecture as it happens."
+        "The next steps were hosting it so people could use their own OpenAI API key, adding folders to organize notes by subject, and letting users upload PDFs and presentations so the AI could follow along and provide more detailed notes."
       ],
-      "media": []
+      "media": [
+        {
+          "src": "media/bricky.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Bricky, the app's orange brick mascot, winking and giving a thumbs-up",
+          "caption": "Bricky opens the transcript-aware chat assistant."
+        }
+      ],
+      "layout": "media-left"
     }
   ],
-  "notes": "NO SCREENSHOT EXISTS — hero is null and one needs to be captured; the only non-empty image in the folder is assets/images/Bricky.PNG (the mascot/chat button, a 470×530 PNG), and assets/images/logo.png is a 0-byte placeholder that nothing in the app references (grep for \"logo\" returns nothing), so it is deliberately left out of \"media\" even though the manifest lists it. All media paths in the source use correct relative prefixes (assets/images/Bricky.PNG from home.html); no path rewriting was needed beyond prefixing the repo-relative live_projects/symposium/. The description had to be reconstructed from code: README.md contains only \"# SymposiumNotes / This is a filler Description to be changed later\", and assets/README.md is empty, so the only authored prose in the whole app is the header (\"Symposium Notes\" / \"Your AI-Powered Note Taking Assistant\"), the page titles (home.html is titled \"Symposium Notes - AI Note Taking Tool\"), the button labels, the settings tooltips and the OpenAI prompt strings, which are quoted above. No year or status is stated anywhere; the git checkout has a single squashed commit dated 2026-04-09 whose message (\"Added all tickets and prices\") belongs to an unrelated project, so it is not evidence of when this was built. There is no entry page named index.html — the app starts at home.html, and the site-wide navbar (tools/navbar/navbar.html) links to it as \"Symposium\" → /live_projects/symposium/home.html, one of only four live nav items alongside Home, About and Connect. localStorage keys a port must keep in sync: \"transcript\", \"notes\", \"settings\" (the whole config object including apiKey), \"detectQuestion\" and \"current_question\". Dead/duplicated code a porter should know about: assets/js/script.js is 0 bytes and referenced by nothing; assets/js/transcription.js is a toast-notification version of the transcript pane logic that transcription.html never loads (that page uses its own inline copy with alert() instead, and has no #notification-container, so the toast CSS in transcription.css is unreachable); home.html includes <script type=\"module\" src=\"assets/js/listener.js\"> and breakout.js twice; assistantButton.css declares the img animation twice, so the second keyframe set (jiggleLoop, 9s) wins over the first (jiggle, 4s); and DEFAULT_CONFIG is redeclared verbatim in four files (breakout.js, transcriber.js, popupScript.js, settings.js). Known bugs if anyone ever revives it: listener.js references DEFAULT_CONFIG as a fallback but never imports it — it is module-scoped in breakout.js, so a first run with no saved settings throws a ReferenceError; listener.js also keeps its own hard-coded copy of the config object and reads only baseLineMultiplier from the saved settings, so every other knob on the settings page is written to localStorage but never actually read by the detector; createSegmentEntry() (called when stopRecording flushes the backlog) appends to #segmentsContainer, which does not exist in home.html; and popup_assistant.html's own close button calls window.close() from inside an iframe, which does nothing (the parent's X in home.html is what actually closes it). Security/porting caveat: the OpenAI API key is typed into a plain text input, stored unencrypted in localStorage, and sent directly from the browser to api.openai.com from three files (transcriber.js, breakout.js, popupScript.js) — a rebuild should proxy this through a server. Layout intent from the CSS: dark header bar, spinning preloader over the whole viewport that fades out on load, two equal flex panels at calc(100vh - 80px) that stack vertically under 768px, a pale-yellow (#fff3cd) transcript pane against an off-white notes pane, and the question detector animating between fixed 50px collapsed and 150px expanded heights. Note that transcription.html/notes.html are designed to be iframed by home.html and load their own stylesheets with paths relative to the app root, so they only render correctly when served from live_projects/symposium/."
+  "notes": "COPY SOURCE: Visible copy is adapted closely from the reviewed SynapsisNotes README and the matching Devpost submission, not reconstructed from source code. The Devpost page and its three media slides were checked on 2026-09-13. The filled transcript screenshot is the Devpost image captioned 'Text'; the empty workspace was captured from the live demo; Bricky comes from the repository. The YouTube embed resolves to bPjYdenq_go. Date 2025-02 comes from the repository's first commit and the BrickHack 11 submission period. The repository name is misspelled SynapsisNotes, while the product and Devpost title are Symposium Notes. Security note: the original browser-only build stores the user's API key in localStorage; do not describe that storage as secure."
 }

@@ -56,14 +56,14 @@ export default async function HomePage() {
               collage fills the half of the band it would otherwise leave empty. */}
           <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,34rem)_minmax(0,1fr)]">
             <div className="max-w-prose">
-            <Image
-              className="h-24 w-24 rounded-full border border-border-default object-cover"
-              src="/images/profile.webp"
-              alt={profile.name}
-              width={96}
-              height={96}
-              priority
-            />
+              <Image
+                className="h-24 w-24 rounded-full border border-border-default object-cover"
+                src="/images/profile.webp"
+                alt={profile.name}
+                width={96}
+                height={96}
+                priority
+              />
 
             <h1 className="mt-8 text-4xl font-semibold tracking-tight text-fg md:text-5xl">
               {profile.name}
@@ -75,7 +75,12 @@ export default async function HomePage() {
 
             <div className="mt-8 flex flex-wrap gap-3">
               {profile.resume ? (
-                <a className="btn btn-primary" href={profile.resume}>
+                <a
+                  className="btn btn-primary"
+                  href={profile.resume}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Resume
                 </a>
               ) : null}
@@ -110,8 +115,7 @@ export default async function HomePage() {
         <Container>
           <h2 className="text-3xl font-semibold tracking-tight text-fg">Selected work</h2>
           <p className="mt-4 max-w-prose text-lg text-fg-muted">
-            The ones I’d show you first. Each write-up has the build, the mistakes and the
-            footage.
+            The ones I’d show you first, with the story and artifacts behind each build.
           </p>
 
           {highlights.length > 0 ? (

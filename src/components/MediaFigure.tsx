@@ -1,5 +1,5 @@
-import Image from "next/image";
-import type { Media } from "@/lib/schema";
+import { LightboxImage } from "@/components/LightboxImage";
+import type { ResolvedMedia } from "@/lib/schema";
 
 /**
  * Media inside an article. `media.src` and `media.poster` arrive already
@@ -13,26 +13,24 @@ import type { Media } from "@/lib/schema";
  */
 const SIZES = "(min-width: 48rem) 45rem, 100vw";
 
-/**
- * Nominal intrinsic size. The content model has no width/height, so this only
- * supplies an aspect ratio for the space reserved before the file loads; the
- * `h-auto` below (and Tailwind's preflight) hands the real ratio back to the
- * image the moment it arrives. Adding width/height to MediaSchema would remove
- * that one reflow.
- */
-const NOMINAL_WIDTH = 1600;
-const NOMINAL_HEIGHT = 900;
+type ImageMedia = ResolvedMedia & { kind: "image" };
 
 export function MediaFigure({
   media,
   priority = false,
   sizes = SIZES,
+  gallery = [],
 }: {
-  media: Media;
+  media: ResolvedMedia;
   priority?: boolean;
   /** Override when the figure is not in the 45rem prose column. */
   sizes?: string;
+  /** All project images, in reading order, for previous/next lightbox controls. */
+  gallery?: ImageMedia[];
 }) {
+  const galleryIndex =
+    media.kind === "image" ? gallery.findIndex((item) => item.src === media.src) : -1;
+
   return (
     <figure>
       <div className="overflow-hidden rounded-md border border-border-default bg-bg-subtle">
@@ -48,13 +46,9 @@ export function MediaFigure({
             preload="metadata"
           />
         ) : (
-          <Image
-            className="block h-auto w-full"
-            src={media.src}
-            // alt is nullable in the schema; a null alt means decorative.
-            alt={media.alt ?? ""}
-            width={NOMINAL_WIDTH}
-            height={NOMINAL_HEIGHT}
+          <LightboxImage
+            media={media as ImageMedia}
+            galleryIndex={galleryIndex >= 0 ? galleryIndex : 0}
             sizes={sizes}
             priority={priority}
           />

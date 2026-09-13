@@ -239,6 +239,8 @@ thing in English, and `npm run validate` quotes it back at you when you get it w
 |---|---|---|---|
 | `heading` | string \| null | no — defaults `null` | `null` for an untitled lead-in section. |
 | `body` | string[] | no — defaults `[]` | **One string per paragraph.** Plain text only — no HTML, no markdown, no `\n\n`. Empty strings are rejected; drop the element instead. `[]` is fine for an images-only section. |
+| `codeBlocks` | string[] | no — defaults `[]` | Fixed-width, whitespace-preserving blocks for code, terminal output or alignment-sensitive text. Keep ordinary prose in `body`. |
+| `layout` | `"stack"` \| `"media-left"` \| `"media-right"` | no — defaults `"stack"` | With one media item and body copy, the left/right options create a two-column desktop pairing that stacks on mobile. Other section shapes render as `"stack"`. |
 | `media` | Media[] | no — defaults `[]` | Images and videos shown with this section, in order. |
 
 ### Media

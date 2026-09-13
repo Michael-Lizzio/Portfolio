@@ -5,7 +5,7 @@
   "summary": "The RIT folder holds two unrelated coursework-era pages that happen to share a directory. dorm-dashboard.html is a dark, RIT-orange control panel for a dorm room: light ON/OFF buttons, a current/target temperature readout and an activity log table with Download and Load More controls. swen101.html is a personal introduction page for SWEN 101 whose four content boxes scatter to random positions on load and physically run away from the mouse pointer. Both are plain HTML, CSS and vanilla JavaScript with no build step, no framework and no shared navigation; neither page is linked from anywhere else in the site.",
   "published": false,
   "featured": false,
-  "date": null,
+  "date": "2024-10",
   "status": null,
   "tech": [
     "HTML",
@@ -16,11 +16,25 @@
   ],
   "links": [
     {
+      "label": "Dorm Dashboard demo",
+      "href": "https://michael-lizzio.github.io/branch/RIT/dorm-dashboard.html"
+    },
+    {
+      "label": "SWEN 101 demo",
+      "href": "https://michael-lizzio.github.io/branch/RIT/swen101.html"
+    },
+    {
       "label": "SE Website",
       "href": "https://www.rit.edu/computing/department-software-engineering"
     }
   ],
-  "hero": null,
+  "hero": {
+    "src": "media/dorm_dashboard.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "Dark RIT-orange Dorm Dashboard interface with light controls, temperature settings and an empty activity log",
+    "caption": "The dorm-room control-panel concept."
+  },
   "sections": [
     {
       "heading": "Dorm Dashboard: a dorm-room control panel",
@@ -38,7 +52,15 @@
         "The list is the course wish-list: \"How to communicate with a team\", \"How to set up and manage Git with multiple people\", \"How to write requirements for software\", \"How to use my previous knowledge to get ahead\", and \"How to make text run away ahahahaha\".",
         "That last item is the page's actual mechanic. On load the script absolutely positions every .box at a random spot in the viewport, then listens for mousemove: for each box it measures the distance from the cursor to the box centre, and when that distance drops under 150 pixels it pushes the box away along the cursor-to-centre vector by half the delta, clamping the new left/top so the box stays inside the window. The author's comment on that multiplier reads \"Adjust the multiplier to change the speed of movement\". The body is set to overflow: hidden — commented \"Prevents scrollbars when elements move\" — so the moving boxes never produce scrollbars."
       ],
-      "media": []
+      "media": [
+        {
+          "src": "media/swen101.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "SWEN 101 introduction page with four lavender content boxes scattered and overlapping as they avoid the cursor",
+          "caption": "The deliberately unruly SWEN 101 page after its boxes scatter across the viewport."
+        }
+      ]
     },
     {
       "heading": "How it is built",
@@ -50,5 +72,5 @@
       "media": []
     }
   ],
-  "notes": "TWO UNRELATED THINGS IN ONE ENTRY: dorm-dashboard.html and swen101.html share the branch/RIT folder but have no shared markup, styles, scripts, navigation or links between them; they are described together only because they live in the same directory. Neither page is referenced from anywhere else in the legacy site (index.html, pages/, project_pages/ and live_projects/ contain no link to branch/RIT), so both are effectively orphaned. NO SCREENSHOT EXISTS: the only media file in the folder is branch/RIT/images/fav_food.jpg (the \"Empanada\" photo used inside the SWEN 101 page), so \"hero\" is null — a fresh screenshot of the dorm dashboard would make the best hero and needs to be captured from the legacy page. MEDIA PATHS: swen101.html references images/fav_food.jpg relative to its own folder, which resolves correctly to branch/RIT/images/fav_food.jpg in the manifest; no broken media references found. MEDIA PIPELINE GAP: branch/RIT/images/fav_food.jpg has no entry in media-map.tsv (compress-media.sh does not cover branch/, the same gap that affects branch/la2028), so build-content.mjs will drop this image until it is compressed and mapped. LINK LABEL: the only outbound link is the anchor text \"SE Website\" in swen101.html, target=\"_blank\", pointing at https://www.rit.edu/computing/department-software-engineering — the label in \"links\" is the author's own wording, not a description of the destination. WINDOWS PATH SEPARATOR: swen101.html loads its script as <script src=\"scripts\\swen101.js\"> with a backslash. Browsers normalise backslashes to forward slashes in http(s)/file URLs, so this most likely still resolves; it was not verified in a browser here. Write it as scripts/swen101.js when porting. DASHBOARD IS NON-FUNCTIONAL: toggleLights, downloadLog and loadMoreLogs are console.log stubs, setTemperature only reads the input value and logs it, the logEntries array in dorm-dashboard.js is empty so the log table renders headers with no rows, and the 71°F current temperature plus \"Cooling\" current action are hardcoded in the HTML. Do not describe it as a working smart-home or IoT system. MISSING DATA FILE: .gitignore excludes branch/RIT/data/dorm-dashboard_example.json, a sample log file that was never committed and does not exist in the checkout — it explains the empty log array and is unrecoverable. DEAD CSS: dorm-dashboard.css styles #statistics h2, but there is no #statistics section in the HTML — leftover from a planned statistics panel. CSS QUIRK: .box in swen101.css declares transition: transform 0.3s ease, but the script animates left/top rather than transform, so box movement is not actually eased. LAYOUT QUIRKS: swen101 boxes are given random start positions on every load and can overlap or stack; the page has no heading element and body overflow is hidden; the run-away effect is mousemove-only, so it does nothing on touch devices. The dashboard uses inline onclick/onchange attributes, which will need converting to React handlers if it is ever ported. ACCURACY: the legacy checkout is shallow (depth 1) and shows one commit dated 2026-04-09 that does not reflect when these pages were written; neither page states a year or a completion status, so \"year\" and \"status\" are null."
+  "notes": "REPAIR PASS (2026-09-13): Both legacy pages were run in a browser and captured as compressed screenshots. The Dorm Dashboard is the hero, the scattered SWEN 101 state appears in its own section, and both GitHub Pages demos were verified and linked. The date 2024-10 is inferred from the path-specific git history: SWEN 101 first appears 2024-10-01 and the dashboard 2024-10-06. The historical extraction notes below are retained for provenance, but their no-screenshot, null-hero, unverified-script, and shallow-history statements are superseded.\n\nTWO UNRELATED THINGS IN ONE ENTRY: dorm-dashboard.html and swen101.html share the branch/RIT folder but have no shared markup, styles, scripts, navigation or links between them; they are described together only because they live in the same directory. Neither page is referenced from anywhere else in the legacy site (index.html, pages/, project_pages/ and live_projects/ contain no link to branch/RIT), so both are effectively orphaned. NO SCREENSHOT EXISTS: the only media file in the folder is branch/RIT/images/fav_food.jpg (the \"Empanada\" photo used inside the SWEN 101 page), so \"hero\" is null — a fresh screenshot of the dorm dashboard would make the best hero and needs to be captured from the legacy page. MEDIA PATHS: swen101.html references images/fav_food.jpg relative to its own folder, which resolves correctly to branch/RIT/images/fav_food.jpg in the manifest; no broken media references found. MEDIA PIPELINE GAP: branch/RIT/images/fav_food.jpg has no entry in media-map.tsv (compress-media.sh does not cover branch/, the same gap that affects branch/la2028), so build-content.mjs will drop this image until it is compressed and mapped. LINK LABEL: the only outbound link is the anchor text \"SE Website\" in swen101.html, target=\"_blank\", pointing at https://www.rit.edu/computing/department-software-engineering — the label in \"links\" is the author's own wording, not a description of the destination. WINDOWS PATH SEPARATOR: swen101.html loads its script as <script src=\"scripts\\swen101.js\"> with a backslash. Browsers normalise backslashes to forward slashes in http(s)/file URLs, so this most likely still resolves; it was not verified in a browser here. Write it as scripts/swen101.js when porting. DASHBOARD IS NON-FUNCTIONAL: toggleLights, downloadLog and loadMoreLogs are console.log stubs, setTemperature only reads the input value and logs it, the logEntries array in dorm-dashboard.js is empty so the log table renders headers with no rows, and the 71°F current temperature plus \"Cooling\" current action are hardcoded in the HTML. Do not describe it as a working smart-home or IoT system. MISSING DATA FILE: .gitignore excludes branch/RIT/data/dorm-dashboard_example.json, a sample log file that was never committed and does not exist in the checkout — it explains the empty log array and is unrecoverable. DEAD CSS: dorm-dashboard.css styles #statistics h2, but there is no #statistics section in the HTML — leftover from a planned statistics panel. CSS QUIRK: .box in swen101.css declares transition: transform 0.3s ease, but the script animates left/top rather than transform, so box movement is not actually eased. LAYOUT QUIRKS: swen101 boxes are given random start positions on every load and can overlap or stack; the page has no heading element and body overflow is hidden; the run-away effect is mousemove-only, so it does nothing on touch devices. The dashboard uses inline onclick/onchange attributes, which will need converting to React handlers if it is ever ported. ACCURACY: the legacy checkout is shallow (depth 1) and shows one commit dated 2026-04-09 that does not reflect when these pages were written; neither page states a year or a completion status, so \"year\" and \"status\" are null."
 }

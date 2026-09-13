@@ -79,7 +79,7 @@ only, so an unpublished project has no page, no card, and no entry in `generateS
 URL 404s. `getAllProjects()` is the one function that includes unpublished projects; it exists for
 the owner's own review surfaces.
 
-**`featured`** promotes a project to the front of the ordering and onto the homepage.
+**`featured`** selects a project for the homepage. It does not override chronological ordering.
 
 **`date`** is `"YYYY"` or `"YYYY-MM"` (`/^\d{4}(-\d{2})?$/`) — a sortable string, not a `Date`,
 because half of these projects are only datable to the year. `"2022"` and `"2024-03"` are valid;
@@ -88,12 +88,12 @@ last — that is better than a guess.
 
 **The ordering, exactly.** `getProjects()` and `getAllProjects()` both return:
 
-1. `featured: true` first, then the rest;
-2. within each group, `date` descending — newest first;
-3. `date: null` last within its group.
+1. `date` descending — newest first;
+2. `date: null` last;
+3. title ascending as a stable tie-breaker.
 
-So a featured 2019 project outranks an unfeatured 2026 one. Featured is an editorial override, not a
-recency signal.
+Homepage selection still uses `featured`; every ordered project list and previous/next project link
+stays chronological.
 
 **`status`** is a free-text badge — `"In progress"`, `"Archived"`, `"Shipped 2024"`. `null` when the
 project doesn't declare one; don't invent a status to fill the field.
@@ -139,6 +139,8 @@ is the standard to aim at. It costs nothing and it is the only channel to the ne
 |---|---|---|---|
 | `heading` | `string \| null` | no | `null` |
 | `body` | `string[]` | no | `[]` |
+| `codeBlocks` | `string[]` | no | `[]` |
+| `layout` | `"stack" \| "media-left" \| "media-right"` | no | `"stack"` |
 | `media` | `Media[]` | no | `[]` |
 
 **`heading`** — `null` renders an unlabelled section, useful as a lead-in.
@@ -149,6 +151,14 @@ string must be non-empty (`min(1)`), so delete empty elements rather than leavin
 correct for an images-only section.
 
 **`media`** — images and videos belonging to this section, in order.
+
+**`codeBlocks`** — fixed-width, whitespace-preserving blocks for code, terminal output, or text
+whose character alignment matters. Each array item renders as one block; blocks after the first get
+a divider. Keep ordinary paragraphs in `body`.
+
+**`layout`** — controls the desktop pairing when a section has body copy and exactly one media item.
+`media-left` and `media-right` create a two-column row that stacks on smaller screens. Sections with
+other shapes fall back to `stack`.
 
 A section may be prose-only, media-only, or both. Sections are the only structure available — there
 are no nested subsections and no rich text. If a project seems to need more, that's a signal to

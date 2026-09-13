@@ -30,6 +30,7 @@ import {
   type Media,
   type Profile,
   type Project,
+  type ResolvedMedia,
   type ResolvedProject,
 } from "./schema";
 
@@ -89,22 +90,107 @@ function toPublicUrl(slug: string, relativeSrc: string): string {
   return `/media/${slug}/${relativeSrc.replace(/^media\//, "")}`;
 }
 
-function resolveMedia(slug: string, media: Media): Media {
+function readUint24LE(buffer: Buffer, offset: number): number {
+  return buffer[offset] | (buffer[offset + 1] << 8) | (buffer[offset + 2] << 16);
+}
+
+/** Read just enough of the formats accepted by MediaSchema to reserve the real aspect ratio. */
+function imageDimensions(buffer: Buffer): { width: number; height: number } | null {
+  // PNG: signature + IHDR dimensions.
+  if (buffer.length >= 24 && buffer.subarray(1, 4).toString("ascii") === "PNG") {
+    return { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) };
+  }
+
+  // WebP: walk RIFF chunks until the first image header.
+  if (
+    buffer.length >= 30 &&
+    buffer.subarray(0, 4).toString("ascii") === "RIFF" &&
+    buffer.subarray(8, 12).toString("ascii") === "WEBP"
+  ) {
+    let offset = 12;
+    while (offset + 8 <= buffer.length) {
+      const kind = buffer.subarray(offset, offset + 4).toString("ascii");
+      const size = buffer.readUInt32LE(offset + 4);
+      const data = offset + 8;
+
+      if (kind === "VP8 " && data + 10 <= buffer.length) {
+        return {
+          width: buffer.readUInt16LE(data + 6) & 0x3fff,
+          height: buffer.readUInt16LE(data + 8) & 0x3fff,
+        };
+      }
+      if (kind === "VP8L" && data + 5 <= buffer.length) {
+        const b1 = buffer[data + 1];
+        const b2 = buffer[data + 2];
+        const b3 = buffer[data + 3];
+        const b4 = buffer[data + 4];
+        return {
+          width: 1 + (((b2 & 0x3f) << 8) | b1),
+          height: 1 + (((b4 & 0x0f) << 10) | (b3 << 2) | ((b2 & 0xc0) >> 6)),
+        };
+      }
+      if (kind === "VP8X" && data + 10 <= buffer.length) {
+        return {
+          width: 1 + readUint24LE(buffer, data + 4),
+          height: 1 + readUint24LE(buffer, data + 7),
+        };
+      }
+
+      offset = data + size + (size % 2);
+    }
+  }
+
+  // JPEG: dimensions live in a start-of-frame segment.
+  if (buffer.length >= 4 && buffer[0] === 0xff && buffer[1] === 0xd8) {
+    let offset = 2;
+    const sof = new Set([0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf]);
+    while (offset + 8 < buffer.length) {
+      if (buffer[offset] !== 0xff) {
+        offset += 1;
+        continue;
+      }
+      const marker = buffer[offset + 1];
+      if (sof.has(marker)) {
+        return { width: buffer.readUInt16BE(offset + 7), height: buffer.readUInt16BE(offset + 5) };
+      }
+      if (marker === 0xd8 || marker === 0xd9) {
+        offset += 2;
+        continue;
+      }
+      const size = buffer.readUInt16BE(offset + 2);
+      if (size < 2) break;
+      offset += size + 2;
+    }
+  }
+
+  return null;
+}
+
+async function resolveMedia(slug: string, media: Media): Promise<ResolvedMedia> {
+  let dimensions: { width: number; height: number } | null = null;
+  if (media.kind === "image") {
+    const filename = media.src.replace(/^media\//, "");
+    dimensions = imageDimensions(await readFile(path.join(PROJECTS_DIR, slug, "media", filename)));
+  }
+
   return {
     ...media,
     src: toPublicUrl(slug, media.src),
     poster: media.poster === null ? null : toPublicUrl(slug, media.poster),
+    ...(dimensions ?? {}),
   };
 }
 
-function resolveProject(slug: string, project: Project): ResolvedProject {
+async function resolveProject(slug: string, project: Project): Promise<ResolvedProject> {
   return {
     ...project,
-    hero: project.hero === null ? null : resolveMedia(slug, project.hero),
-    sections: project.sections.map((section) => ({
-      ...section,
-      media: section.media.map((media) => resolveMedia(slug, media)),
-    })),
+    hero: project.hero === null ? null : await resolveMedia(slug, project.hero),
+    sections: await Promise.all(
+      project.sections.map(async (section) => ({
+        ...section,
+        media: await Promise.all(section.media.map((media) => resolveMedia(slug, media))),
+      })),
+    ),
   };
 }
 
@@ -113,14 +199,13 @@ function resolveProject(slug: string, project: Project): ResolvedProject {
 /* -------------------------------------------------------------------------- */
 
 /**
- * Featured first, then newest date first, then undated. Ties break on title so
+ * Newest date first, then undated. Ties break on title so
  * the order is identical on every machine and every build — static output must
  * not depend on how the filesystem happened to list the directory.
  *
  * Dates are "YYYY" or "YYYY-MM", so plain string comparison already sorts them.
  */
-function byFeaturedThenDate(a: ResolvedProject, b: ResolvedProject): number {
-  if (a.featured !== b.featured) return a.featured ? -1 : 1;
+function byDate(a: ResolvedProject, b: ResolvedProject): number {
   if (a.date !== b.date) {
     if (a.date === null) return 1;
     if (b.date === null) return -1;
@@ -174,7 +259,7 @@ const loadProjects = cache(async (): Promise<ResolvedProject[]> => {
     }),
   );
 
-  return projects.sort(byFeaturedThenDate);
+  return projects.sort(byDate);
 });
 
 /* -------------------------------------------------------------------------- */
@@ -186,13 +271,13 @@ export async function getProfile(): Promise<Profile> {
   return loadProfile();
 }
 
-/** Published projects only. Featured first, then newest first, undated last. */
+/** Published projects only. Newest first, then undated. */
 export async function getProjects(): Promise<ResolvedProject[]> {
   const projects = await loadProjects();
   return projects.filter((project) => project.published);
 }
 
-/** Every project, including unpublished drafts. Same ordering. */
+/** Every project, including unpublished drafts. Same chronological ordering. */
 export async function getAllProjects(): Promise<ResolvedProject[]> {
   return loadProjects();
 }

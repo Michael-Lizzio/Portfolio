@@ -33,6 +33,10 @@ export const SectionSchema = z.object({
   heading: z.string().min(1).nullable().default(null),
   /** One string per paragraph. Plain text — no HTML, no markdown. */
   body: z.array(z.string().min(1)).default([]),
+  /** Optional fixed-width blocks for output, code, and alignment-sensitive text. */
+  codeBlocks: z.array(z.string().min(1)).default([]),
+  /** Desktop relationship between a section's prose and its single media item. */
+  layout: z.enum(["stack", "media-left", "media-right"]).default("stack"),
   media: z.array(MediaSchema).default([]),
 });
 
@@ -96,8 +100,18 @@ export type Link = z.infer<typeof LinkSchema>;
 export type Project = z.infer<typeof ProjectSchema>;
 export type Profile = z.infer<typeof ProfileSchema>;
 
+/** Intrinsic image dimensions are read from the media file during content loading. */
+export type ResolvedMedia = Media & {
+  width?: number;
+  height?: number;
+};
+
+export type ResolvedSection = Omit<Section, "media"> & {
+  media: ResolvedMedia[];
+};
+
 /** A project with its media paths rewritten to public URLs (`/media/<slug>/...`). */
 export type ResolvedProject = Omit<Project, "hero" | "sections"> & {
-  hero: Media | null;
-  sections: Section[];
+  hero: ResolvedMedia | null;
+  sections: ResolvedSection[];
 };

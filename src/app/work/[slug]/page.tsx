@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Fragment } from "react";
 
 import { Container } from "@/components/Container";
 import { MediaFigure } from "@/components/MediaFigure";
 import { PageHeader } from "@/components/PageHeader";
 import { Prose } from "@/components/Prose";
+import { ProjectLightbox } from "@/components/ProjectLightbox";
 import { TechPill } from "@/components/TechPill";
 import { formatProjectDate } from "@/components/date";
 import { getProject, getProjectSlugs, getProjects } from "@/lib/content";
-import type { Media, ResolvedProject, Section } from "@/lib/schema";
+import type { ResolvedMedia, ResolvedProject, ResolvedSection } from "@/lib/schema";
 
 /**
  * One project.
@@ -19,9 +21,9 @@ import type { Media, ResolvedProject, Section } from "@/lib/schema";
  * content model. The shape of the data varies a lot and every variation has to
  * look intentional, not merely not-crash:
  *
- *   foosball  10 sections, 23 media (a hero, 7 videos, a 15-photo gallery),
+ *   foosball  10 sections, 22 media (a hero, 7 videos, a 14-photo gallery),
  *             a status line, 9 tech tags
- *   la2028     4 sections, no media at all, no hero, no links
+ *   la2028     4 prose-heavy sections, one hero and a live-demo link
  *   cryptogram sections that are nothing but a gallery, and no body copy
  *
  * So nothing here is conditional-on-truthiness-and-hope: each block states the
@@ -86,6 +88,7 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
   const next = index >= 0 && index < projects.length - 1 ? projects[index + 1] : null;
 
   const date = formatProjectDate(project.date);
+  const gallery = projectImageGallery(project);
 
   return (
     <>
@@ -158,7 +161,7 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
         {/* Only the hero is priority: it is the LCP candidate when it exists. */}
         {project.hero ? (
           <Container size="prose">
-            <MediaFigure media={project.hero} priority />
+            <MediaFigure media={project.hero} gallery={gallery} priority />
           </Container>
         ) : null}
 
@@ -167,8 +170,10 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
         </Container>
 
         {project.sections.map((section, i) => (
-          <ProjectSection key={i} section={section} />
+          <ProjectSection key={i} section={section} gallery={gallery} />
         ))}
+
+        <ProjectLightbox gallery={gallery} />
       </article>
 
       <ProjectFooterNav previous={previous} next={next} />
@@ -182,15 +187,59 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
  * prose (la2028, all four of them). A section that is entirely empty renders
  * nothing at all rather than an unexplained gap.
  */
-function ProjectSection({ section }: { section: Section }) {
+type ImageMedia = ResolvedMedia & { kind: "image" };
+
+function projectImageGallery(project: ResolvedProject): ImageMedia[] {
+  const candidates = [
+    ...(project.hero ? [project.hero] : []),
+    ...project.sections.flatMap((section) => section.media),
+  ].filter((item): item is ImageMedia => item.kind === "image");
+
+  return candidates.filter(
+    (item, index) => candidates.findIndex((candidate) => candidate.src === item.src) === index,
+  );
+}
+
+function ProjectSection({
+  section,
+  gallery,
+}: {
+  section: ResolvedSection;
+  gallery: ImageMedia[];
+}) {
   const hasBody = section.body.length > 0;
   const hasMedia = section.media.length > 0;
+  const hasCode = section.codeBlocks.length > 0;
 
-  if (!section.heading && !hasBody && !hasMedia) return null;
+  if (!section.heading && !hasBody && !hasCode && !hasMedia) return null;
+
+  const split =
+    section.layout !== "stack" && hasBody && !hasCode && section.media.length === 1;
+
+  if (split) {
+    const mediaFirst = section.layout === "media-left";
+    return (
+      <section className="mt-14 md:mt-20">
+        <Container>
+          {section.heading ? (
+            <h2 className="text-2xl font-semibold tracking-tight text-fg">{section.heading}</h2>
+          ) : null}
+          <div className="mt-6 grid items-center gap-8 md:grid-cols-2 md:gap-12">
+            <div className={mediaFirst ? "md:order-1" : "md:order-2"}>
+              <MediaFigure media={section.media[0]} gallery={gallery} />
+            </div>
+            <div className={mediaFirst ? "md:order-2" : "md:order-1"}>
+              <Prose paragraphs={section.body} />
+            </div>
+          </div>
+        </Container>
+      </section>
+    );
+  }
 
   return (
     <section className="mt-14 md:mt-20">
-      {section.heading || hasBody ? (
+      {section.heading || hasBody || hasCode ? (
         <Container size="prose">
           {section.heading ? (
             <h2 className="text-2xl font-semibold tracking-tight text-fg">{section.heading}</h2>
@@ -201,11 +250,28 @@ function ProjectSection({ section }: { section: Section }) {
               <Prose paragraphs={section.body} />
             </div>
           ) : null}
+
+          {hasCode ? <CodeBlocks blocks={section.codeBlocks} /> : null}
         </Container>
       ) : null}
 
-      {hasMedia ? <SectionMedia media={section.media} /> : null}
+      {hasMedia ? <SectionMedia media={section.media} gallery={gallery} /> : null}
     </section>
+  );
+}
+
+function CodeBlocks({ blocks }: { blocks: string[] }) {
+  return (
+    <div className="mt-6 overflow-x-auto rounded-md border border-border-default bg-bg-subtle p-5">
+      {blocks.map((block, index) => (
+        <Fragment key={block}>
+          {index > 0 ? <hr className="my-5 border-0 border-t border-border-strong" /> : null}
+          <pre className="min-w-max font-mono text-sm leading-relaxed text-fg">
+            <code>{block}</code>
+          </pre>
+        </Fragment>
+      ))}
+    </div>
   );
 }
 
@@ -220,11 +286,17 @@ function ProjectSection({ section }: { section: Section }) {
  * Every grid is one column below md, which is the fix that deletes the legacy
  * site's "switch your phone to landscape" warning at the source.
  */
-function SectionMedia({ media }: { media: Media[] }) {
+function SectionMedia({
+  media,
+  gallery,
+}: {
+  media: ResolvedMedia[];
+  gallery: ImageMedia[];
+}) {
   if (media.length === 1) {
     return (
       <Container size="prose" className="mt-8">
-        <MediaFigure media={media[0]} />
+        <MediaFigure media={media[0]} gallery={gallery} />
       </Container>
     );
   }
@@ -235,7 +307,11 @@ function SectionMedia({ media }: { media: Media[] }) {
         <ul className="grid gap-6 md:grid-cols-2">
           {media.map((item, i) => (
             <li key={`${i}-${item.src}`}>
-              <MediaFigure media={item} sizes="(min-width: 48rem) 22rem, 100vw" />
+              <MediaFigure
+                media={item}
+                gallery={gallery}
+                sizes="(min-width: 48rem) 22rem, 100vw"
+              />
             </li>
           ))}
         </ul>
@@ -257,7 +333,7 @@ function SectionMedia({ media }: { media: Media[] }) {
       <ul className={`grid gap-6 ${columns}`}>
         {media.map((item, i) => (
           <li key={`${i}-${item.src}`}>
-            <MediaFigure media={item} sizes={sizes} />
+            <MediaFigure media={item} gallery={gallery} sizes={sizes} />
           </li>
         ))}
       </ul>

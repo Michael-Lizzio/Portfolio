@@ -1,0 +1,103 @@
+{
+  "slug": "parcel-web-analyzer",
+  "title": "Parcel Web Analyzer",
+  "tagline": "A geospatial tool for comparing Seattle homes by what matters nearby",
+  "summary": "The Parcel Web Analyzer is a web-based tool that helps users compare residential parcels in the Seattle area using their own proximity-based requirements. It combines King County parcel polygons with live OpenStreetMap amenities, scores each parcel with a custom weighting algorithm, and explains why a parcel scored well.",
+  "published": true,
+  "featured": false,
+  "date": "2025-12",
+  "status": "IGME 382 final project",
+  "tech": [
+    "Python",
+    "Flask",
+    "GeoPandas",
+    "Shapely",
+    "JavaScript",
+    "Mapbox GL JS",
+    "Mapbox Draw",
+    "OpenStreetMap",
+    "Overpass API",
+    "ArcGIS Pro"
+  ],
+  "links": [
+    {
+      "label": "Video demo",
+      "href": "https://youtu.be/uNQ4RlmUaS0"
+    },
+    {
+      "label": "Repo",
+      "href": "https://github.com/Michael-Lizzio/ParcelWebAnalyzer"
+    }
+  ],
+  "hero": {
+    "src": "media/map-results.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "Mapbox map of Seattle residential parcels colored from light to dark by their suitability score",
+    "caption": "Processed parcels use a light-to-dark gradient to show relative suitability."
+  },
+  "sections": [
+    {
+      "heading": "The idea",
+      "body": [
+        "This project was inspired by my sister’s recent home-buying search in Seattle and the criteria she shared: walkability to restaurants, access to parks and trails, and proximity to daily amenities. Her notes directly shaped the suitability factors I analyzed.",
+        "The question I wanted to answer was: which residential parcels in Seattle best match a person's home-buying requirements, and how does that suitability change across the city?"
+      ],
+      "media": [
+        {
+          "src": "media/map-before.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Seattle map before analysis with residential parcels shown as outlines and requirement controls beside it",
+          "caption": "Before processing, parcels are outlines for context."
+        }
+      ],
+      "layout": "media-right"
+    },
+    {
+      "heading": "How it works",
+      "body": [
+        "Users load parcels, draw an area of interest, fetch nearby amenities from Overpass, build and reorder requirement groups, and then process the scores. Clicking a parcel shows its score and the count from each requirement group, so the result is explainable instead of just being a color on a map.",
+        "For each group, the app filters the included amenity types, buffers each amenity by the chosen distance, spatially joins those buffers to the parcels, and counts the intersections. Priority is handled with triangular weighting, so the first requirement has the most influence and each lower priority contributes less.",
+        "The original King County dataset includes more than 500,000 parcels across many land uses. I used ArcGIS Pro to clip the study area and filter it down to residential parcels before loading it into the web app."
+      ],
+      "media": [
+        {
+          "src": "media/parcel-score.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Parcel score popup listing the selected parcel's total and the amenities contributing to it",
+          "caption": "Clicking a parcel explains what contributed to its score."
+        }
+      ],
+      "layout": "media-left"
+    },
+    {
+      "heading": "What the results showed",
+      "body": [
+        "High scores formed clusters in mixed-use areas. Homes near main streets with many restaurants scored higher, showing where businesses and amenities are concentrated.",
+        "The chosen distance made a large difference. Smaller walking distances such as 0.25 to 0.5 miles produced sharper contrast, while larger distances spread high scores more broadly. When food was the top priority, parcels near commercial clusters could score very highly even when that conflicted with a preference for quiet streets.",
+        "The app exports the scored layer as GeoJSON or Shapefile so the output can go back into a GIS workflow."
+      ],
+      "media": [
+        {
+          "src": "media/food-cluster.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Map and controls showing high parcel scores clustered near a dense group of food amenities",
+          "caption": "Restaurant-heavy priorities reveal cluster bias near commercial streets."
+        }
+      ],
+      "layout": "media-right"
+    },
+    {
+      "heading": "What I learned",
+      "body": [
+        "Preprocessing mattered as much as the algorithm. Clipping, filtering, and exporting in ArcGIS Pro were essential to making the interactive analysis usable.",
+        "I also learned how much a good interface changes a GIS tool. Operations that feel complex in ArcGIS can become much easier in a guided workflow. Building it made me think about all the GIS tools we take for granted, such as Google Maps, and how important it is to plan the interface around what someone is trying to do."
+      ],
+      "media": []
+    }
+  ],
+  "notes": "COPY SOURCE: Content is condensed from the reviewed README in Michael-Lizzio/ParcelWebAnalyzer, especially Summary, Inspiration, Methods, Results, Discussion, and Conclusion. All four images are the README's committed screenshots. Date 2025-12 is the repository's first-commit month. The repository was cloned and retained at /Users/michael/cursor/personal/ParcelWebAnalyzer. The README says the app is Seattle-focused even though the underlying on-demand OSM approach could scale elsewhere."
+}

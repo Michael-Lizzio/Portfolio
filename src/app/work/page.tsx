@@ -27,7 +27,7 @@ export default async function WorkPage() {
     <>
       <PageHeader
         title="Work"
-        tagline="Everything with a write-up — robotics, algorithms, embedded hardware and web apps. Featured first, then newest."
+        tagline="Everything with a write-up — robotics, algorithms, embedded hardware and web apps. Newest first."
         meta={
           <p className="font-mono text-xs text-fg-faint">
             {projects.length} {projects.length === 1 ? "project" : "projects"}

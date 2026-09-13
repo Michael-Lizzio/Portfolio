@@ -11,7 +11,7 @@ import type { Media } from "@/lib/schema";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "How a Raspberry Pi at Christmas turned into six years of programming — and what I look for in a project now.",
+    "How a Raspberry Pi at Christmas grew into years of programming — and what I look for in a project now.",
 };
 
 /**

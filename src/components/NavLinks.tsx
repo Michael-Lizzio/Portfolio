@@ -45,6 +45,8 @@ export function NavLinks({ items, resume }: { items: NavItem[]; resume: string |
   const resumeLink = resume ? (
     <a
       href={resume}
+      target="_blank"
+      rel="noopener noreferrer"
       className="block rounded-sm py-2 text-sm text-fg-muted hover:text-fg md:py-0 motion-safe:transition"
     >
       Resume

@@ -44,7 +44,12 @@ export default async function ContactPage() {
             ) : null}
 
             {profile.resume ? (
-              <a className="btn btn-outline" href={profile.resume}>
+              <a
+                className="btn btn-outline"
+                href={profile.resume}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Resume (PDF)
               </a>
             ) : null}
