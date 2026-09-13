@@ -3,7 +3,7 @@
   "title": "AI Database Filter",
   "tagline": "A local AI assistant for exploring a complex database in plain English",
   "summary": "I built an end-to-end filtering system for a county traffic-signal management application covering more than 2,000 signals and a large network of related records. The finished feature combined a flexible visual query builder with a local AI assistant that could understand plain-English requests, propose filters for review, and help users repair filters they had already created. This page follows the project from the first manual controls through retrieval, model evaluation, prompt tuning, database safeguards, and production integration.",
-  "published": false,
+  "published": true,
   "featured": false,
   "date": "2026-06",
   "status": "Internship project",
