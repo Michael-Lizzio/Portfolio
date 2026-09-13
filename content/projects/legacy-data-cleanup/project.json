@@ -1,0 +1,93 @@
+{
+  "slug": "legacy-data-cleanup",
+  "title": "Legacy Data Cleanup",
+  "tagline": "An AI-assisted review pipeline for untangling decades of inconsistent records",
+  "summary": "I built a collection of tools for finding and repairing data-quality problems left by the conversion of a legacy DOS system into a modern web application. The workflow profiled the data, packaged difficult cases for AI analysis, traced every suggestion back to its original cells, and gave a person the final decision through a review interface. For mechanical corrections, I also created a deliberately conservative bulk-fix path with invariants, dry runs, backups, and transactional updates.",
+  "published": true,
+  "featured": false,
+  "date": "2026-07",
+  "status": "Internship project",
+  "development": "ai-generated",
+  "tech": [
+    "JavaScript",
+    "Node.js",
+    "Python",
+    "Flask",
+    "PostgreSQL",
+    "C#",
+    "Local language models",
+    "Structured AI workflows",
+    "Data profiling",
+    "Transactional data repair"
+  ],
+  "links": [],
+  "hero": null,
+  "sections": [
+    {
+      "heading": "Why the records were difficult",
+      "body": [
+        "The project was replacing a DOS-era system with a web application, and the old data did not map cleanly into the new structure. Free text had been entered into narrow fixed-width fields and continued across neighboring rows or columns. When some of those records were imported, line boundaries disappeared, words were joined together, comments were split into fragments, and values ended up in places where they did not belong.",
+        "The challenge was not only finding unusual values. Some rare values were real, and some strange-looking fragments only made sense when read beside the surrounding cells. A cleanup system needed enough context to reconstruct the intended information without confidently rewriting valid historical records."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Profiling before changing anything",
+      "body": [
+        "I started with scripts that scanned columns, counted distinct values, sampled suspicious patterns, and identified likely corruption. This made the rules reflect the actual data instead of assumptions about what bad data should look like. Mostly unique fields were treated differently from categorical fields, where one rare value among thousands of repeated values was much more likely to be a typo or misplaced note.",
+        "The profiling output became structured JSON containing the original values, surrounding rows, likely issue types, and enough context for the next stage. The source database remained read-only during discovery."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Using AI in controlled batches",
+      "body": [
+        "There was too much material to review in one prompt, so I divided the findings into independent JSON batches. Each batch explained the table layout, reading order, relevant rules, original values, and the exact response format. The AI could then propose reconstructed comments, spelling corrections, values to move, or cases that still needed a person.",
+        "The output contract mattered as much as the prompt. Import scripts rejected incomplete batches, malformed JSON, unknown categories, missing record identifiers, and findings that referred to data outside the supplied batch. That turned AI output into a checked intermediate artifact rather than something that could flow directly into the database."
+      ],
+      "codeBlocks": [
+        "LEGACY RECORDS\n      ↓\nPROFILE + DETECT  →  suspicious cells and fragments\n      ↓\nJSON BATCHES      →  AI reconstruction and review\n      ↓\nHUMAN REVIEW      →  approve · edit · flag · dismiss\n      ↓\nSTAGED CHANGES    →  verify · back up · apply"
+      ],
+      "media": []
+    },
+    {
+      "heading": "Keeping a person in the loop",
+      "body": [
+        "I built a local review application that grouped every related table for one asset onto the same screen. Suggested comments appeared beside the source table, with the exact contributing cells highlighted. Reviewers could approve a suggestion, edit its wording, mark it for more review, dismiss it, or inspect the raw fragments before deciding.",
+        "Each approved comment kept its category, final text, source table, column, record identifier, and captured original value. Decisions and edits were saved as work progressed, so a long review could be paused and resumed without losing its place."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Automating only the safe cases",
+      "body": [
+        "Some corruption had a consistent mechanical cause: a missing space where one fixed-width line had wrapped into the next. I created a separate deterministic fixer for those cases. It only split tokens from an explicitly reviewed list and only inserted or removed spaces or collapsed doubled punctuation. It was not allowed to add, delete, or reorder any letter or number.",
+        "The tool rechecked that invariant for every proposed change and aborted the entire run if even one row failed. It was dry-run by default, produced a complete before-and-after audit file, made a backup before applying changes, used a single transaction, and was designed to be idempotent. A full-dataset dry run identified 21,616 corrections with zero invariant violations."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Creating the implementation with AI",
+      "body": [
+        "I produced this tooling through an AI-generated development process. I gave the coding model representative records, explained where the data came from and what a valid transformation looked like, then used it to generate the profilers, algorithms, batch converters, validation scripts, and review interfaces.",
+        "My role was to define the problem, design the data passed between each stage, supply examples and constraints, inspect the proposed behavior, and keep iterating when the output missed an edge case. Using AI let me test several approaches quickly, but it also made independent verification especially important. The strict schemas, invariants, audit files, and human approval steps were how I made the generated implementation accountable."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "What the workflow changed",
+      "body": [
+        "Instead of asking someone to manually read every table and reconstruct every fragment from scratch, the system brought likely problems and suggested repairs to them with the evidence already attached. Routine issues could be handled consistently, while uncertain cases stayed visible and required a decision.",
+        "The project taught me that automation for messy historical data should not be measured only by how many changes it can produce. The better question is how clearly it can explain each change, how safely it can refuse uncertain work, and how easy it is for a person to recover the original value."
+      ],
+      "codeBlocks": [],
+      "media": []
+    }
+  ],
+  "notes": "SOURCES: Michael's dictated account on 2026-09-13, cross-checked against the authorized USB archive. Reviewed mlizzio-sms-work-summary.md; nassau.county.sms.api/test_scripts/README.md; test_scripts/src/dbtool/README.md; test_scripts/copilot/README.md; fix-repairs.js; the profiler, detector, batch import/export, review-app, and C# migration file structure. NOT RUN: These tools depend on the employer's local database, source spreadsheets, and environment configuration. No .env files, raw database exports, stored AI batches, or workplace records were opened or copied. SCOPE: The visible page combines related cleanup work described by Michael: fragmented comments and misplaced values handled through AI suggestions plus human review, and deterministic fixed-width word-boundary repairs handled by the bulk fixer and C# import formatter. These are presented as one legacy-cleanup project rather than separate pages. DEVELOPMENT DISCLOSURE: Michael explicitly states that he coded this project purely through AI. The page is therefore marked ai-generated while explaining his role in problem definition, examples, workflow design, constraints, review, and validation. SAFETY/STATUS: Source documentation confirms the database review app staged edits in JSON and kept source tables read-only; its own comments tables were separate. The deterministic fixer supported transactional application with a backup and rollback. The preserved README states that its full-dataset dry run found 21,616 changes with 0 invariant violations, but also lists applying those repairs as a next step. Visible copy therefore says the dry run identified the corrections and does not claim they were committed to the production database. An older work-summary sentence says a full run applied them, so final application status should be confirmed with Michael before any stronger claim. PUBLIC-SAFETY EDITS: Client and employer names, internal system names, table and column names, file names, record identifiers, real text examples, database counts, network details, and operational categories are omitted or generalized. MEDIA/LINKS: No public repo, demo, or approved workplace screenshot was verified. The text diagram is original portfolio content and contains no internal data. DATE: 2026-07 is the documented month of the migration and cleanup work."
+}
