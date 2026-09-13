@@ -25,7 +25,13 @@
     "SQLite"
   ],
   "links": [],
-  "hero": null,
+  "hero": {
+    "src": "media/workflow_comparison.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "Two workflow diagrams comparing the former five-step manual document process with the four-step evidence-backed review process",
+    "caption": "The prototype replaced a repeated trip through File Explorer, a PDF viewer, manual renaming, and a spreadsheet with one review flow."
+  },
   "sections": [
     {
       "heading": "Seeing the bottleneck early",
@@ -42,10 +48,16 @@
         "The guiding rule was simple: the software could propose, but a person had to decide. It never silently filed a document. For every predicted value, it kept the page, bounding box, original OCR text, confidence, and reason behind the score. A reviewer could click a candidate and jump directly to the exact place it came from on the scan.",
         "That changed the goal from making AI perfectly understand every old document to making the remaining human decision fast. If the system was uncertain, it showed the disagreement. If it could not read a handwritten date, it said so and let the reviewer type it. A wrong prediction stayed a visible suggestion instead of becoming a misplaced record."
       ],
-      "codeBlocks": [
-        "SCANNED FILE\n     ↓\nOCR + page coordinates\n     ↓\n┌────────────────┬──────────────────┬────────────────┐\n│ mined cue text │ similar examples │ local AI vote  │\n└────────────────┴──────────────────┴────────────────┘\n                     ↓\n       fused type + ranked field candidates\n                     ↓\n      human review with highlighted evidence\n                     ↓\n         approved name and filing location"
-      ],
-      "media": []
+      "codeBlocks": [],
+      "media": [
+        {
+          "src": "media/classification_pipeline.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Flowchart showing scanned files moving through OCR, three independent classification methods, confidence fusion, metadata extraction, human review, and approved filing",
+          "caption": "Three separate readings contributed evidence, but only a person approved the final name and location."
+        }
+      ]
     },
     {
       "heading": "Getting useful text from difficult scans",
@@ -65,6 +77,24 @@
       ],
       "codeBlocks": [],
       "media": []
+    },
+    {
+      "heading": "A deliberate learning loop",
+      "body": [
+        "The system did not stop learning after the initial corpus was built. Every approved document became a new labeled example containing its corrected type and OCR text, keyed by the file's content hash so it could not be learned twice. Flagged and skipped documents were excluded because nobody had confirmed their classification.",
+        "Retraining was an explicit expert action rather than something that happened silently after every click. When started, the system combined the original corpus with the newly approved examples, re-mined the phrases that distinguished each category, and refit the TF-IDF similarity index. Future scans then benefited from the office's own reviewed decisions while the behavior stayed stable during a review session.",
+        "The feedback loop also worked in reverse. If an approved filing was undone or an expert reopened it, that example was removed from the learning data. I also used leave-one-out evaluation throughout the pipeline after discovering that an early perfect result came from test documents matching themselves. That mistake became a permanent exclusion rule instead of a misleading benchmark."
+      ],
+      "codeBlocks": [],
+      "media": [
+        {
+          "src": "media/learning_loop.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Feedback-loop diagram showing an approved document becoming a labeled example, deliberate expert retraining, updated cues and similarity, and removal if the approval is later reversed",
+          "caption": "Approved work improved future predictions, while corrected or reopened decisions were removed from the learning set."
+        }
+      ]
     },
     {
       "heading": "Combining three different opinions",
@@ -125,6 +155,15 @@
       "media": []
     },
     {
+      "heading": "Learning the workflow from the people doing it",
+      "body": [
+        "A large part of the project happened away from the code. I talked with the people scanning the cabinets, the people who would review and file the results, and teammates working on the larger signal-management system. Each group saw a different piece of the process, and those conversations exposed details that were easy to miss from a sample PDF alone.",
+        "The scanning team explained why large-format sheets arrived later and why one paper packet could become several inconsistently named files. Reviewers helped shape the candidate list, highlights, shortcuts, comments, flags, and second-check workflow. The broader programming and data teams helped connect the final naming and folder structure with the system that would consume the digitized records. Building around those handoffs turned the prototype from an OCR experiment into a view of the complete operation."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
       "heading": "How I built it",
       "body": [
         "This was a fast, AI-assisted prototype for internal use. I used AI heavily to generate and refactor code, explore algorithms, diagnose failures, and turn ideas into testable versions quickly. My role was to define the workflow, provide real examples, decide what could safely be automated, build the evaluation loops, and keep testing the system against the documents and mistakes that actually mattered.",
@@ -134,5 +173,5 @@
       "media": []
     }
   ],
-  "notes": "SOURCES: Michael's dictated account on 2026-09-13, cross-checked against a read-only review of the authorized USB archive's signal_scanner project. Reviewed README.md, ARCHITECTURE.md, requirements.txt, setup documentation, and representative OCR, text normalization, cue mining, TF-IDF/kNN, LLM, fusion, extraction, naming, packet parsing, staging, page editing, auth, security, queue, review, learning, storage, and web UI source. NOT RUN: The system depends on the employer's documents, local signal lookup, Ollama model, Windows runtime, and environment configuration. No .env file, account database, OCR cache, queue/history data, production filename fixtures, stored documents, or other workplace records were opened or copied into the portfolio. TERMINOLOGY: Michael called one OCR component 'Docstring'; the source uses Docling plus RapidOCR. EMBEDDING CLARIFICATION: Michael recalled training an embedding text model from about 146 categorized documents. The preserved system builds a labeled corpus of 141 already-filed documents and implements optional Ollama embeddings, but its measured configuration disables embeddings because embeddinggemma and nomic-embed-text did not improve leave-one-out accuracy. Visible copy therefore describes the tested embedding work but identifies character/word TF-IDF plus mined cue phrases and the local LLM as the active three-way classifier. OCR/HANDWRITING: Michael observed successful handwriting recognition in some scans. Source evaluation also records that handwritten dates were missing from OCR on a meaningful subset, so visible copy says some handwriting was recovered but not consistently. MODEL: Architecture documentation identifies Ollama qwen3.5:4b, schema-constrained output, temperature 0, and efficient mode that skips the LLM when the other two voters agree. SCALE: The 50 cabinets, approximately 300,000 pages, and records dating to 1972 come from Michael's direct account. Source documentation separately describes approximately 40,000 scanned documents, roughly 140 labeled examples, and more than 2,000 signals; pages and documents are not treated as equivalent. EVALUATION: Visible percentages are rounded from the preserved measurements: 80.9% overall and 97.1% above confidence 0.60 without the LLM; 26 of 26 category-correct in the small blind full-pipeline test. The same test had substantially weaker date and exact-name accuracy, which is stated to avoid presenting type accuracy as end-to-end accuracy. DEVELOPMENT DISCLOSURE: Michael explicitly classifies the implementation as AI-assisted and describes extensive AI prototyping for an internal-use prototype. OWNERSHIP/STATUS: The work summary calls the initial signal_scanner repository a sole-author document OCR prototype. The archive contains a much more extensive uncommitted working tree beyond the two recorded prototype commits. Visible copy describes Michael's ownership of the prototype without calling it a deployed production system. NETWORK CLARIFICATION: Source supports local execution shared over the office network, not public internet hosting. SECURITY: Public copy summarizes roles, sessions, magic links, audit history, and locking but omits internal addresses, filenames, paths, keys, and configuration. PUBLIC-SAFETY EDITS: Client and employer names, internal application acronym, signal identifiers, real intersections, document type codes, exact folder layout, operational filenames, and database schema details are omitted or generalized. MEDIA/LINKS: No public repository, demo, or approved workplace screenshot was verified. No third-party logos or generic internet images were added. The two text diagrams are original portfolio content derived from the documented architecture and contain no internal data. DATE: 2026-07 is supported by the repository's two recorded commits and the internship work summary; later uncommitted development exists, but its exact dates are not verified."
+  "notes": "SOURCES: Michael's dictated accounts on 2026-09-13, cross-checked against a read-only review of the authorized USB archive's signal_scanner project. Reviewed README.md, ARCHITECTURE.md, requirements.txt, setup documentation, and representative OCR, text normalization, cue mining, TF-IDF/kNN, LLM, fusion, extraction, naming, packet parsing, staging, page editing, auth, security, queue, review, learning, storage, and web UI source. NOT RUN: The system depends on the employer's documents, local signal lookup, Ollama model, Windows runtime, and environment configuration. No .env file, account database, OCR cache, queue/history data, production filename fixtures, stored documents, or other workplace records were opened or copied into the portfolio. TERMINOLOGY: Michael called one OCR component 'Docstring'; the source uses Docling plus RapidOCR. EMBEDDING CLARIFICATION: Michael recalled training an embedding text model from about 146 categorized documents. The preserved system builds a labeled corpus of 141 already-filed documents and implements optional Ollama embeddings, but its measured configuration disables embeddings because embeddinggemma and nomic-embed-text did not improve leave-one-out accuracy. Visible copy therefore describes the tested embedding work but identifies character/word TF-IDF plus mined cue phrases and the local LLM as the active three-way classifier. LEARNING LOOP: Source confirms that approvals are appended to learned.jsonl by content hash; flagged and skipped records are excluded; retraining is a deliberate action that merges the learned and base corpora, re-mines cues, and refits the classifier; undo, reopen, and purge paths remove learned entries so corrected mistakes do not persist. OCR/HANDWRITING: Michael observed successful handwriting recognition in some scans. Source evaluation also records that handwritten dates were missing from OCR on a meaningful subset, so visible copy says some handwriting was recovered but not consistently. MODEL: Architecture documentation identifies Ollama qwen3.5:4b, schema-constrained output, temperature 0, and efficient mode that skips the LLM when the other two voters agree. SCALE: The 50 cabinets, approximately 300,000 pages, and records dating to 1972 come from Michael's direct account. Source documentation separately describes approximately 40,000 scanned documents, roughly 140 labeled examples, and more than 2,000 signals; pages and documents are not treated as equivalent. EVALUATION: Visible percentages are rounded from the preserved measurements: 80.9% overall and 97.1% above confidence 0.60 without the LLM; 26 of 26 category-correct in the small blind full-pipeline test. The same test had substantially weaker date and exact-name accuracy, which is stated to avoid presenting type accuracy as end-to-end accuracy. DEVELOPMENT DISCLOSURE: Michael explicitly classifies the implementation as AI-assisted and describes extensive AI prototyping for an internal-use prototype. OWNERSHIP/STATUS: The work summary calls the initial signal_scanner repository a sole-author document OCR prototype. The archive contains a much more extensive uncommitted working tree beyond the two recorded prototype commits. Visible copy describes Michael's ownership of the prototype without calling it a deployed production system. TEAM INPUT: The section about talking with scanning staff, reviewers, and programming/data teammates comes from Michael's direct account. Specific workflow details attributed to those conversations are also reflected in source comments and UI behavior, but individual people and employer details are omitted. NETWORK CLARIFICATION: Source supports local execution shared over the office network, not public internet hosting. SECURITY: Public copy summarizes roles, sessions, magic links, audit history, and locking but omits internal addresses, filenames, paths, keys, and configuration. PUBLIC-SAFETY EDITS: Client and employer names, internal application acronym, signal identifiers, real intersections, document type codes, exact folder layout, operational filenames, and database schema details are omitted or generalized. MEDIA/LINKS: No public repository, demo, or approved workplace screenshot was verified. No third-party logos or generic internet images were added. The three diagrams were written in Mermaid from the documented architecture, rendered locally, converted to WebP through the portfolio media pipeline, and contain no internal data. The manual-workflow comparison uses Michael's description of File Explorer, a PDF viewer, renaming, and spreadsheet tracking. DATE: 2026-07 is supported by the repository's two recorded commits and the internship work summary; later uncommitted development exists, but its exact dates are not verified."
 }
