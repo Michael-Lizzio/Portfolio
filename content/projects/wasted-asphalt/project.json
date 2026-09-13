@@ -1,0 +1,82 @@
+{
+  "slug": "wasted-asphalt",
+  "title": "WastedAsphalt",
+  "tagline": "Scores how much of a county's parking asphalt is sitting visibly empty, from satellite imagery",
+  "summary": "A local web app that measures how much parking surface a New York county is carrying and how much of it is visibly in use. It loads county boundaries from a TIGER/Line shapefile, pulls every amenity=parking polygon from OpenStreetMap through Overpass, downloads a Mapbox satellite chip for each lot, and runs a classical image pipeline that samples the lot's own asphalt colour and measures how much of the surface deviates from it. Monroe County resolves to 3,726 lots, 3,697 of them analyzed, at a 26% county average. Jobs are pausable and resumable, and results export as GeoPackage, GeoJSON or CSV for ArcGIS.",
+  "published": false,
+  "featured": false,
+  "date": "2026-04",
+  "status": null,
+  "tech": [
+    "FastAPI",
+    "React + TypeScript",
+    "Mapbox GL",
+    "OpenStreetMap Overpass API",
+    "OpenCV",
+    "Shapely + pyproj",
+    "SQLite job queue",
+    "GeoPackage / GeoJSON export"
+  ],
+  "links": [
+    { "label": "Repo", "href": "https://github.com/Michael-Lizzio/WastedAsphalt" }
+  ],
+  "hero": {
+    "src": "media/wasted_asphalt_cover.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "The WastedAsphalt app with Monroe County selected, showing 3,726 lots, 3,697 analyzed, 29 skipped and a 26% average, beside a satellite map of the county around Rochester",
+    "caption": null
+  },
+  "sections": [
+    {
+      "heading": null,
+      "body": [
+        "I wanted to know how much of a city is paved over for parking that nobody is using. The pieces to answer that are all public: county boundaries ship in the Census TIGER/Line shapefiles, OpenStreetMap already has parking lots mapped as polygons, and satellite imagery is a tile request away. WastedAsphalt wires those three together and puts a number on every lot in a county.",
+        "Running it against Monroe County produced 3,726 parking polygons. 3,697 of them were analyzable, 29 were skipped, and the county came out at a 26% average score. That run finished 3,698 of 3,698 tasks with zero failures in about eleven minutes."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Every lot in the county, scored",
+      "body": [
+        "Once a county finishes processing, each lot is drawn on the map coloured by its score: green for lots reading as mostly empty, through yellow and orange to red. Downtown Rochester is where it gets interesting, because the pattern is legible at a glance rather than as a spreadsheet.",
+        "The right-hand panel carries the county totals and the three export buttons. The exports were the actual point of the project: GeoPackage and GeoJSON both open directly in ArcGIS, so the output can be joined against other municipal layers instead of living only inside this app."
+      ],
+      "media": [
+        {
+          "src": "media/rochester_lots.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Satellite map zoomed to downtown Rochester with several hundred parking lot polygons outlined and filled in green, yellow, orange and red according to their utilization score",
+          "caption": "Downtown Rochester after processing. Each polygon is one OpenStreetMap parking lot, coloured by its score."
+        }
+      ]
+    },
+    {
+      "heading": "How a single lot is scored",
+      "body": [
+        "For each lot the pipeline rasterises the OSM polygon into the image, samples the median colour of the asphalt inside it, and then measures the area whose colour deviates from that sample. The score is that anomaly area divided by the usable paved area. One lot in the run had 789 m² of anomaly inside 3,843 m² of pavement, which is where its 0.21 came from.",
+        "The pair below is one lot's raw Mapbox chip next to the overlay the pipeline produced for it. Teal is the OSM polygon boundary, the red wash is the paved area being considered, and the lighter patches are the pixels counted as anomalies.",
+        "This lot is also a good illustration of where the method stops being a car counter. It scored 0.91 — 4,445 m² of anomaly inside 4,884 m² of pavement — but the photograph shows a lot that is perhaps a third full. The dense white parking stripes deviate from the sampled asphalt just as strongly as a vehicle does, so they are counted too. The README is direct about this: the number is best read as visible non-asphalt occupancy inside the lot mask, and painted markings, shadows, islands and pavement repairs all land in it. It is a classical colour baseline, not a trained vehicle detector."
+      ],
+      "media": [
+        {
+          "src": "media/lot_10676_before_after.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Two aerial views of the same suburban parking lot side by side; the left is the plain satellite image showing scattered parked cars on dark asphalt with white stripes, the right adds a teal boundary outline and a red translucent wash over the lot surface with lighter patches marking detected anomalies",
+          "caption": "Left: the raw Mapbox chip for one lot. Right: the pipeline's overlay for the same lot. This one scores 0.91, which is more a measure of its paint than of its cars."
+        }
+      ]
+    },
+    {
+      "heading": "Running a county without babysitting it",
+      "body": [
+        "A county is thousands of separate image requests, so the job runner had to survive being interrupted. Work is queued in SQLite with per-task state, which makes a run pausable, resumable, and restartable after the process dies without losing the chips it already fetched. Mapbox responses are cached on disk for the same reason — re-running a county does not re-buy imagery.",
+        "The nine tests in the repo cover the geometry and analysis helpers rather than the network paths."
+      ],
+      "media": []
+    }
+  ],
+  "notes": "PROVENANCE: documented by running the project on 2026-09-13 on Michael's Windows machine, not from the README. Backend started with .venv/Scripts/python.exe -m uvicorn wasted_asphalt.app:app --app-dir backend --port 8000; frontend with ./node_modules/.bin/vite --port 5199. Note vite.config.ts proxies /api to 127.0.0.1:8000 specifically — starting the backend on any other port makes the whole UI show 'Could not load counties: Internal Server Error', which looks like a backend fault but is a dead proxy target.\n\nFIGURES: all quoted numbers came from the live API, not the README. GET /api/counties returned 62 features (52 not_loaded, 8 loaded, 2 analyzed — Cortland 36023 and Monroe 36055). GET /api/counties/36055/jobs/latest returned status completed, 3698/3698 tasks, 0 failed, started_at 2026-04-30T02:15:30 and completed_at 2026-04-30T02:26:34, which is the ~11 minutes cited. GET /api/counties/36055/lots returned 3,726 features, 3,697 with a non-null utilization, mean 0.2569 (the UI rounds this to 26%), min 0.0, max 0.9949. Tests: .venv/Scripts/python.exe -m pytest tests -q -> '9 passed in 3.04s'.\n\nTHE 0.91 LOT: lot 10676 (osm data in the GeoJSON), utilization 0.9100, anomaly_area_sqm 4444.71, paved_area_sqm 4884.12, asphalt_rgb [98,105,111]. I compared its overlay against its raw chip by eye and the lot is clearly nowhere near 91% occupied — hence the paragraph about painted striping. Cross-checked the formula on lot 8713: anomaly 789.12 / paved 3843.31 = 0.20532, which matches its reported utilization exactly. The README's own 'Current Limitations' and line 316 say the same thing, so this is the project's stated position, not a criticism I am adding.\n\nMEDIA: cover and Rochester shots are real screenshots of the running app at 1440x900, captured headlessly with Playwright in a scratch venv (nothing installed into the project). The before/after image is a genuine ffmpeg hstack of two files the project itself wrote: data/images/lot_10676_6fdb21fe4b1ef429.png (raw chip) and data/analysis/lot_10676_6fdb21fe4b1ef429_overlay.png (its overlay). Nothing was retouched.\n\nNOT CAPTURED: the 'Selected Lot' inspector panel. It is visible and empty in every screenshot, reading 'Click a loaded parking lot to inspect imagery and analysis output.' I tried ~30 automated clicks on lot polygons across two zoom levels and never got it to populate, so I cannot say what it renders when a lot is selected and have not described it. Browser tools were unavailable this session, so I could not click it by hand. Worth one manual screenshot later — it is likely the best single image in the project.\n\nUNVERIFIED: I did not start a fresh county run, so the pause/resume/restart behaviour is described from the job schema and the README, not observed. I also did not exercise the GPKG/GeoJSON/CSV export buttons. LOC figures are deliberately absent — I did not count them.\n\nLINK: https://github.com/Michael-Lizzio/WastedAsphalt returned HTTP 200 unauthenticated on 2026-09-13, so it is public and safe to link. git log shows only 2 commits, 2026-04-29 'Initial commit' and 2026-04-30 'Ship WastedAsphalt: NY county parking analysis stack' — date set to 2026-04 from those, not inferred from file mtimes.\n\nDATA NOTE: the repo carries ~7,200 cached satellite chips and ~14,400 mask/overlay PNGs under data/, plus a 32 MB SQLite db. None of that is in this PR; only the three compressed webp files are."
+}
