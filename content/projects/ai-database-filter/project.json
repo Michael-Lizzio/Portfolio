@@ -1,0 +1,97 @@
+{
+  "slug": "ai-database-filter",
+  "title": "AI Database Filter",
+  "tagline": "A local AI assistant for exploring a complex database in plain English",
+  "summary": "I built an end-to-end filtering system for a county traffic-signal management application covering more than 2,000 signals and a large network of related records. The finished feature combined a flexible visual query builder with a local AI assistant that could understand plain-English requests, propose filters for review, and help users repair filters they had already created. This page follows the project from the first manual controls through retrieval, model evaluation, prompt tuning, database safeguards, and production integration.",
+  "published": false,
+  "featured": false,
+  "date": "2026-06",
+  "status": "Internship project",
+  "tech": [
+    "JavaScript",
+    "Fastify",
+    "PostgreSQL",
+    "Ollama",
+    "Qwen2.5 Coder 3B",
+    "Retrieval-augmented generation",
+    "Text embeddings",
+    "Server-Sent Events",
+    "Automated model evaluation"
+  ],
+  "links": [],
+  "hero": null,
+  "sections": [
+    {
+      "heading": "Starting with the real filtering problem",
+      "body": [
+        "The application brought together signal inventory, timing, maintenance, documents, locations, and other operational records. The tables were deeply connected, and many fields contained inconsistent or free-entry text. A useful filter could not stop at simple equals and greater-than conditions. It needed to follow relationships, search text, compare values, count related records, handle dates, rank results, and still make sense to someone who did not write SQL.",
+        "I owned this feature end to end. Before adding AI, I built the visual filter system first. That forced me to understand the full set of operations, how filters should be represented, and what the interface needed to communicate. It also gave the AI a controlled language to work with later instead of letting it generate arbitrary database queries."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Designing for imperfect data",
+      "body": [
+        "Some of the hardest cases came from fields that were not as structured as their names suggested. A timing value, for example, could contain one number, several numbers, or ordinary text. I added operators that could recognize individual numbers inside mixed text, so a search for 3 could still match a record containing 3 and 5 without treating 13 as the same value.",
+        "The query builder grew to support text and regular-expression searches, relative dates, column-to-column comparisons, counts and totals across related records, top-N rankings, and nested AND, OR, and NOT logic. Users could build those conditions manually, while the same filter model became the safe target for the AI assistant."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Adding a conversational assistant",
+      "body": [
+        "I added a chat interface beside the filter builder and connected it to a local language model through Ollama. A user could ask for one condition or an entire group of filters, inspect the proposed changes, and decide whether to add them. The assistant could also read the filters already on screen, explain unexpected results, and propose updates instead of starting over.",
+        "The model never directly controlled the database or silently changed the interface. It produced structured filter actions, the backend checked them against live metadata, and the user received reviewable proposal cards. That separation made the AI useful without asking anyone to trust an invisible SQL query."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Giving a small model the right context",
+      "body": [
+        "The full database description was too large to place in every prompt, especially on the limited hardware available. I built a retrieval system that embedded curated descriptions of the filterable tables and compared them with each request. The most relevant tables, columns, example values, and usage notes were placed into the prompt, while the central signals table and any tables already used by the current filters stayed available for continuity.",
+        "The curated descriptions helped the model understand what the data meant, but they were never trusted as executable truth. Live PostgreSQL metadata still verified the tables, columns, types, and shortest join paths. Retrieval selected the useful context; the database schema decided what was actually valid."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Testing models instead of guessing",
+      "body": [
+        "The workstation had very limited GPU memory, so choosing a model was an engineering constraint rather than a preference. I built a repeatable evaluation harness and ran the same 200 requests across eight local models. The suite covered everyday filters as well as difficult combinations involving counts, rankings, dates, regular expressions, and related tables. Outputs were anonymized and graded against expected behavior, while the harness also measured response time.",
+        "The original 4B model was accurate but took roughly 43 seconds for a typical response because it could not fit fully on the GPU. The best balance was Qwen2.5 Coder 3B. It fit the hardware and responded in about 8 seconds before tuning. The result also taught me that a coder-oriented model was a good match because the task was closer to generating a strict data structure than having an open-ended conversation."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Learning how to tune the system",
+      "body": [
+        "I used the evaluation results to find repeatable failure patterns instead of patching individual answers. The smaller model struggled most with related-record counts, rankings, and requests that combined a ranking with existing conditions. I ran about 50 controlled prompt experiments and learned that rules alone could make the model worse. Compact rules paired with carefully chosen few-shot examples worked much better.",
+        "On the matched benchmark, the tuned 3B model improved from about 85% to 91% while keeping its median response near 10 seconds. I also tested it on a fresh set of messier prompts. That holdout showed a smaller improvement and a lower real-world score, which was a useful reminder that a benchmark can overstate progress when its wording resembles the examples used for tuning."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Building safety around the AI",
+      "body": [
+        "I treated generated output as untrusted input. The assistant could only propose supported filter operations, identifiers were checked against an allowlist and live schema metadata, values were passed as query parameters, and invalid actions were rejected or returned to the model for repair. The backend resolved joins rather than asking the model to invent them.",
+        "Database execution ran inside read-only transactions with timeouts, and sensitive tables and columns were excluded from the metadata shown to the assistant. Development used a local database copy, but I still designed the safeguards as if the feature were already connected to production data."
+      ],
+      "media": []
+    },
+    {
+      "heading": "From prototype to team feature",
+      "body": [
+        "The project began as a standalone Fastify prototype and later became a production service integrated into the existing signal-management application. I built the backend, the filter and chat interfaces, streaming status updates, reusable saved filters, and the connection between AI proposals and the existing data grid. I also packaged the frontend changes to minimize the amount of teammates' code that had to change.",
+        "I used AI-assisted development throughout the project to prototype approaches, refactor code, and review large evaluation runs. The fast feedback loop helped me explore more options, but the architecture, expected behaviors, safety boundaries, and final decisions came from testing the complete system against the actual problem. Working closely with the production and data teams also helped turn a broad idea into something that fit the larger application."
+      ],
+      "media": []
+    },
+    {
+      "heading": "What I took away",
+      "body": [
+        "This project changed how I think about small local models. Model size mattered less than choosing a model suited to the output, retrieving only the context it needed, and measuring the result on realistic requests. It also showed me that the most important part of an AI feature is often everything around the model: the interface, validation, database constraints, evaluation process, and the point where a person stays in control."
+      ],
+      "media": []
+    }
+  ],
+  "notes": "SOURCES: The visible narrative combines Michael's dictated account on 2026-09-13 with a read-only review of the authorized internship archive on the mounted USB. Cross-checked against mlizzio-sms-work-summary.md; the prototype and production READMEs; miscellaneous/docs/how-the-super-filter-ai-works.md; model-ranking-boss-report.md; full-evaluation-report.md; prompt-tuning-report.md; package manifests; and representative query-builder, retrieval, validation, and UI file structure. NOT RUN: The system requires the employer's local PostgreSQL data, Ollama setup, and environment configuration. No .env files were read. MODEL CLARIFICATION: The spoken account called the final model 'Qwen 3.5 Coder, three billion parameters.' The preserved evaluation reports and architecture documentation instead show qwen3.5:4b as the original accurate-but-slow baseline and qwen2.5-coder:3b as the tuned model that shipped. Visible copy follows the source. SCALE: Michael recalled roughly 2,700 signals; preserved documentation supports more than 2,000, with a separate scanner document referring to 2,284 signal folders. Visible copy therefore says only 'more than 2,000.' OWNERSHIP: Michael states he owned the filter/AI feature end to end. The work summary identifies the prototype and production filter backends as sole-author repositories, while nassau.county.sms.web was a shared repository where he contributed the filter modal, AI UI, persistence, and integration. PUBLIC-SAFETY EDITS: The client and employer names, internal system acronym, database/table names, exact infrastructure, schema contents, real example locations, and operational record counts are omitted from visible copy. Exact benchmark methodology and aggregate performance numbers are included because they describe Michael's engineering work without exposing the underlying prompts or data, but they should still be reviewed before publication. AI DEVELOPMENT DISCLOSURE: Michael says AI-assisted coding was used heavily for rapid prototyping, refactoring, and testing, and that Copilot-based reviewers graded large output sets against answer keys and supplied context. Visible copy states this without implying that AI independently validated correctness. MEDIA/LINKS: No public repository or demo was verified. Michael may later obtain approved screenshots; hero and all section media intentionally remain empty for now. DATE: 2026-06 is the first month of the documented prototype phase; work continued through July 2026."
+}
