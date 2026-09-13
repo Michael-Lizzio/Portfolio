@@ -1,0 +1,138 @@
+{
+  "slug": "document-management-system",
+  "title": "Document Management System",
+  "tagline": "A human-in-the-loop system for turning decades of paper records into searchable files",
+  "summary": "I proactively built an internal document-processing system for a digitization effort covering roughly 300,000 pages of traffic-signal records dating back to the 1970s. It combined two OCR paths, three independent document-classification methods, evidence-backed field extraction, and a fast review interface that helped a person name and file each scan without working across File Explorer, Adobe, and a spreadsheet. I used AI-assisted development heavily to prototype the system, test ideas against already-filed documents, and turn a manual process into one controlled workflow.",
+  "published": true,
+  "featured": false,
+  "date": "2026-07",
+  "status": "Internal internship prototype",
+  "development": "ai-assisted",
+  "tech": [
+    "Python",
+    "FastAPI",
+    "Uvicorn",
+    "Vanilla JavaScript",
+    "Docling",
+    "RapidOCR",
+    "ONNX Runtime",
+    "PyMuPDF",
+    "scikit-learn",
+    "NumPy",
+    "TF-IDF similarity",
+    "Ollama",
+    "Qwen3.5 4B",
+    "SQLite"
+  ],
+  "links": [],
+  "hero": null,
+  "sections": [
+    {
+      "heading": "Seeing the bottleneck early",
+      "body": [
+        "The county had signal plans, timing sheets, work reports, work orders, and other records stored across about 50 filing cabinets. Some documents dated back to 1972, and the full collection was estimated at roughly 300,000 pages. One team was responsible for carefully scanning the paper into PDFs. The next challenge was turning those scans into consistently named, organized, and searchable files.",
+        "That second step could easily become another large manual project. A reviewer would need to open a PDF, identify its type, locate the date and signal number, copy any type-specific identifiers, rename the file, update a tracking sheet, and repeat. I saw that bottleneck before the full workflow had been settled and began building a prototype that could do the searching first, then hand a reviewable answer to a person."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Designing around a person, not around the model",
+      "body": [
+        "The guiding rule was simple: the software could propose, but a person had to decide. It never silently filed a document. For every predicted value, it kept the page, bounding box, original OCR text, confidence, and reason behind the score. A reviewer could click a candidate and jump directly to the exact place it came from on the scan.",
+        "That changed the goal from making AI perfectly understand every old document to making the remaining human decision fast. If the system was uncertain, it showed the disagreement. If it could not read a handwritten date, it said so and let the reviewer type it. A wrong prediction stayed a visible suggestion instead of becoming a misplaced record."
+      ],
+      "codeBlocks": [
+        "SCANNED FILE\n     ↓\nOCR + page coordinates\n     ↓\n┌────────────────┬──────────────────┬────────────────┐\n│ mined cue text │ similar examples │ local AI vote  │\n└────────────────┴──────────────────┴────────────────┘\n                     ↓\n       fused type + ranked field candidates\n                     ↓\n      human review with highlighted evidence\n                     ↓\n         approved name and filing location"
+      ],
+      "media": []
+    },
+    {
+      "heading": "Getting useful text from difficult scans",
+      "body": [
+        "I benchmarked OCR approaches and settled on a two-route pipeline using Docling and RapidOCR. Docling worked well when a document had readable text and tables. Plan drawings and large image-based sheets could appear successful while returning almost nothing, so the system detected those cases and ran RapidOCR on high-resolution crops of the full sheet and its corners, where title blocks usually live.",
+        "Both routes returned the same structure: extracted text plus segments that mapped character ranges back to a page and rectangle. That common format powered the evidence viewer. OCR results were cached by the file's content hash, so renaming a scan did not force the expensive recognition step to run again.",
+        "The OCR could recover some surprisingly difficult printed and handwritten material, but handwriting was not consistently solved. Handwritten dates on inventory cards and plans remained a major weak point, and the interface was designed to make those gaps quick for a person to fill."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Learning from documents people had already filed",
+      "body": [
+        "I built a labeled corpus from roughly 140 documents that had already been categorized by the county. Each document was evaluated with itself removed from the comparison set, so it could not earn a perfect result by matching its own text. That leave-one-out setup became the repeatable test harness for changes to classification, extraction, prompts, and model choices.",
+        "I tested multiple embedding models because semantic similarity had helped on my other local-AI projects. On this particular collection, embeddings were slower and slightly less accurate. These forms often describe the same intersection even when they are different document types, while their repeated labels and layout-specific wording are highly distinctive. I kept the embedding path available for future testing, but disabled it in the measured configuration instead of using it just because it sounded more advanced."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Combining three different opinions",
+      "body": [
+        "The first classifier automatically mined distinctive words and phrases from the labeled corpus. It used frequency thresholds and weighted log-odds to find language that appeared often in one type and rarely elsewhere, including separate cues for pairs of document types that were commonly confused. Location names were excluded so the system did not accidentally learn that one street meant one form type.",
+        "The second classifier compared a scan with the already-filed documents using TF-IDF over character and word n-grams. Character fragments were especially useful because they still overlapped when OCR damaged a word. I corrected the nearest-neighbor scoring for the heavily unbalanced corpus so the most common document type did not win by default.",
+        "The third vote came from a local Qwen model running through Ollama. It received the mined cue sheet, extracted candidates, and similarity results, then returned a schema-constrained JSON decision at temperature zero. The three scores were fused using their agreement and the margin over the runner-up. When a method had no evidence it abstained, and when the methods disagreed the document was held for review rather than forcing a confident answer."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Extracting the details that make a document searchable",
+      "body": [
+        "Classification was only the first half of the problem. The file name also needed fields such as the document date, signal number, contract number, work order number, or another identifier depending on the document type. I built tolerant patterns that accepted common OCR substitutions, normalized a value only when its surrounding characters supported the correction, and returned every plausible match instead of throwing the alternatives away.",
+        "Signal detection combined numbers printed on the page with intersection names and a lookup against the signal inventory. Repetition raised a candidate's score, while contradictory location evidence lowered it. This mattered for corridor documents that legitimately named several signals and for scans where one signal number was unreadable but its two cross streets were clear.",
+        "The result was a ranked set of candidates with provenance, not one opaque answer. The reviewer chose which values belonged in the final name, could edit anything missing or incorrect, and saw the proposed file name update immediately."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Handling multipart and large-format scans",
+      "body": [
+        "The physical scanning process created another problem: one document could arrive as several PDFs or images, and large-format plan sheets were scanned separately before being added back later. The source names were not consistent enough for a simple sort. I built a parser around the naming patterns that actually appeared, grouped related pieces, noticed gaps that could indicate a missing large-format sheet, and surfaced anything it could not interpret instead of guessing.",
+        "A staging workspace let reviewers drag pieces into order, rotate or crop individual pages, add late-arriving scans, preview the complete document, and merge it before OCR and classification. Edits were stored separately from the original scans, and the individual parts stayed intact until an approved merged copy existed. The combined document also retained the hashes of every source part so uploading one of those pages later would still be detected as a duplicate."
+      ],
+      "codeBlocks": [
+        "separate scanner files\n  Document 22A.pdf\n  Document 22_C.pdf\n  scan22B.pdf  ← large-format page arrives later\n          ↓\n  group → reorder → rotate/crop → preview\n          ↓\n       one merged document\n          ↓\n     OCR and human review"
+      ],
+      "media": []
+    },
+    {
+      "heading": "Replacing a scattered manual workflow",
+      "body": [
+        "I brought upload, background processing, review, naming, filing, flags, comments, and history into one web interface. Reviewers could see each classifier's vote, inspect all candidates, use keyboard shortcuts to approve or flag, and move directly to the next item. Duplicate checks used SHA-256 hashes across the inbox, processing queue, staging area, finished records, and the individual files inside a merged document.",
+        "The queue survived restarts and processed one document at a time because OCR and the local model both wanted the available GPU. Atomic JSON writes, backup recovery, and rebuilding state from the working folders protected the review history if the app stopped unexpectedly. Page images were generated only when needed and treated as a rebuildable cache, which kept storage from growing with every review."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Building it for a real team",
+      "body": [
+        "The application ran locally and could be shared with coworkers over the office network. I added password accounts, revocable magic sign-in links, expiring HttpOnly sessions, and three roles. Helpers could process their own queue, experts could review everyone's decisions and undo filings, and administrators could manage accounts, storage, settings, and the full activity log.",
+        "Review itself had two stages. A helper could approve, flag, or skip a document with a reason. An expert then checked those decisions, prioritized the uncertain ones, and either signed off or reopened the document with a note. Advisory locks warned when another person had an item open, while the actual filing action used a stronger per-document lock so two approvals could not create two copies."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Measuring what worked and what did not",
+      "body": [
+        "The rules-and-similarity evaluation classified about 81% of the labeled corpus correctly overall. More importantly, when its confidence cleared the filing threshold, it matched the existing category about 97% of the time and held the uncertain cases back for review. A separate blind test of 26 renamed documents reached the correct category on all 26 when the local model acted as the third voter.",
+        "The harder fields kept the results grounded. Signal placement was useful but weaker on documents covering several intersections, and dates were the main bottleneck because some were absent from the OCR or several real dates appeared on one page. Exact file names were therefore much less accurate than document types. Those results reinforced the system's purpose: reduce how much a reviewer has to inspect, while making the remaining uncertainty obvious."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "How I built it",
+      "body": [
+        "This was a fast, AI-assisted prototype for internal use. I used AI heavily to generate and refactor code, explore algorithms, diagnose failures, and turn ideas into testable versions quickly. My role was to define the workflow, provide real examples, decide what could safely be automated, build the evaluation loops, and keep testing the system against the documents and mistakes that actually mattered.",
+        "The project pulled together lessons from my other internship work: local model constraints, retrieval and similarity methods, structured output, test harnesses, and human review around uncertain AI. The biggest lesson was that useful document AI was not one model call. It was the OCR routing, measurable classifiers, provenance, failure handling, permissions, interface, and careful point where a person stayed in control."
+      ],
+      "codeBlocks": [],
+      "media": []
+    }
+  ],
+  "notes": "SOURCES: Michael's dictated account on 2026-09-13, cross-checked against a read-only review of the authorized USB archive's signal_scanner project. Reviewed README.md, ARCHITECTURE.md, requirements.txt, setup documentation, and representative OCR, text normalization, cue mining, TF-IDF/kNN, LLM, fusion, extraction, naming, packet parsing, staging, page editing, auth, security, queue, review, learning, storage, and web UI source. NOT RUN: The system depends on the employer's documents, local signal lookup, Ollama model, Windows runtime, and environment configuration. No .env file, account database, OCR cache, queue/history data, production filename fixtures, stored documents, or other workplace records were opened or copied into the portfolio. TERMINOLOGY: Michael called one OCR component 'Docstring'; the source uses Docling plus RapidOCR. EMBEDDING CLARIFICATION: Michael recalled training an embedding text model from about 146 categorized documents. The preserved system builds a labeled corpus of 141 already-filed documents and implements optional Ollama embeddings, but its measured configuration disables embeddings because embeddinggemma and nomic-embed-text did not improve leave-one-out accuracy. Visible copy therefore describes the tested embedding work but identifies character/word TF-IDF plus mined cue phrases and the local LLM as the active three-way classifier. OCR/HANDWRITING: Michael observed successful handwriting recognition in some scans. Source evaluation also records that handwritten dates were missing from OCR on a meaningful subset, so visible copy says some handwriting was recovered but not consistently. MODEL: Architecture documentation identifies Ollama qwen3.5:4b, schema-constrained output, temperature 0, and efficient mode that skips the LLM when the other two voters agree. SCALE: The 50 cabinets, approximately 300,000 pages, and records dating to 1972 come from Michael's direct account. Source documentation separately describes approximately 40,000 scanned documents, roughly 140 labeled examples, and more than 2,000 signals; pages and documents are not treated as equivalent. EVALUATION: Visible percentages are rounded from the preserved measurements: 80.9% overall and 97.1% above confidence 0.60 without the LLM; 26 of 26 category-correct in the small blind full-pipeline test. The same test had substantially weaker date and exact-name accuracy, which is stated to avoid presenting type accuracy as end-to-end accuracy. DEVELOPMENT DISCLOSURE: Michael explicitly classifies the implementation as AI-assisted and describes extensive AI prototyping for an internal-use prototype. OWNERSHIP/STATUS: The work summary calls the initial signal_scanner repository a sole-author document OCR prototype. The archive contains a much more extensive uncommitted working tree beyond the two recorded prototype commits. Visible copy describes Michael's ownership of the prototype without calling it a deployed production system. NETWORK CLARIFICATION: Source supports local execution shared over the office network, not public internet hosting. SECURITY: Public copy summarizes roles, sessions, magic links, audit history, and locking but omits internal addresses, filenames, paths, keys, and configuration. PUBLIC-SAFETY EDITS: Client and employer names, internal application acronym, signal identifiers, real intersections, document type codes, exact folder layout, operational filenames, and database schema details are omitted or generalized. MEDIA/LINKS: No public repository, demo, or approved workplace screenshot was verified. No third-party logos or generic internet images were added. The two text diagrams are original portfolio content derived from the documented architecture and contain no internal data. DATE: 2026-07 is supported by the repository's two recorded commits and the internship work summary; later uncommitted development exists, but its exact dates are not verified."
+}
