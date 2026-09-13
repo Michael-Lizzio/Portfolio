@@ -1,0 +1,101 @@
+{
+  "slug": "agentic-report-generator",
+  "title": "Agentic Report Generator",
+  "tagline": "An experiment in letting a local AI research data and build its own reports",
+  "summary": "I experimented with a local AI system that could take a question, research a complex operational database, create charts and maps, and write a report from what it found. I built the research tools, agent workflow, visualizations, streaming interface, and safeguards around database access. The prototype proved that the workflow was possible, but the available local models forced a tradeoff between useful reasoning and acceptable response time, so it never became reliable enough for production.",
+  "published": true,
+  "featured": false,
+  "date": "2026-06",
+  "status": "Experimental internship prototype",
+  "development": null,
+  "tech": [
+    "Python",
+    "FastAPI",
+    "TypeScript",
+    "Fastify",
+    "PostgreSQL",
+    "Ollama",
+    "Local language models",
+    "Matplotlib",
+    "Mapbox GL JS",
+    "Server-Sent Events",
+    "Text embeddings"
+  ],
+  "links": [],
+  "hero": null,
+  "sections": [
+    {
+      "heading": "The experiment",
+      "body": [
+        "The idea was to give users a ChatGPT-style interface connected to the same operational data they already worked with. Instead of choosing tables, writing SQL, exporting results, and assembling a report by hand, someone could ask a question in plain English and let the system work through those steps.",
+        "Users could choose from the local models installed on the workstation. Simple questions could return a short answer, while an explicit report request started a longer workflow that planned the research, gathered evidence, created visualizations, and composed a document."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "A report built in stages",
+      "body": [
+        "I split the work into stages because asking one model call to understand the question, research the database, calculate results, and write a polished report was too much. The planning stage produced a title, research questions, and section outline. A research loop then chose tools and kept working until it had enough findings. Finally, the writing stage composed each section from the saved evidence rather than relying on the model's memory of earlier tool calls."
+      ],
+      "codeBlocks": [
+        "QUESTION\n   ↓\nUNDERSTAND  →  research plan + report outline\n   ↓\nRESEARCH    →  schema search → read-only SQL → saved findings\n   ↓                              ↘ charts + maps\nCOMPOSE     →  one grounded section at a time\n   ↓\nREPORT"
+      ],
+      "media": []
+    },
+    {
+      "heading": "Letting the model research",
+      "body": [
+        "The model could inspect relevant schema descriptions, sample rows, check distinct values, and run its own SELECT queries. I added embedding-based schema retrieval so it received the tables related to the question instead of the entire database definition. This helped preserve the limited context window for the actual research and writing.",
+        "Every successful query became a saved finding with its purpose, SQL, and result. The final report was grounded in that finding log, and large query results could be handed directly to visualization tools on the server without filling the model's context with thousands of values."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Charts and maps as tools",
+      "body": [
+        "I created chart tools for bar, line, pie, scatter, grouped, stacked, and histogram views. The model supplied a constrained data specification, and the server rendered the image with Matplotlib. The model never generated or executed plotting code, which made the feature more predictable and much safer.",
+        "For geographic questions, the model could run a read-only query and turn the result into GeoJSON for an interactive map. The tool supported heat maps, points, clusters, and categories, automatically connected signal identifiers with coordinates when needed, and created a static snapshot that could be embedded in a report."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Making long runs survivable",
+      "body": [
+        "Report generation could take several minutes, so I made each run an independent background task rather than tying it to one browser request. Progress, model output, tool calls, and errors streamed through Server-Sent Events. If the browser disconnected, the work continued and the interface could reconnect and replay what it missed.",
+        "Conversations, reports, charts, maps, and research findings were saved to disk. I also experimented with conversation compaction so longer chats could be summarized before they overflowed the model's context window."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Keeping database access contained",
+      "body": [
+        "The research agent was allowed to write flexible SQL, but it was not allowed to write to the database. Queries were checked to allow only a single SELECT or WITH statement, capped to a reasonable number of rows, and executed through PostgreSQL sessions configured as read-only with statement timeouts. The database itself was the final enforcement layer.",
+        "Chart and map tools reused the same protected query path. Their inputs were validated specifications rather than arbitrary code, so adding a visual did not create a second route around the database or execution safeguards."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Where the prototype fell short",
+      "body": [
+        "The limiting factor was the local model. Smaller models fit the available hardware and responded quickly, but they often stopped their research too early, wrote shallow analysis, or mishandled a complicated sequence of tool calls. Larger models were noticeably better, but took too long for an interactive application on the workstation I had.",
+        "I added routing, retries, context controls, SQL repair, automated tests, and evaluation scripts, but those systems could not create reasoning ability that the model did not have. The final prototype demonstrated the architecture and produced working reports, charts, and maps, but it never reached the consistency I would require before giving it to users."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "What I learned",
+      "body": [
+        "This was useful precisely because it did not turn into a polished production feature. I learned how to break an open-ended task into agents and tools, preserve state across a long-running workflow, ground writing in recorded evidence, and design execution boundaries around generated SQL. I also learned to recognize when better orchestration could help and when the underlying model was simply the bottleneck."
+      ],
+      "codeBlocks": [],
+      "media": []
+    }
+  ],
+  "notes": "SOURCES: Michael's dictated account on 2026-09-13, cross-checked against the authorized USB archive. Reviewed report_generatorV2/README.md, report_generator/README.md, super_report_generator/README.md, and representative agent.py, charts.py, maps.py, tools.py, db_safety.py, routing, storage, tests, and frontend structure. NOT RUN: The system depends on the employer's local PostgreSQL database, Ollama models, and environment configuration. No .env files or stored report contents were read. HONEST STATUS: Michael states that the project never worked reliably enough because models that fit the available hardware were too limited and stronger models were too slow. The source describes the local 3B model's report-writing quality as shallow and roughly 4/10 in its internal judge. Visible copy therefore describes a functional experimental prototype, not a shipped production system. TERMINOLOGY: Michael recalled chart generation as MATLAB; the source uses Python Matplotlib with its Agg backend. MAPS: Source confirms Mapbox GL interactive maps, GeoJSON persistence, Matplotlib static snapshots, and heatmap/points/clusters/categories modes. OWNERSHIP: The work summary identifies report_generatorV2 as a sole-author repository and report_generator/super_report_generator as local uncommitted iterations. DEVELOPMENT DISCLOSURE: Michael did not state whether the implementation itself was human-led, AI-assisted, or AI-generated, so development remains null until he classifies it. PUBLIC-SAFETY EDITS: Client and employer names, internal application acronym, schema/table names, example locations, database record counts, and infrastructure details are omitted. MEDIA/LINKS: No public repository or demo was verified. No workplace reports or stored charts were copied. The text diagram is original portfolio content derived from the documented three-stage pipeline and contains no internal data. DATE: 2026-06 is the documented first month of report_generatorV2 development; work continued into July."
+}
