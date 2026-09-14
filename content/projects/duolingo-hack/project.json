@@ -1,0 +1,32 @@
+{
+  "slug": "duolingo-hack",
+  "title": "Duolingo Hack",
+  "tagline": "A Duolingo bot that turned speaking practice into an XP machine",
+  "summary": "I got tired of doing the same Duolingo exercises every day, so I built a bot to do them for me. It started by running several story sessions in parallel, then changed tactics after that stopped earning XP. The final version recorded each speaking prompt through a virtual audio cable and played it back to Duolingo for a perfect answer.",
+  "published": true,
+  "featured": false,
+  "date": null,
+  "status": "Archived",
+  "development": null,
+  "tech": ["Python", "Selenium", "Beautiful Soup", "Virtual audio cable", "PyAudio"],
+  "links": [],
+  "hero": null,
+  "sections": [
+    {
+      "heading": "The first version",
+      "body": ["My first approach used Duolingo stories. I ran several browser sessions at once, completing multiple stories every thirty seconds and stacking up XP until Duolingo stopped awarding it."],
+      "media": []
+    },
+    {
+      "heading": "The audio trick",
+      "body": ["For speaking practice, Duolingo first played the phrase it wanted me to repeat. My bot recorded that audio, trimmed the silence, and sent the exact same phrase back through a virtual microphone. That version helped me rack up thousands of XP and win the Diamond League."],
+      "media": []
+    },
+    {
+      "heading": "What happened next",
+      "body": ["I retired the bot because I actually use Duolingo to learn now, but I am still keeping the streak alive. This page will be much funnier once the old screen recordings, leaderboard screenshots, and current streak screenshot are added."],
+      "media": []
+    }
+  ],
+  "notes": "Source inspected at selected-projects-temp/PycharmProjects/DuolingoHack. duo_wescraper_speak.py uses Selenium, BeautifulSoup, PyAudio, sounddevice, NumPy and Wavio. It records a speaking prompt, trims silence and plays the recording back through configured virtual audio devices. main_webscraper.py is dated 2023-05-23, but the public project date remains null until Michael confirms when the complete project was made. NOT RUN: the automation depends on an old Duolingo interface, account access, browser state and virtual audio-device configuration. Requested media: parallel story sessions, the speaking-practice run, Diamond League/XP result, and current streak. Development classification still needs Michael's confirmation."
+}

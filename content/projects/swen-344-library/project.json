@@ -1,0 +1,57 @@
+{
+  "slug": "swen-344-library",
+  "title": "Library Database & REST API",
+  "tagline": "A library system built in layers while learning PostgreSQL, Python, and REST",
+  "summary": "This was the main project I built while learning full-stack development in SWEN 344. I first modeled a multi-branch library in PostgreSQL and wrote its business logic in Python, then turned the same system into a Flask REST API with users, sessions, book management, and history. It was a useful way to learn how a database, domain layer, and HTTP API fit together.",
+  "published": true,
+  "featured": false,
+  "date": "2025",
+  "status": "RIT SWEN 344 coursework",
+  "tech": [
+    "Python",
+    "PostgreSQL",
+    "Flask",
+    "Flask-RESTful",
+    "SQL",
+    "REST API",
+    "psycopg2",
+    "Unit testing"
+  ],
+  "links": [],
+  "hero": null,
+  "sections": [
+    {
+      "heading": "Building the database first",
+      "body": [
+        "The first version was a Python library system built directly on a ten-table PostgreSQL database. It handled users, books, physical inventory copies, multiple library branches, checkout history, reservations, returns, overdue lockouts, CSV imports, and reports.",
+        "Books and physical copies were kept separate, so several branches could hold copies of the same title. Book history worked like an event log. Returning a book could automatically find the oldest reservation and check that same copy out to the person who had been waiting longest."
+      ],
+      "media": [
+        {
+          "src": "media/database-diagram.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Entity relationship diagram for the library database showing users, inventory, books, libraries, statuses, categories, and book history",
+          "caption": "The PostgreSQL model behind the library system."
+        }
+      ],
+      "layout": "media-right"
+    },
+    {
+      "heading": "Turning it into a REST service",
+      "body": [
+        "The second phase put Flask-RESTful endpoints in front of the database and business logic. The API could create and update users, log them in and out, search books, check out, return, or reserve a book, and filter borrowing history.",
+        "This phase also added session tokens and password hashing. Tests called the running server over HTTP, which gave me practice testing the complete path from a request through the API and Python code into PostgreSQL."
+      ],
+      "media": []
+    },
+    {
+      "heading": "What the course connected",
+      "body": [
+        "The larger SWEN 344 workspace continued from PostgreSQL to Python data access, Flask APIs, and React clients. I also built a nutrition tracker and a vending-machine interface, but this page stays focused on the library system because it shows the database-to-REST progression most clearly."
+      ],
+      "media": []
+    }
+  ],
+  "notes": "DRAFT CREATED FROM USER INTERVIEW AND SOURCE REVIEW. Keep unpublished and brief. Recommended captures: (1) hero showing a successful /books REST response beside the command that started the server, (2) terminal output from the 64-test API suite, and optionally (3) a focused crop of the database diagram showing the books, inventory, libraries, and history relationships. The current full DTR diagram is authentic but extremely tall and should remain supporting media rather than the final hero. Date is recorded only as 2025 because the archive includes course files authored in February 2025 but no trustworthy single completion month. The workspace came from private RIT GitLab checkouts, so no public repository link was added. Not run because it requires a local PostgreSQL instance on port 5433 and startup rebuilds the database."
+}

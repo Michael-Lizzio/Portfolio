@@ -1,13 +1,19 @@
 {
   "slug": "blackjack",
   "title": "Blackjack",
-  "tagline": "A multiplayer blackjack game with configurable players, betting and a complete round summary",
-  "summary": "A multiplayer blackjack game with configurable players, chip-based betting, dealer and player hands, and the standard hit, stand, double and surrender actions. Five screenshots follow the interface from setup and betting through an active hand, results and updated balances, while the video records a complete play-through. The surviving page does not identify the language or libraries, so the technology list remains empty.",
-  "published": false,
+  "tagline": "The 3,372-line Pygame casino game that got me hooked on building big projects",
+  "summary": "Blackjack was the first really big project I completed on my own. I learned each piece as I needed it and slowly built a full multiplayer casino game with accounts, saved statistics, chip betting, splits, insurance, surrender, hotkeys, settings, and a complete round flow. Somehow all 3,372 lines live in one Python file, and somehow it works.",
+  "published": true,
   "featured": false,
   "date": null,
   "status": null,
-  "tech": [],
+  "development": "human-led",
+  "tech": [
+    "Python",
+    "Pygame",
+    "Persistent text storage",
+    "Custom layout algorithms"
+  ],
   "links": [],
   "hero": {
     "src": "media/blackjack_cover.webp",
@@ -17,6 +23,28 @@
     "caption": null
   },
   "sections": [
+    {
+      "heading": "Building it one piece at a time",
+      "body": [
+        "I did not begin with a grand architecture. I added one feature, figured out what it needed, and then moved to the next. Player and hand classes, dealing, bets, account passwords, lifetime statistics, settings, and all the special blackjack actions gradually became one very integrated game.",
+        "Finishing it was incredibly fulfilling. It proved to me that I could keep working through a large idea until the whole thing actually came together, and it pulled me much deeper into coding."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Fitting every hand on the table",
+      "body": [
+        "One of my favorite details is the card display. The program calculates the angle and offset for every card, then fans the hand inside the space available for that player. As more cards are dealt, the layout tightens itself instead of spilling across the table."
+      ],
+      "media": []
+    },
+    {
+      "heading": "More than hit or stand",
+      "body": [
+        "The game supports as many as five players at the same keyboard. Players can bet with chips, split hands, double down, surrender, buy insurance, play as guests or sign into accounts, and review balances and lifetime results after a round."
+      ],
+      "media": []
+    },
     {
       "heading": "Game walkthrough",
       "body": [

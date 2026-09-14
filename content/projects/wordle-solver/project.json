@@ -1,13 +1,21 @@
 {
   "slug": "wordle-solver",
   "title": "Wordle Solver",
-  "tagline": "A Wordle-solving program that narrows the word list and recommends the strongest next guess",
-  "summary": "An early Wordle-solving program that works beside the browser game. Normal mode accepts color feedback as 0, 1 and 2 values, while Super Wordle opens the game in dark mode and automates typing; after each guess it narrows the word list and suggests the strongest candidates. The screenshots and video show it moving from hundreds of possibilities to the answer.",
-  "published": false,
+  "tagline": "A Wordle solver that ranks guesses, narrows the answers, and can play automatically",
+  "summary": "When Wordle first came out, I wanted to know whether I could make a program solve it consistently. My solver filters the possible answers from the green, yellow, and gray feedback, scores the remaining words from their letter frequency, and avoids wasting guesses on repeated letters when new ones would teach it more. Super Wordle goes a step further and reads the browser game so it can play automatically.",
+  "published": true,
   "featured": false,
   "date": "2022-02",
   "status": null,
-  "tech": [],
+  "development": "human-led",
+  "tech": [
+    "Python",
+    "Selenium",
+    "Beautiful Soup",
+    "OpenCV",
+    "PyAutoGUI",
+    "Letter-frequency scoring"
+  ],
   "links": [],
   "hero": {
     "src": "media/wordle_solver_cover.webp",
@@ -17,6 +25,21 @@
     "caption": null
   },
   "sections": [
+    {
+      "heading": "Choosing the next word",
+      "body": [
+        "After every guess, the solver removes words that no longer match the tile feedback. It counts how frequently each letter appears in what remains, then scores candidate guesses from those counts. Duplicate letters are discounted so an early guess can test as many useful letters as possible."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Normal mode and Super Wordle",
+      "body": [
+        "Normal mode works beside any Wordle game: I enter the five tile colors as numbers and the program recommends another guess. Super mode automates the loop. An early version sampled exact tile colors from screenshots, while a later Selenium version clicked the on-screen keyboard and read each tile's state from the page.",
+        "I also added deliberately bad modes that can choose a random guess, a completely random word, or the worst-ranked option, mostly because it was funny to watch."
+      ],
+      "media": []
+    },
     {
       "heading": "Examples",
       "body": [

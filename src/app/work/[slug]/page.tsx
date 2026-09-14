@@ -9,6 +9,8 @@ import { MediaFigure } from "@/components/MediaFigure";
 import { PageHeader } from "@/components/PageHeader";
 import { Prose } from "@/components/Prose";
 import { ProjectLightbox } from "@/components/ProjectLightbox";
+import { RockPaperScissorsGame } from "@/components/RockPaperScissorsGame";
+import { RomanNumeralConverter } from "@/components/RomanNumeralConverter";
 import { TechPill } from "@/components/TechPill";
 import { formatProjectDate } from "@/components/date";
 import { getProject, getProjectSlugs, getProjects } from "@/lib/content";
@@ -173,6 +175,12 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
         <Container size="prose" className={project.hero ? "mt-12" : undefined}>
           <Prose paragraphs={[project.summary]} />
         </Container>
+
+        {project.slug === "one-line-rock-paper-scissors" ? (
+          <RockPaperScissorsGame />
+        ) : null}
+
+        {project.slug === "roman-numerals" ? <RomanNumeralConverter /> : null}
 
         {project.sections.map((section, i) => (
           <ProjectSection key={i} section={section} gallery={gallery} />

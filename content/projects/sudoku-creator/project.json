@@ -1,0 +1,33 @@
+{
+  "slug": "sudoku-creator",
+  "title": "Sudoku Creator and Solver",
+  "tagline": "A Pygame Sudoku app that generates, plays, checks, and solves puzzles",
+  "summary": "After building the Cryptogram Solver, I wanted to use backtracking on another kind of puzzle. This Pygame app can generate Sudoku boards, let you play them, accept a puzzle you enter yourself, and solve the board one step at a time. It mostly works most of the time, which is part of the charm of revisiting it now.",
+  "published": true,
+  "featured": false,
+  "date": "2022",
+  "status": "Complete",
+  "development": null,
+  "tech": ["Python", "Pygame", "Backtracking algorithm", "Puzzle generation"],
+  "links": [],
+  "hero": {
+    "src": "media/sudoku_interface.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "Sudoku interface with a generated puzzle, options on the left and control toggles on the right",
+    "caption": "The original Pygame interface for playing, checking, and solving a generated Sudoku."
+  },
+  "sections": [
+    {
+      "heading": "One program, several modes",
+      "body": ["The interface includes hints, answer checking, erasing, board entry, and a solver view. The generated puzzle keeps track of which cells are original clues, player guesses, hints, correct answers, wrong answers, or solver moves so each kind can be displayed differently."],
+      "media": []
+    },
+    {
+      "heading": "Watching the solver work",
+      "body": ["Instead of solving the whole board instantly, the backtracking routine advances one action per frame. You can watch it try a value, reach a dead end, move backward, and continue until it fills the grid."],
+      "media": []
+    }
+  ],
+  "notes": "Source inspected at selected-projects-temp/PycharmProjects/sudoku creater/main.py. The source explicitly says it was made in summer 2022 after the Colorfill project, so the date is set to 2022 without inventing a month. The existing image.png is an authentic 1920x1080 screenshot and was copied into this project as sudoku_interface.webp. NOT RUN during this pass; behavior was verified from the source. Requested additional media: generated blank/start board, manual entry mode, solver in progress, solved board, and optionally a solver video. Development classification needs confirmation."
+}

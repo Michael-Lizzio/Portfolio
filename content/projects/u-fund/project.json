@@ -1,0 +1,75 @@
+{
+  "slug": "u-fund",
+  "title": "U-Fund: A New Page",
+  "tagline": "A team-built platform for requesting, approving, and funding books for incarcerated people",
+  "summary": "U-Fund: A New Page was my SWEN 261 team project. We built a full-stack system where incarcerated people could request books, prison administrators could approve or deny them, and outside helpers could fund approved requests. It was one of my first chances to work on a fairly complex application with several roles and workflows shared across a team.",
+  "published": true,
+  "featured": false,
+  "date": "2025-04",
+  "status": "RIT SWEN 261 team project",
+  "tech": [
+    "Java 21",
+    "Spring Boot",
+    "Angular 17",
+    "TypeScript",
+    "REST API",
+    "Maven",
+    "JUnit",
+    "JSON file storage",
+    "Three-tier architecture"
+  ],
+  "links": [],
+  "hero": null,
+  "sections": [
+    {
+      "heading": "Working as a team",
+      "body": [
+        "This was a very fun project to work on because the four of us had to collaborate on both sides of a large system. The team was Michael Lizzio, Liam Pennino, Nina Sagawa, and Selene Shen. We divided features between the Angular interface and Spring Boot API, then had to make sure all of our work fit together.",
+        "It gave me real experience coordinating responsibilities, working with code written by other people, and building features that depended on another teammate's work. There was no AI involved in the project."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Three different roles",
+      "body": [
+        "The system had three roles with different permissions and tasks. Inmates created profiles, requested books, and received notifications when a request was approved, denied, or funded. Administrators reviewed the request pool, managed accounts and prisons, and moved approved books into the public cupboard. Helpers searched that cupboard, added books to a funding basket, and completed a simulated checkout.",
+        "The main workflow connected all three roles. An inmate submitted a book request, an administrator reviewed it, and approval moved that book into the collection helpers could fund. Funding it then generated another notification for the inmate."
+      ],
+      "media": []
+    },
+    {
+      "heading": "How we structured it",
+      "body": [
+        "The backend followed a three-tier design with Spring controllers, DAO interfaces, file-backed DAO implementations, and model classes. Seven REST resources handled accounts, books, requests, funding baskets, notifications, prisons, and profiles. The Angular app had matching services and route guards for each user's role.",
+        "The backend stored its data in JSON files and rewrote those files when records changed. The project also included JUnit tests and separate JaCoCo coverage reports for the controller, model, and persistence tiers."
+      ],
+      "media": [
+        {
+          "src": "media/architecture.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "U-Fund architecture diagram showing the Angular client, Spring REST controllers, Java model and persistence layers, and file storage",
+          "caption": "The project's view, controller, model, persistence, and storage layers."
+        }
+      ],
+      "layout": "media-right"
+    },
+    {
+      "heading": "One complete interaction",
+      "body": [
+        "This sequence diagram follows a helper searching for a book and adding it to a funding basket. The request travels from the Angular client through the Spring controller and service layer, then into the basket and book data objects before the result returns to the browser."
+      ],
+      "media": [
+        {
+          "src": "media/helper-basket-sequence.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Sequence diagram tracing a helper's book search and add-to-basket request through the Angular client, Spring controller, services, and data access objects",
+          "caption": "Helper book search and funding-basket sequence."
+        }
+      ],
+      "layout": "media-left"
+    }
+  ],
+  "notes": "DRAFT CREATED FROM USER INTERVIEW AND SOURCE REVIEW. Keep unpublished until real application screenshots are supplied. Recommended captures: (1) hero showing the helper cupboard with several approved books, (2) inmate request form and profile, (3) admin request-review screen with approve/deny controls, (4) helper funding basket and checkout, and (5) notifications showing the cross-role workflow. A short presentation clip could be added after those stills. Existing architecture and sequence diagrams are authentic files from docs/. Date 2025-04 comes from the archive index's last team commit. The source was not run because dependencies were deliberately excluded from the temporary archive and the JSON data files are mutated at runtime. Authentication and payment are course-project simulations and should not be described as production security or real payment processing. No public repository URL was verified."
+}

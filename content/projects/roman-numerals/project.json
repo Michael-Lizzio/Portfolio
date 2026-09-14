@@ -1,0 +1,41 @@
+{
+  "slug": "roman-numerals",
+  "title": "Roman Numeral Converter",
+  "tagline": "An early two-way Roman numeral converter with its own validity check",
+  "summary": "I wrote this on a Raspberry Pi before I even knew about while loops. It converts Roman numerals into regular numbers, checks whether the input is valid, and uses a separate conversion routine for the other direction. Looking back at it is a fun snapshot of how I solved problems before I knew the normal tools for solving them.",
+  "published": true,
+  "featured": false,
+  "date": null,
+  "status": "Complete",
+  "development": null,
+  "tech": ["Python", "NumPy", "Command-line interface"],
+  "links": [
+    {
+      "label": "Cover photo: Sonse (CC BY 2.0)",
+      "href": "https://commons.wikimedia.org/wiki/File:Inscription_erected_by_Basilius_at_the_Colosseum_in_Rome_(45446761285).jpg"
+    }
+  ],
+  "hero": {
+    "src": "media/roman_numeral_cover.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "Ancient Roman inscription on a stone slab with the title Roman Numeral Converter",
+    "caption": "Adapted from a photograph by Sonse, licensed CC BY 2.0."
+  },
+  "sections": [
+    {
+      "heading": "A strange but useful validator",
+      "body": ["The program decodes the Roman numeral, converts the answer back into a canonical Roman numeral, and compares that result with the original input. If the strings do not match, it can reject forms such as IIII and suggest IV instead."],
+      "media": []
+    },
+    {
+      "heading": "How the two directions work",
+      "body": [
+        "Reading a Roman numeral goes from left to right. A symbol is added when it is at least as large as the symbol after it, but subtracted when a larger symbol follows it. That is why VI is 5 + 1, while IV is -1 + 5.",
+        "Writing a Roman numeral works in the other direction. The converter repeatedly takes the largest symbol or subtractive pair that fits into the number, appends it, and continues with the remainder. The playable trace above exposes each of those decisions."
+      ],
+      "media": []
+    }
+  ],
+  "notes": "Source inspected at selected-projects-temp/PycharmProjects/Roman Numerals/main.py and test.py. Michael remembers building it around 2020 or 2021 after a Seattle trip, but asked that the date remain TBD until he confirms it. The Arabic-to-Roman portion may include off-the-shelf code whose author or source has not yet been identified; do not publish a source-code excerpt or repository link until attribution is checked. NOT RUN: inspected from source. Development classification needs confirmation. The JavaScript terminal requires a shared site feature outside the current content-only schema."
+}

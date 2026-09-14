@@ -1,0 +1,33 @@
+{
+  "slug": "one-line-rock-paper-scissors",
+  "title": "One-Line Rock Paper Scissors",
+  "tagline": "A tiny Python game squeezed into two deliberately ridiculous lines",
+  "summary": "This was a small code-golf experiment to see how much game logic I could compress without breaking it. The result fits the outcome logic on one line and the entire input loop on another. It is not the cleanest way to write a game, but finding the little Python tricks that made it possible was the whole point.",
+  "published": true,
+  "featured": false,
+  "date": null,
+  "status": "Complete",
+  "development": null,
+  "tech": ["Python", "Conditional expressions"],
+  "links": [],
+  "hero": {
+    "src": "media/rock_paper_scissors_line_cover.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "Black ink drawing of paper, rock, and scissors connected by arrows showing the winning cycle",
+    "caption": "The triangle behind the one-line win test: rock beats scissors, scissors beats paper, and paper beats rock."
+  },
+  "sections": [
+    {
+      "heading": "The two lines",
+      "body": [
+        "The game is a triangle rather than a straight ranking: rock beats scissors, scissors beats paper, and paper beats rock. The code turns that triangle into the numbered list [paper, rock, scissors], or [0, 1, 2]. Each choice beats the item one step ahead, with scissors wrapping from 2 back to paper at 0.",
+        "For paper and rock, adding one finds the choice they beat: 0 + 1 is rock, and 1 + 1 is scissors. Scissors is the wraparound case, so subtracting two turns its index 2 into paper's index 0. If neither test matches, equal indexes mean a tie and the remaining case is a loss.",
+        "Chained conditional expressions select the result text, while semicolons keep the input and output loop on one physical line. It is intentionally compressed code, but the triangle is the simple idea underneath it."
+      ],
+      "codeBlocks": ["def get_res(str,c_num): return \"You Win!!, I chose \" + [\"paper\", \"rock\", \"scissors\"][c_num] if([\"paper\", \"rock\", \"scissors\"].index(str) - 2 == c_num or [\"paper\", \"rock\", \"scissors\"].index(str) + 1 == c_num) else \"We Tied, I chose \" + [\"paper\", \"rock\", \"scissors\"][c_num] if [\"paper\", \"rock\", \"scissors\"].index(str) == c_num else \"You Lose, HaHa!, I chose \" + [\"paper\", \"rock\", \"scissors\"][c_num]\nchoice = \"\"\nwhile choice.lower() != 'q': choice = input(\"Rock Paper or Scissors (Q) - Quit: \" ).lower(); print(get_res(choice, randint(0, 2)) if choice != 'q' else \"Thanks for Playing!!\")"],
+      "media": []
+    }
+  ],
+  "notes": "Source inspected at selected-projects-temp/PycharmProjects/One line Rock Paper Scisors/main.py. The file contains two active game statements plus older commented attempts and unrelated scratch code at the end. The displayed code preserves the active get_res function and loop. NOT RUN because the behavior is directly readable and interactive terminal input is not needed for content verification. Date and development classification need Michael's confirmation. The embedded JavaScript terminal requires a shared site feature and is not represented by the current content schema."
+}

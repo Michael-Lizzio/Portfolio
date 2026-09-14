@@ -51,3 +51,7 @@ next-env.d.ts
 
 # static export output
 /out
+
+# local scratch — resume builds, not part of the site
+/output
+/tmp

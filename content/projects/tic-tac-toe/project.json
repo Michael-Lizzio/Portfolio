@@ -1,0 +1,27 @@
+{
+  "slug": "tic-tac-toe",
+  "title": "Tic-Tac-Toe",
+  "tagline": "My first Pygame project, with three levels of computer opponent",
+  "summary": "This was my first graphical game and the project I made before Blackjack. I built the board, menus, scorekeeping, local two-player mode, and three computer difficulties in one Python file. It was mostly an excuse to learn Pygame, but it became a complete little game along the way.",
+  "published": true,
+  "featured": false,
+  "date": null,
+  "status": "Complete",
+  "development": null,
+  "tech": ["Python", "Pygame", "NumPy", "Heuristic game logic"],
+  "links": [],
+  "hero": null,
+  "sections": [
+    {
+      "heading": "The computer player",
+      "body": ["The hard difficulty does not use machine learning or a huge game tree. It looks for immediate wins and blocks, scores the remaining routes through each empty square, and handles one important fork as a special case. Medium sometimes chooses a random move instead, and easy is more random again."],
+      "media": []
+    },
+    {
+      "heading": "What I learned",
+      "body": ["Every X, O, line, button, and score box is drawn from dimensions calculated in the program. Building that interface gave me the Pygame experience I used for the much larger Blackjack project next."],
+      "media": []
+    }
+  ],
+  "notes": "Source inspected at selected-projects-temp/PycharmProjects/Tic-Tac-Toe Game/main.py. The source calls it the first graphics game, says it was made one or two days before Blackjack, and places it after Cryptogram. Date remains null until Michael supplies the proper date. NOT RUN during this pass; features were verified from the source functions and control flow. Requested media: home/menu screen, each difficulty or a representative computer match, end screen/scoreboard, and optionally a short gameplay video. Development classification needs confirmation."
+}

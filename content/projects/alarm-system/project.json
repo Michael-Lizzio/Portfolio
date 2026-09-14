@@ -1,24 +1,21 @@
 {
   "slug": "alarm-system",
   "title": "Automated Alarm System",
-  "tagline": "An off-the-shelf home alarm rebuilt around a Raspberry Pi and a custom Pygame panel",
-  "summary": "A budget 4-channel RFID home alarm system upgraded into a smarter security setup driven by a Raspberry Pi. The Pi reads the alarm panel's LED alert lights as voltages to work out which door is open and when the battery is low, and it controls the alarm's power cord and onboard beeper through relays. A first version used a simple LCD screen and a single mode button; a subsequent version further expanded the user interface and available features with a fully customized Pygame GUI offering mode selection, color-coded sensor status, configurable per-mode behavior, lifetime statistics, and email and SMS alerts.",
+  "tagline": "Three generations of a home alarm built from hacked hardware, a Raspberry Pi, and custom software",
+  "summary": "This project grew through three very different versions. My dad and I first soldered into a cheap RF alarm panel so a Raspberry Pi could read its lights, announce open doors, and keep logs. I later built my own Pygame control panel, then replaced that with a remotely accessible web system made from several small services talking over a shared TCP protocol.",
   "published": true,
   "featured": false,
   "date": null,
   "status": null,
   "tech": [
+    "Python",
     "Raspberry Pi",
     "Pygame",
-    "Pi Hat (reads LED voltages)",
-    "Relays",
-    "LCD screen",
-    "Motion sensor",
-    "4-channel RFID alarm system",
-    "UPS",
-    "HDMI",
-    "Home network / router",
-    "Email and SMS notifications"
+    "Flask",
+    "TCP and JSON",
+    "Tailscale",
+    "Telegram",
+    "Relays and RF sensors"
   ],
   "links": [],
   "hero": {
@@ -30,45 +27,24 @@
   },
   "sections": [
     {
-      "heading": "Overview",
+      "heading": "Version one: hacking the alarm panel",
       "body": [
-        "This project upgrades a basic alarm system into a sophisticated security solution using a Raspberry Pi. The enhanced system features advanced alert capabilities, a customizable user experience, and improved functionality for monitoring and managing home security."
+        "My dad and I opened an inexpensive Amazon alarm and soldered connections onto the LEDs it used for its wireless door sensors. The Raspberry Pi watched those voltage patterns, worked out which door or gate was open, announced it with a wonderfully robotic voice, and saved an event log."
       ],
       "media": []
     },
     {
-      "heading": "Project Story",
+      "heading": "Version two: the Pygame panel",
       "body": [
-        "The original alarm system was limited to indicating which door was open by lighting up corresponding LEDs. To enhance its capabilities, I developed a system that integrates a Raspberry Pi to monitor and respond to various events. The initial version involved soldering wires to the alert lights, connecting them to a Raspberry Pi, which measured voltages to detect open doors and low battery conditions through LED flash patterns. This system utilized a simple LCD screen to display modes and a button to switch between the modes.",
-        "The subsequent version further expanded the user interface and available features. A fully customized GUI was created using Pygame, offering complex, reusable, and configurable parameters to suit user needs."
+        "I built the next interface myself in Pygame, without AI. It had alarm modes, sensor status, settings, sound behavior, notifications, and statistics. I had much bigger plans for it, but a memory leak eventually killed the process after a week or two of continuous use."
       ],
       "media": []
     },
     {
-      "heading": "Hardware Components",
+      "heading": "Version three: a network of services",
       "body": [
-        "Alarm System: Utilized a budget-friendly 4-channel RFID alarm system from Amazon.",
-        "Integration: LED leads are connected to a Pi Hat on the Raspberry Pi, which reads voltages. The alarm system’s power cord and onboard beeper are routed through relays controlled by the Raspberry Pi.",
-        "Connectivity: The system connects to the home network via a router and is powered by a UPS, with an HDMI cable linking to the control panel.",
-        "Additional Sensors: Integrated a motion sensor for enhanced detection capabilities."
-      ],
-      "media": []
-    },
-    {
-      "heading": "Main Screen Features",
-      "body": [
-        "Top Buttons: Settings, mode selector (Auto Home, Home Day and Night, Away, Out), and Wi-Fi status indicator.",
-        "Bottom Status Bar: Displays the status of sensors with color-coded indicators: open (red), closed (green), errors (yellow), no power (black), and unknown (gray)."
-      ],
-      "media": []
-    },
-    {
-      "heading": "Settings Screen Enhancements",
-      "body": [
-        "Master Sound Settings: Adjust sound alerts for various conditions.",
-        "Mode Behavior Configuration: Customize how each mode responds to detected events.",
-        "Lifetime Statistics: View detailed analytics on system performance and usage.",
-        "Notification Management: Configure email and SMS alert behavior."
+        "The final version moved to a Flask web interface that could be reached through Tailscale. Hardware, relays, motion, audio, notifications, data, cameras, and system state were split into services that communicated over TCP with a shared JSON protocol.",
+        "I arrived at that design by solving the communication problems as they appeared, before I had formally learned the term microservices. There is much more to show here later, especially the hardware, camera idea, interfaces, and how the services fit together."
       ],
       "media": []
     }

@@ -1,0 +1,27 @@
+{
+  "slug": "rit-dining-notifications",
+  "title": "RIT Dining Notifications",
+  "tagline": "A Telegram budget assistant built around my real RIT dining balance",
+  "summary": "I built this because I wanted a useful daily number, not another spreadsheet to maintain. The program logged into RIT TigerSpend, saved new purchases, and messaged me through Telegram whenever it found one. It also divided my remaining Dining Dollars by the time left in the semester so I always knew what I could spend that day and week.",
+  "published": true,
+  "featured": false,
+  "date": null,
+  "status": "Archived",
+  "development": null,
+  "tech": ["Python", "Selenium", "Beautiful Soup", "Telegram Bot API", "JSON"],
+  "links": [],
+  "hero": null,
+  "sections": [
+    {
+      "heading": "A budget that adjusted itself",
+      "body": ["The daily and weekly limits were recalculated from the latest balance and the number of days left. When I spent less than the allowance, the leftover money stayed in the total and raised the amount available later in the semester."],
+      "media": []
+    },
+    {
+      "heading": "How it worked",
+      "body": ["The scraper opened TigerSpend, waited for me to approve the Duo login, selected the Dining Dollars account, and parsed its transaction table. New entries were stored in JSON and sent to a Telegram bot, which also supported commands for refreshing purchases and checking the current budget."],
+      "media": []
+    }
+  ],
+  "notes": "Source inspected at selected-projects-temp/PycharmProjects/RIT-Dining-Notifications, excluding secret.py. main.py contains a Fall 2024 semester end date, but that does not prove the original project date, so the public date remains null. The source verifies Selenium/BeautifulSoup scraping, JSON transaction storage, Telegram messages, daily and weekly budget calculations, and manual refresh/check-funds commands. NOT RUN because it requires RIT credentials, Duo approval, an old browser profile and a Telegram token. Requested media: Telegram purchase alert, check-funds response, budget message, sanitized transaction history, and optionally a short demo. All screenshots must hide names, account identifiers, balances if sensitive, login screens, tokens and connection codes. Development classification needs confirmation."
+}

@@ -1,0 +1,74 @@
+{
+  "slug": "rit-laundry-tracker",
+  "title": "RIT Dorm Laundry Tracker",
+  "tagline": "My first team prototype for checking dorm washers and dryers before walking downstairs",
+  "summary": "This was one of my first team software projects at RIT. We made a prototype where students could choose their residence hall, see which washers and dryers were available, and start a 55-minute laundry timer. It was also where I met my friend Jimmy, who I am still friends with today, and it gave me my first real experience building software with other people.",
+  "published": true,
+  "featured": false,
+  "date": "2024-10",
+  "status": "RIT SWEN 101 team project",
+  "tech": [
+    "HTML",
+    "CSS",
+    "Vanilla JavaScript",
+    "localStorage",
+    "JSON data modeling"
+  ],
+  "links": [
+    {
+      "label": "Repo",
+      "href": "https://github.com/Michael-Lizzio/SWENGroup-1"
+    }
+  ],
+  "hero": {
+    "src": "media/machine-status.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "RIT dorm laundry page showing Kate Gleason Hall washers outlined in green when available and red when in use",
+    "caption": "The washer and dryer availability screen running locally."
+  },
+  "sections": [
+    {
+      "heading": "My first team experience",
+      "body": [
+        "The most important part of this project for me was learning how to work on software with a team for the first time. We had to agree on what the app should do, divide the pages and features, share our code, and bring everything back together into one flow.",
+        "It was a great introduction to collaborating instead of building everything alone. I also met my friend Jimmy through the project, and we are still friends today."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Choosing a dorm",
+      "body": [
+        "The prototype starts with a simple RIT email login and then asks the student to choose one of thirteen residence halls. The selected dorm is saved in localStorage and carried to the machine page."
+      ],
+      "media": [
+        {
+          "src": "media/dorm-selection.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Dorm selection page listing RIT residence halls over a campus photograph",
+          "caption": "Students choose their residence hall before viewing its machines."
+        }
+      ],
+      "layout": "media-right"
+    },
+    {
+      "heading": "Availability and timers",
+      "body": [
+        "The machine screen uses a green outline for available washers and dryers and a red outline for machines that are in use. Choosing an available machine opens a status page with a 55-minute countdown.",
+        "This was a front-end prototype rather than a connected campus system. We designed a JSON structure for thirteen dorms and eight machines per dorm, but the final pages still used hardcoded machine states and the timer reset if the page was refreshed."
+      ],
+      "media": [
+        {
+          "src": "media/washer-timer.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Orange washer status page showing a 55-minute countdown and a button to start the timer",
+          "caption": "The washer countdown before it starts."
+        }
+      ],
+      "layout": "media-left"
+    }
+  ],
+  "notes": "DRAFT CREATED FROM USER INTERVIEW AND A LOCAL RUN. The app was served from SWENGroup-1/ and the complete flow was verified: login, dorm selection, machine availability, and washer timer. The three screenshots were captured from that run on 2026-09-13. GitHub API confirmed Michael-Lizzio/SWENGroup-1 is public but GitHub Pages is not enabled, so only the repository is linked and no live-demo claim is made. Date 2024-10 comes from the data generator's authored date; the repository was pushed in December 2024. The visible copy intentionally says this is a front-end prototype because machine_data.json is never loaded and availability remains hardcoded. User supplied the personal context about meeting Jimmy and remaining friends."
+}

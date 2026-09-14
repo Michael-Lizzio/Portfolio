@@ -3,7 +3,7 @@
   "title": "LA28 Olympic Itinerary Planner",
   "tagline": "Turning LA28 ticket listings into a searchable planner with a shareable itinerary",
   "summary": "A pair of static HTML/CSS/JavaScript planners for the 2028 Los Angeles Olympics, built on ticket and schedule data that had to be extracted before it could be planned against. A Python script reads screenshots of the official LA28 Olympic Games Tickets listing page through an OpenAI vision model and writes strict-schema JSON; a Node script does the same job from a pasted text dump. The browser apps then let you search, filter, sort, browse a month calendar, build an itinerary, and see an estimated total from listed starting prices. Everything runs client-side: selections live in localStorage and export as JSON you can hand to someone else.",
-  "published": false,
+  "published": true,
   "featured": false,
   "date": "2026-04",
   "status": null,

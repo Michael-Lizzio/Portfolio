@@ -1,0 +1,22 @@
+{
+  "slug": "warm-cold-square",
+  "title": "Warm Cold Square",
+  "tagline": "A two-day Pygame challenge about finding a hidden square without hitting a bomb",
+  "summary": "I made this with my cousin Justin as a quick two-day challenge. A square is hidden somewhere on the screen, and the game tells you whether your mouse is burning, hot, warm, cold, very cold, or in the fridge. The catch is that the screen is covered with red bombs that end the round if you touch them.",
+  "published": true,
+  "featured": false,
+  "date": null,
+  "status": "Complete",
+  "development": null,
+  "tech": ["Python", "Pygame", "Manhattan distance", "Pygbag"],
+  "links": [],
+  "hero": null,
+  "sections": [
+    {
+      "heading": "How it plays",
+      "body": ["Easy, medium, and hard change both the hidden square's size and the number of bombs. The temperature word comes from the Manhattan distance between the cursor and the square. Reaching the square reveals it in green and gives you a time and score."],
+      "media": []
+    }
+  ],
+  "notes": "Source inspected at selected-projects-temp/PycharmProjects/Warm cold square/main.py. The opening comment says it was a two-day challenge with Justin toward the middle or end of summer. Exact year and date need Michael's confirmation. The checked-in environment indicates Pygbag and the async main-loop shape matches browser packaging, but the app was not run during this pass. Requested media: menu/difficulty screen, an in-progress round showing a temperature, a win screen, a loss screen, and optionally short gameplay. Development classification needs confirmation."
+}
