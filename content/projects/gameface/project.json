@@ -1,0 +1,144 @@
+{
+  "slug": "gameface",
+  "title": "GameFace",
+  "tagline": "An AWS face-matching app that finds the professional athlete you resemble",
+  "summary": "GameFace was my SWEN 514 team project, an AWS application that compared an uploaded photo with professional athletes and returned the five closest matches. I built the face-recognition side from an early local prototype into four Python Lambda functions, then used Terraform to connect them to Rekognition, S3, DynamoDB, API Gateway, CloudWatch, and SNS. The finished system combined that backend with my teammates' sports-data scraper and React interface in one repeatable deployment.",
+  "published": false,
+  "featured": false,
+  "date": "2026-04",
+  "status": "RIT SWEN 514 team project",
+  "development": null,
+  "tech": [
+    "Python 3.12",
+    "Boto3",
+    "AWS Rekognition",
+    "AWS Lambda",
+    "Amazon API Gateway",
+    "Amazon S3",
+    "Amazon DynamoDB",
+    "Amazon CloudWatch",
+    "Amazon SNS",
+    "Terraform",
+    "React 19",
+    "Vite",
+    "Amazon EC2"
+  ],
+  "links": [
+    {
+      "label": "Combined Terraform",
+      "href": "https://github.com/514-2255-2-team2/Main-Terraform"
+    },
+    {
+      "label": "Rekognition service",
+      "href": "https://github.com/514-2255-2-team2/rekognition-deployment"
+    },
+    {
+      "label": "React interface",
+      "href": "https://github.com/514-2255-2-team2/GameFaceUI"
+    }
+  ],
+  "hero": {
+    "src": "media/gameface-match.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "GameFace showing an uploaded photo of Damar Hamlin beside a 100 percent match and additional athlete results",
+    "caption": "The finished app returned a ranked list with each athlete's photo, name, team, league, and similarity score."
+  },
+  "sections": [
+    {
+      "heading": "What we built",
+      "body": [
+        "The idea was simple: upload a face and see which professional athlete it looks like. The finished prototype let a user search across every available team or narrow the comparison to the Kansas City Chiefs or Buffalo Bills, which were the two teams loaded for our final demo.",
+        "Behind that simple screen was a complete cloud workflow. The system collected athlete data and photos, indexed each face into a team-specific Rekognition collection, accepted a user's image, searched the selected collections, and returned the top five matches with player details and similarity scores."
+      ],
+      "media": [
+        {
+          "src": "media/gameface-upload.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "GameFace upload screen with a team selector, image picker, submit button, and results area",
+          "caption": "The starting screen gave the user one focused choice: select a team scope, choose a JPG or PNG, and submit it for matching."
+        }
+      ],
+      "layout": "media-right"
+    },
+    {
+      "heading": "My part of the system",
+      "body": [
+        "I owned the Rekognition portion of the project. I started with local Python scripts that created a face collection, indexed a directory of player photos, searched it with a test image, and even used a webcam to compare a live photo with the closest player. That small experiment gave me a way to understand the API before placing it inside the team's larger AWS architecture.",
+        "I then turned that prototype into four Lambda functions. One indexed athlete faces and recorded their Rekognition face IDs in DynamoDB. Another uploaded user images to a private S3 bucket. The search function compared an uploaded image across one or more team collections and ranked the results. The final function fetched a player's DynamoDB record and generated a temporary S3 URL for the interface.",
+        "I also wrote the Terraform that packaged those functions, created their roles and service-specific permissions, exposed the endpoints through API Gateway, and configured the user-upload bucket. The bucket blocked public access and used server-side encryption, while the API returned browser-friendly CORS responses for the React client."
+      ],
+      "media": []
+    },
+    {
+      "heading": "One command for the complete system",
+      "body": [
+        "Our early version split the backend and frontend into separate Terraform processes, and someone still had to copy the API URL into the UI. By the final check-in, we had combined the pieces into one Terraform project. The generated API endpoint passed into the EC2 startup script as an environment variable, so the React app could start with the correct backend automatically.",
+        "The recorded deployment created 48 AWS resources with one terraform apply. It provisioned the storage, database, Lambda functions, API routes, monitoring, and the EC2 instance that hosted the interface. I also corrected the startup order so the athlete scraper finished before the face indexer ran. Without that dependency, the indexer could scan DynamoDB too early and miss players added later in the scrape."
+      ],
+      "media": [
+        {
+          "src": "media/aws-architecture.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "GameFace AWS architecture showing Terraform, EC2, API Gateway, Lambda, Rekognition, S3, DynamoDB, CloudWatch, and SNS",
+          "caption": "The final architecture joined the React UI, API, face-matching workflow, data pipeline, and alerting system in one Terraform-managed stack."
+        }
+      ],
+      "layout": "media-left"
+    },
+    {
+      "heading": "Following a match through AWS",
+      "body": [
+        "When a user submitted an image, the browser encoded it and called the upload endpoint. A Lambda function decoded the image, gave it a unique S3 key, and returned its S3 location. The browser then called the search endpoint with that location and the selected team names.",
+        "The search Lambda converted each team name into a valid Rekognition collection ID and searched the collections independently. It combined duplicate player IDs, sorted every result by similarity, and returned the requested number of matches. The interface used the player-details endpoint to pair those scores with the athlete's name, team, league, and photo."
+      ],
+      "codeBlocks": [
+        "React UI\n  | upload photo\n  v\nAPI Gateway -> Upload Lambda -> S3\n  | image location + selected teams\n  v\nSearch Lambda -> Rekognition collections\n  | ranked player IDs + similarity\n  v\nPlayer Details Lambda -> DynamoDB + S3 -> React UI"
+      ],
+      "media": []
+    },
+    {
+      "heading": "Monitoring weak matches",
+      "body": [
+        "A low score could mean that the uploaded person was not represented in the athlete collection. I added a custom CloudWatch metric for the best similarity score from each search, then connected it to a Terraform-managed alarm and SNS email subscription. In our demo, a best match below 10 percent triggered an email so the team could see that the search had produced an unusually weak result.",
+        "The monitoring call was intentionally non-fatal. If CloudWatch could not accept a metric, the matching request still returned its results to the user instead of turning an observability problem into an application failure."
+      ],
+      "media": [
+        {
+          "src": "media/gameface-low-score.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "GameFace showing low-confidence Kansas City Chiefs matches with similarity scores below five percent",
+          "caption": "Searching with someone outside the selected collection produced weak matches and exercised the CloudWatch and SNS alert path."
+        }
+      ],
+      "layout": "media-right"
+    },
+    {
+      "heading": "Building it as a team",
+      "body": [
+        "My teammates built the sports-data scraper and React interface while I focused on face recognition and its AWS deployment. The project became most interesting when those parts had to work together. We had to agree on S3 locations, DynamoDB fields, API payloads, environment variables, and the order in which resources and data became available.",
+        "That integration work changed the project from several working pieces into one system another person could deploy. We produced both an AMI-based setup path and a manual CloudShell guide, confirmed the SNS subscription, opened the IP address Terraform returned, tested real matches and intentionally weak ones, and finished by tearing the complete stack down with Terraform."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Demo",
+      "body": [
+        "This excerpt from our final team check-in shows the deployed interface, the team filter, and a successful search. The uploaded Damar Hamlin image returns itself at 100 percent, followed by the other closest athletes from the selected collections."
+      ],
+      "media": [
+        {
+          "src": "media/gameface-demo.mp4",
+          "kind": "video",
+          "poster": "media/gameface-demo.poster.webp",
+          "alt": "Final GameFace team demo showing the upload interface, team filter, and ranked athlete matches",
+          "caption": "A 35-second excerpt from the final SWEN 514 team demonstration."
+        }
+      ]
+    }
+  ],
+  "notes": "Sources inspected 2026-09-15: public repositories 514-2255-2-team2/Main-Terraform, 514-2255-2-team2/GameFaceUI, and 514-2255-2-team2/rekognition-deployment; private repositories 514-2255-2-team2/rekognition, Photo-Scrapper, and API-Gateway; supplied Drive archive /Users/michael/Downloads/SWEN 514-20260915T181611Z-1-001.zip, including AWS.drawio, Project Setup & Teardown - Team 2.docx, Untitled presentation.pptx, SWEN 514 - Check In #3 - Team 2.pptx, and the Check In #2 and #3 videos. Git history attributes the Rekognition prototype, Python search/index code, four Lambda functions, their Terraform/IAM/API Gateway/S3 deployment, CloudWatch custom metric, SNS subscription/alarm, unique athlete bucket naming, and scraper-before-indexer dependency fix to Michael Lizzio. Git history attributes the React UI and scraper primarily to teammates, so the page describes those as team work. The final recorded run and setup guide show Terraform creating 48 resources and the application returning top-five matches across the Kansas City Chiefs and Buffalo Bills. Check In #2 and #3 were transcribed locally with Whisper base.en; the final check-in confirmed the unified Terraform deployment, environment-variable API handoff, startup order, top-five UI, team filter, and under-10-percent alarm behavior. The React UI was run locally on 2026-09-15; npm ci, npm run build, and npm run lint passed. It could not exercise the retired AWS backend locally. npm audit reported 13 dependency vulnerabilities in the historical lockfile, so the public page does not claim this course prototype is production-ready. The AWS stack was not applied during portfolio work because doing so would create billable cloud resources and require credentials; runtime behavior is documented from the supplied recorded demonstrations. Date 2026-04 comes from the final repository commits and dated demo/setup evidence. Development is left null because Michael did not classify this project's development process as human-led, AI-assisted, or AI-generated. The hero and two supporting screenshots were cropped from the supplied final check-in video at approximately 03:01, 03:19, and 03:45 to remove browser chrome and the video-call participant panel. The architecture image is the clean final diagram rendered from the supplied presentation. The demo is a cropped 35-second excerpt from approximately 03:00 to 03:35 of the final check-in video; it excludes the later email screen and participant panel."
+}
