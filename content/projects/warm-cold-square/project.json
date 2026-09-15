@@ -3,7 +3,7 @@
   "title": "Warm Cold Square",
   "tagline": "A two-day Pygame challenge about finding a hidden square without hitting a bomb",
   "summary": "I made this with my cousin Justin in June 2022 as a small two-day, hackathon-style challenge. A green square is hidden somewhere on the screen, and the only guidance is a changing temperature clue based on how close the mouse is to it. The challenge is to reach the target quickly while threading through a field of red bombs that can end the round immediately.",
-  "published": true,
+  "published": false,
   "featured": false,
   "date": "2022-06",
   "status": "Complete",
