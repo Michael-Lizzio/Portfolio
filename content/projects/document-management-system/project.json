@@ -26,11 +26,11 @@
   ],
   "links": [],
   "hero": {
-    "src": "media/workflow_comparison.webp",
+    "src": "media/review-queue.webp",
     "kind": "image",
     "poster": null,
-    "alt": "Two workflow diagrams comparing the former five-step manual document process with the four-step evidence-backed review process",
-    "caption": "The prototype replaced a repeated trip through File Explorer, a PDF viewer, manual renaming, and a spreadsheet with one review flow."
+    "alt": "Signal Scanner dashboard showing a large review queue of classified documents waiting for human approval",
+    "caption": "The dashboard kept incoming scans, background processing, and the review queue visible in one place."
   },
   "sections": [
     {
@@ -42,11 +42,11 @@
       "codeBlocks": [],
       "media": [
         {
-          "src": "media/review-queue.webp",
+          "src": "media/workflow_comparison.webp",
           "kind": "image",
           "poster": null,
-          "alt": "Signal Scanner dashboard showing a large review queue of classified documents waiting for human approval",
-          "caption": "The dashboard kept incoming scans, background processing, and the review queue visible in one place."
+          "alt": "Two workflow diagrams comparing the former five-step manual document process with the four-step evidence-backed review process",
+          "caption": "The prototype replaced a repeated trip through File Explorer, a PDF viewer, manual renaming, and a spreadsheet with one review flow."
         }
       ]
     },
