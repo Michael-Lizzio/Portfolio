@@ -1,24 +1,21 @@
 {
   "slug": "wasted-asphalt",
   "title": "WastedAsphalt",
-  "tagline": "County-scale parking-lot utilization analysis from satellite imagery",
-  "summary": "WastedAsphalt is a local web app for analyzing parking-lot utilization across New York counties. It pulls parking polygons from OpenStreetMap, downloads Mapbox satellite imagery, estimates visible utilization with a classical image-analysis pipeline, and exports ArcGIS-friendly results. Its persistent job system lets long county runs pause, resume, and recover after a restart.",
-  "published": true,
+  "tagline": "Scores how much of a county's parking asphalt is sitting visibly empty, from satellite imagery",
+  "summary": "A local web app that measures how much parking surface a New York county is carrying and how much of it is visibly in use. It loads county boundaries from a TIGER/Line shapefile, pulls every amenity=parking polygon from OpenStreetMap through Overpass, downloads a Mapbox satellite chip for each lot, and runs a classical image pipeline that samples the lot's own asphalt color and measures how much of the surface deviates from it. Monroe County resolves to 3,726 lots, 3,697 of them analyzed, at a 26% county average. Jobs are pausable and resumable, and results export as GeoPackage, GeoJSON, or CSV for ArcGIS.",
+  "published": false,
   "featured": false,
   "date": "2026-04",
   "status": null,
   "tech": [
-    "Python",
     "FastAPI",
-    "React",
-    "TypeScript",
-    "Mapbox GL JS",
+    "React + TypeScript",
+    "Mapbox GL",
+    "OpenStreetMap Overpass API",
     "OpenCV",
-    "SQLAlchemy",
-    "SQLite",
-    "OpenStreetMap",
-    "Overpass API",
-    "GeoPandas"
+    "Shapely + pyproj",
+    "SQLite job queue",
+    "GeoPackage / GeoJSON export"
   ],
   "links": [
     {
@@ -27,52 +24,81 @@
     }
   ],
   "hero": {
-    "src": "media/county-picker.webp",
+    "src": "media/wasted_asphalt_cover.webp",
     "kind": "image",
     "poster": null,
-    "alt": "WastedAsphalt county picker with a New York map, county list, and analysis panels",
-    "caption": "The app starts with all New York counties and their current processing status."
+    "alt": "WastedAsphalt with Monroe County selected, showing 3,726 lots, 3,697 analyzed, 29 skipped, and a 26 percent average beside a satellite map around Rochester",
+    "caption": "A completed Monroe County run with county totals and the processed parking lots visible together."
   },
   "sections": [
     {
-      "heading": "What the app does",
+      "heading": null,
       "body": [
-        "The app loads New York county boundaries from the local 2025 TIGER/Line shapefile and displays them on a Mapbox satellite-streets map. Pick a county and it queries Overpass for OpenStreetMap parking polygons, clips them to the county, and skips underground, multi-storey, rooftop, covered, and other lots that cannot be analyzed well from above.",
-        "For each analyzable lot, it downloads and caches a Mapbox satellite image, aligns the parking polygon with that image, and estimates how much of the visible paved area is occupied. The map, raw image, analysis overlay, utilization ratio, and confidence can all be inspected one lot at a time."
+        "I wanted to know how much of a city is paved over for parking that nobody is using. The pieces to answer that are all public: county boundaries ship in the Census TIGER/Line shapefiles, OpenStreetMap already has parking lots mapped as polygons, and satellite imagery is a tile request away. WastedAsphalt wires those three together and puts a number on every lot in a county.",
+        "Running it against Monroe County produced 3,726 parking polygons. 3,697 of them were analyzable, 29 were skipped, and the county came out at a 26% average score. That run finished 3,698 of 3,698 tasks with zero failures in about eleven minutes."
       ],
       "media": [
+        {
+          "src": "media/county-picker.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "WastedAsphalt county picker with a New York map, county list, and analysis panels",
+          "caption": "The app starts with every New York county and its current processing status."
+        }
+      ]
+    },
+    {
+      "heading": "Every lot in the county, scored",
+      "body": [
+        "Once a county finishes processing, each lot is drawn on the map colored by its score: green for lots reading as mostly empty, through yellow and orange to red. Downtown Rochester is where it gets interesting, because the pattern is legible at a glance rather than as a spreadsheet.",
+        "The right-hand panel carries the county totals and the three export buttons. The exports were the actual point of the project: GeoPackage and GeoJSON both open directly in ArcGIS, so the output can be joined against other municipal layers instead of living only inside this app."
+      ],
+      "media": [
+        {
+          "src": "media/rochester_lots.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Satellite map zoomed to downtown Rochester with parking lot polygons colored green, yellow, orange, and red according to their utilization score",
+          "caption": "Downtown Rochester after processing. Each polygon is one OpenStreetMap parking lot, colored by its score."
+        },
         {
           "src": "media/monroe-complete.webp",
           "kind": "image",
           "poster": null,
           "alt": "Completed Monroe County analysis with thousands of parking lots colored on the map and job totals in the side panels",
-          "caption": "The completed Monroe County run."
+          "caption": "The completed county-wide run and its processing totals."
         }
-      ],
-      "layout": "media-right"
+      ]
     },
     {
-      "heading": "Monroe County example",
+      "heading": "How a single lot is scored",
       "body": [
-        "The completed Monroe County run contains 3,726 parking lots. It analyzed 3,697, skipped 29, completed all 3,698 job tasks with no failures, and estimated an average utilization of 26%.",
-        "The teal outline in each overlay is the parking-lot mask used for the calculation. Red areas are detected non-asphalt anomalies inside that mask. The utilization score is the red anomaly area divided by the usable paved mask area, while confidence is a quality estimate rather than a guarantee that every red pixel is a vehicle."
+        "For each lot the pipeline rasterizes the OpenStreetMap polygon into the image, samples the median color of the asphalt inside it, and then measures the area whose color deviates from that sample. The score is that anomaly area divided by the usable paved area. One lot in the run had 789 square meters of anomaly inside 3,843 square meters of pavement, which is where its 0.21 came from.",
+        "The pair below is one lot's raw Mapbox chip next to the overlay the pipeline produced for it. Teal is the OpenStreetMap polygon boundary, the red wash is the paved area being considered, and the lighter patches are the pixels counted as anomalies.",
+        "This lot is also a good illustration of where the method stops being a car counter. It scored 0.91, but the photograph shows a lot that is perhaps a third full. The dense white parking stripes deviate from the sampled asphalt just as strongly as a vehicle does, so they are counted too. The number is best read as visible non-asphalt occupancy inside the lot mask. Painted markings, shadows, islands, and pavement repairs all land in it. It is a classical color baseline, not a trained vehicle detector."
       ],
       "media": [
+        {
+          "src": "media/lot_10676_before_after.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Raw satellite image and analysis overlay of the same parking lot, with a teal boundary and detected anomalies highlighted over the paved surface",
+          "caption": "Left: the raw Mapbox chip. Right: the pipeline's overlay. This example shows how painted stripes can raise the score."
+        },
         {
           "src": "media/analysis-examples.webp",
           "kind": "image",
           "poster": null,
           "alt": "Four Monroe County parking-lot satellite images paired with overlays marking lot boundaries in teal and detected anomalies in red",
-          "caption": "Representative satellite images and their analysis overlays."
+          "caption": "Additional satellite images and the analysis overlays produced for them."
         }
-      ],
-      "layout": "media-left"
+      ]
     },
     {
-      "heading": "A resumable county pipeline",
+      "heading": "Running a county without babysitting it",
       "body": [
-        "Every county, parking lot, imagery asset, result, job, and task is stored in a local SQLite database. Pause stops new tasks from being claimed while active workers finish. Resume reloads unfinished work, even after the backend has been closed and restarted.",
-        "Completed county results export as GeoPackage, GeoJSON, or CSV. GeoPackage is the best option for ArcGIS Pro; CSV includes WKT geometry for spreadsheet review or GIS import."
+        "A county is thousands of separate image requests, so the job runner had to survive being interrupted. Work is queued in SQLite with per-task state, which makes a run pausable, resumable, and restartable after the process dies without losing the chips it already fetched. Mapbox responses are cached on disk for the same reason, so rerunning a county does not download the same imagery again.",
+        "Completed county results export as GeoPackage, GeoJSON, or CSV. GeoPackage is the best option for ArcGIS Pro, while CSV includes WKT geometry for spreadsheet review or GIS import. The nine tests in the repository cover the geometry and analysis helpers rather than the network paths."
       ],
       "media": [
         {
@@ -82,17 +108,8 @@
           "alt": "Monroe County results screen with buttons to export GeoPackage, GeoJSON, and CSV files",
           "caption": "Completed results can be exported for ArcGIS and other GIS workflows."
         }
-      ],
-      "layout": "media-right"
-    },
-    {
-      "heading": "How to read the result",
-      "body": [
-        "The current algorithm is a classical baseline, not a trained vehicle detector. It samples the lot's asphalt color, measures pixel differences, excludes likely vegetation and very dark shadows, removes small noise, and reports the remaining non-asphalt anomaly area.",
-        "Cars are the target anomaly, but painted markings, islands, glare, shadows, pavement repairs, roof edges, trailers, and incorrect OpenStreetMap polygons can still affect the score. The overlays make those problems visible, and confidence and analysis flags help filter weak records before county-scale GIS analysis."
-      ],
-      "media": []
+      ]
     }
   ],
-  "notes": "COPY SOURCE: Visible content is condensed from the reviewed Michael-Lizzio/WastedAsphalt README. The four images are the exact screenshots committed under docs/images. Monroe County figures are copied from the documented local run: GEOID 36055, 3,726 total lots, 3,697 analyzed, 29 skipped, 26% average utilization, 3,698 of 3,698 tasks completed, zero failed. Date 2026-04 is the repository's first-commit month. The repository was cloned and retained at /Users/michael/cursor/personal/WastedAsphalt. Not run for this portfolio pass because it requires a Mapbox token and a populated local analysis database; the README documents the completed run and tests."
+  "notes": "PROVENANCE: The expanded version was documented by running the project on 2026-09-13 on Michael's Windows machine. The existing README-derived screenshots and descriptions already on main were retained where they added useful views. The backend and frontend were run locally, the live API was inspected, and the repository's nine tests passed. FIGURES: The live API returned 62 counties, 3,726 Monroe County lots, 3,697 analyzed lots, a mean score of 0.2569, and a completed 3,698-task job with zero failures in about eleven minutes. LIMITATION: A reviewed 0.91 example showed that dense painted striping can be counted as anomaly area, so visible copy explicitly describes the result as non-asphalt occupancy rather than a trained vehicle count. MEDIA: The cover and Rochester views are real screenshots of the running app. The before-and-after image combines the raw chip and overlay written by the project. Existing county-picker, completed-run, analysis-example, and export screenshots from the repository documentation were also retained. UNVERIFIED: A fresh county run, pause and resume behavior, and the export buttons were not exercised during this portfolio pass. LINK: The public repository URL returned successfully on 2026-09-13. DATE: 2026-04 comes from the repository's first commit. None of the project's cached satellite dataset or local database is included in the portfolio."
 }
