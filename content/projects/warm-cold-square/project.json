@@ -2,21 +2,91 @@
   "slug": "warm-cold-square",
   "title": "Warm Cold Square",
   "tagline": "A two-day Pygame challenge about finding a hidden square without hitting a bomb",
-  "summary": "I made this with my cousin Justin as a quick two-day challenge. A square is hidden somewhere on the screen, and the game tells you whether your mouse is burning, hot, warm, cold, very cold, or in the fridge. The catch is that the screen is covered with red bombs that end the round if you touch them.",
+  "summary": "I made this with my cousin Justin in June 2022 as a small two-day, hackathon-style challenge. A green square is hidden somewhere on the screen, and the only guidance is a changing temperature clue based on how close the mouse is to it. The challenge is to reach the target quickly while threading through a field of red bombs that can end the round immediately.",
   "published": true,
   "featured": false,
-  "date": null,
+  "date": "2022-06",
   "status": "Complete",
   "development": null,
-  "tech": ["Python", "Pygame", "Manhattan distance", "Pygbag"],
+  "tech": [
+    "Python",
+    "Pygame",
+    "Manhattan distance",
+    "Pygbag"
+  ],
   "links": [],
-  "hero": null,
+  "hero": {
+    "src": "media/warm_cold_gameplay.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "Warm Cold Square game in progress with a Warm clue above a field of small red bombs",
+    "caption": "An easy round in progress. The hidden target is not drawn until the player reaches it or touches a bomb."
+  },
   "sections": [
     {
-      "heading": "How it plays",
-      "body": ["Easy, medium, and hard change both the hidden square's size and the number of bombs. The temperature word comes from the Manhattan distance between the cursor and the square. Reaching the square reveals it in green and gives you a time and score."],
+      "heading": "A two-day challenge",
+      "body": [
+        "My cousin Justin and I treated this as a quick build challenge: take a simple hot-and-cold search idea, turn it into a playable game, and finish it in two days. The result is deliberately spare—one menu, one screen of hazards, and a rule that can be understood as soon as the temperature word starts changing.",
+        "The menu has Play, difficulty, and Quit controls. Clicking the middle button cycles through easy, medium, and hard, then Play generates a new target and a completely new field of bombs for that round."
+      ],
+      "codeBlocks": [],
+      "layout": "media-right",
+      "media": [
+        {
+          "src": "media/warm_cold_menu.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Warm Cold Square fullscreen menu with Play, Easy, and Quit buttons on a black background",
+          "caption": "The fullscreen menu keeps the challenge immediate: play, select a difficulty, or quit."
+        }
+      ]
+    },
+    {
+      "heading": "Turning distance into temperature",
+      "body": [
+        "Each frame, the game calculates Manhattan distance: the horizontal difference between the cursor and target plus the vertical difference. That number is converted into six bands—Burning, Hot, Warm, Cold, Very Cold, and Fridge—and each label has its own color. It gives direction indirectly, so the player has to move, watch the clue change, and narrow down the target's location.",
+        "The target remains invisible during the search. Reaching it reveals the square in green and displays a time and score based on the starting distance and how quickly it was found. Touching any red bomb also reveals the target, but ends the round as a loss."
+      ],
+      "codeBlocks": [],
+      "layout": "media-left",
+      "media": [
+        {
+          "src": "media/warm_cold_won.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Warm Cold Square win screen showing Burning, a green hidden target, the word Won, time, and score",
+          "caption": "Reaching the hidden square reveals it in green and produces the round's time and score."
+        }
+      ]
+    },
+    {
+      "heading": "Difficulty through density",
+      "body": [
+        "Difficulty changes two variables at once. Easy hides a 50-by-50-pixel target among 100 bombs; medium reduces it to 25 by 25 and places 450 bombs; hard leaves only a 10-by-10 target among 750 bombs. Every bomb is also 10 by 10 pixels, so hard mode makes the goal no larger than one hazard.",
+        "Bombs are placed randomly with rejection checks intended to keep them away from the target, the cursor's starting position, and each other. That makes every round a different navigation problem instead of a fixed maze."
+      ],
+      "codeBlocks": [],
+      "layout": "media-right",
+      "media": [
+        {
+          "src": "media/warm_cold_lost.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Warm Cold Square hard-mode loss with hundreds of red bombs, the revealed green target, and a large Lost message",
+          "caption": "A hard round ends after the cursor touches one of 750 hazards; the hidden target is revealed in green."
+        }
+      ]
+    },
+    {
+      "heading": "Built for the screen it runs on",
+      "body": [
+        "The desktop version opens at the display's native resolution and derives its margins, button sizes, font sizes, and spacing from the screen dimensions. The visuals are made entirely from Pygame rectangles and text rather than image assets.",
+        "I later made a browser-oriented copy using an asynchronous menu loop and packaged it with Pygbag. The preserved web build identifies itself as Pygbag 0.6.6, while the version tested for this page is the original desktop project."
+      ],
+      "codeBlocks": [],
+      "layout": "stack",
       "media": []
     }
   ],
-  "notes": "Source inspected at selected-projects-temp/PycharmProjects/Warm cold square/main.py. The opening comment says it was a two-day challenge with Justin toward the middle or end of summer. Exact year and date need Michael's confirmation. The checked-in environment indicates Pygbag and the async main-loop shape matches browser packaging, but the app was not run during this pass. Requested media: menu/difficulty screen, an in-progress round showing a temperature, a win screen, a loss screen, and optionally short gameplay. Development classification needs confirmation."
+  "notes": "SOURCE: C:/Users/mjliz_9kaompp/PycharmProjects/Warm cold square/main.py, a single-file Pygame project. RUN 2026-09-15 on Windows with the bundled CPython 3.9.13 environment and pygame 2.1.2; the unmodified program launched successfully at the native display resolution and displayed its menu. Controlled runtime checks executed the original game loop at 1280x720, verified representative inputs for all six temperature labels, verified the exact easy/medium/hard configurations (100 bombs + 50x50 target, 450 + 25x25, 750 + 10x10), reached the target on easy, and collided with a bomb on hard. The menu image is a capture of the unmodified fullscreen app; gameplay, win, and loss images were captured from the original game loop with controlled mouse positions. DATE: project/main.py CreationTime is 2022-06-03 16:38:46, and its opening comment describes a two-day challenge with Justin around the middle or end of summer. Month 2022-06 is recorded with the filesystem creation timestamp as provenance. USER-SUPPLIED CONTEXT 2026-09-15: this was a fun hackathon-style project made with cousin Justin. WEB BUILD: C:/Users/mjliz_9kaompp/PycharmProjects/web_warm_cold_square/build/web/index.html explicitly identifies Pygbag Version 0.6.6, so Pygbag remains in tech. OBSERVED QUIRKS: a distance of exactly 50 falls through the strict temperature comparisons to FRIDGE, and the result banner is shown only briefly before returning to the menu. No public repository or deployed demo was confirmed, so links remains empty. Development classification still needs Michael's confirmation."
 }
