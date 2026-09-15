@@ -7,6 +7,7 @@
   "featured": false,
   "date": "2025-04",
   "status": "RIT SWEN 261 team project",
+  "development": "human-led",
   "tech": [
     "Java 21",
     "Spring Boot",
@@ -19,7 +20,13 @@
     "Three-tier architecture"
   ],
   "links": [],
-  "hero": null,
+  "hero": {
+    "src": "media/inmate-requests.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "A New Page inmate request screen showing two requested books and their costs",
+    "caption": "An inmate could submit book requests and keep track of the books attached to their account."
+  },
   "sections": [
     {
       "heading": "Working as a team",
@@ -36,6 +43,43 @@
         "The main workflow connected all three roles. An inmate submitted a book request, an administrator reviewed it, and approval moved that book into the collection helpers could fund. Funding it then generated another notification for the inmate."
       ],
       "media": []
+    },
+    {
+      "heading": "The workflow in the final demo",
+      "body": [
+        "The final demo walks through the application from each role's point of view. A user could create an account as an inmate, helper, or administrator. Inmates requested books, administrators reviewed each request with an approval or denial message, and helpers browsed the approved books and added them to a funding basket.",
+        "Notifications connected the steps. The team added them as one of our feature enhancements so an inmate could see when an administrator approved a request and when a helper funded the book."
+      ],
+      "media": [
+        {
+          "src": "media/account-creation.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "A New Page login and account creation screen with username, password, name, and role fields",
+          "caption": "The shared entry screen supported login and account creation for each of the application's roles."
+        },
+        {
+          "src": "media/admin-review.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Administrator review queue showing inmate book requests with message, approve, and deny controls",
+          "caption": "Administrators reviewed each inmate request and could include a message with the decision."
+        },
+        {
+          "src": "media/helper-cupboard.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Helper book cupboard showing an approved book that can be added to the funding basket",
+          "caption": "Approved requests became available to helpers in the book cupboard."
+        },
+        {
+          "src": "media/helper-basket.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Helper funding basket showing two requested books and a seven dollar checkout total",
+          "caption": "The funding basket collected books from different inmates before the simulated checkout."
+        }
+      ]
     },
     {
       "heading": "How we structured it",
@@ -69,7 +113,15 @@
         }
       ],
       "layout": "media-left"
+    },
+    {
+      "heading": "Testing and review",
+      "body": [
+        "We used JUnit, manual browser testing, and curl requests while building the application. In the final presentation, the team reported at least 91 percent coverage in every backend tier and 100 percent branch coverage in the model tier.",
+        "We also ran SonarQube and discussed the issues it found instead of treating the report as a score. The presentation called out static fields changed from instance methods, unnecessary verbosity where Java's diamond operator could be used, and avoidable string concatenation as examples we would clean up next."
+      ],
+      "media": []
     }
   ],
-  "notes": "DRAFT CREATED FROM USER INTERVIEW AND SOURCE REVIEW. Keep unpublished until real application screenshots are supplied. Recommended captures: (1) hero showing the helper cupboard with several approved books, (2) inmate request form and profile, (3) admin request-review screen with approve/deny controls, (4) helper funding basket and checkout, and (5) notifications showing the cross-role workflow. A short presentation clip could be added after those stills. Existing architecture and sequence diagrams are authentic files from docs/. Date 2025-04 comes from the archive index's last team commit. The source was not run because dependencies were deliberately excluded from the temporary archive and the JSON data files are mutated at runtime. Authentication and payment are course-project simulations and should not be described as production security or real payment processing. No public repository URL was verified."
+  "notes": "UPDATED FROM USER INTERVIEW, SOURCE REVIEW, AND THE SWEN 261 GROUP 3C ARCHIVE SUPPLIED 2026-09-15. The archive contains requirements, domain and class diagrams, acceptance-test plans, sprint documents, a 21-slide final presentation dated 2025-04-23, and four demo recordings. The five UI images on this page were extracted from current_swen_261_sprint_3_demo.mp4, the latest recording by timestamp, at approximately 02:00, 09:00, 10:30, 13:00, and 13:30. The frames were cropped to remove browser chrome, the Windows taskbar, and the Vimeo webcam overlay; their application content was not recreated. Existing architecture and sequence diagrams are authentic files from docs/. The final presentation confirms the four-person team, inmate role and notification enhancements, JUnit plus manual and curl testing, at least 91 percent coverage in every tier, 100 percent model-tier branch coverage, and the SonarQube examples described on the page. Date 2025-04 comes from the archive index's last team commit and the final presentation date. The source was not run because dependencies were deliberately excluded from the temporary archive and the JSON data files are mutated at runtime. Authentication and payment are course-project simulations and should not be described as production security or real payment processing. No public repository URL was verified."
 }
