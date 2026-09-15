@@ -2,26 +2,73 @@
   "slug": "tic-tac-toe",
   "title": "Tic-Tac-Toe",
   "tagline": "My first Pygame project, with three levels of computer opponent",
-  "summary": "This was my first graphical game and the project I made before Blackjack. I built the board, menus, scorekeeping, local two-player mode, and three computer difficulties in one Python file. It was mostly an excuse to learn Pygame, but it became a complete little game along the way.",
+  "summary": "I made this in April 2022 as my first graphical game, starting from a tutorial and then turning it into a complete Tic-Tac-Toe program of my own. I added a home screen, scorekeeping, local two-player play, three computer difficulties, forfeits, and custom end screens. The project was a fun way to learn Pygame before I used it for the much larger Blackjack game that followed.",
   "published": true,
   "featured": false,
-  "date": null,
+  "date": "2022-04",
   "status": "Complete",
   "development": null,
-  "tech": ["Python", "Pygame", "NumPy", "Heuristic game logic"],
+  "tech": [
+    "Python",
+    "Pygame",
+    "NumPy",
+    "Heuristic game logic"
+  ],
   "links": [],
-  "hero": null,
+  "hero": {
+    "src": "media/tic_tac_toe_gameplay.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "Tic-Tac-Toe match in progress with blue X marks and purple O marks on a black board",
+    "caption": "A match in progress. The interface, marks, grid, and controls are all drawn directly with Pygame."
+  },
   "sections": [
     {
-      "heading": "The computer player",
-      "body": ["The hard difficulty does not use machine learning or a huge game tree. It looks for immediate wins and blocks, scores the remaining routes through each empty square, and handles one important fork as a special case. Medium sometimes chooses a random move instead, and easy is more random again."],
+      "heading": "From a tutorial to a complete game",
+      "body": [
+        "This started as a small tutorial project and became an excuse to keep experimenting. I built a home screen where the player can choose who moves first, switch between playing a friend and the computer, cycle through difficulty levels, reset the scores, and start another round without restarting the program.",
+        "The scoreboard stays active for the whole session and records wins for X and O as well as ties. During a match, either player can forfeit, and the game draws a line through the winning row, column, or diagonal before showing the result screen."
+      ],
+      "codeBlocks": [],
+      "layout": "media-right",
+      "media": [
+        {
+          "src": "media/tic_tac_toe_menu.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Tic-Tac-Toe home screen with score boxes, a large Play button, and player, reset, mode, and quit controls",
+          "caption": "The home screen combines the scoreboard with controls for the first player, game mode, score reset, and starting a match."
+        }
+      ]
+    },
+    {
+      "heading": "A hand-built computer player",
+      "body": [
+        "The hard opponent does not use minimax or search a full game tree. It first tries every empty square to find an immediate winning move, then repeats the scan to block an immediate win by the player. If neither applies, it scores each open square by counting how many still-possible winning routes pass through it and randomly chooses among the best-scoring options.",
+        "I also added a special defense for the classic opposite-corners fork: when the player owns two opposite corners and the computer owns the center, the computer chooses an edge rather than another corner. Medium difficulty still takes wins and blocks losses, but mixes heuristic and random moves during open play. Easy chooses randomly from the remaining squares."
+      ],
+      "codeBlocks": [],
+      "layout": "stack",
       "media": []
     },
     {
-      "heading": "What I learned",
-      "body": ["Every X, O, line, button, and score box is drawn from dimensions calculated in the program. Building that interface gave me the Pygame experience I used for the much larger Blackjack project next."],
-      "media": []
+      "heading": "Drawing the interface with Pygame",
+      "body": [
+        "There are no image assets in the project. The grid is made from lines, X marks from pairs of diagonal strokes, O marks from outlined circles, and every button or panel from rectangles and rendered text. Their positions and sizes are calculated from the window width, height, and one derived line-width value, so the whole interface comes from the same small set of dimensions.",
+        "The board is a 3-by-3 NumPy array containing zero for an empty square, one for X, and two for O. Win detection returns both the winning player and the endpoints of the winning route, allowing the same result to drive the game logic and the line drawn across the board."
+      ],
+      "codeBlocks": [],
+      "layout": "media-left",
+      "media": [
+        {
+          "src": "media/tic_tac_toe_winner.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Tic-Tac-Toe result screen showing a large blue X, the word Winner, and a Quit button",
+          "caption": "The result panel uses the same line-drawn X and proportional layout helpers as the game board."
+        }
+      ]
     }
   ],
-  "notes": "Source inspected at selected-projects-temp/PycharmProjects/Tic-Tac-Toe Game/main.py. The source calls it the first graphics game, says it was made one or two days before Blackjack, and places it after Cryptogram. Date remains null until Michael supplies the proper date. NOT RUN during this pass; features were verified from the source functions and control flow. Requested media: home/menu screen, each difficulty or a representative computer match, end screen/scoreboard, and optionally a short gameplay video. Development classification needs confirmation."
+  "notes": "SOURCE: C:/Users/mjliz_9kaompp/PycharmProjects/Tic-Tac-Toe Game/main.py, a single 615-line Python file. RUN 2026-09-15 on Windows with the bundled CPython 3.9.13 environment, pygame 2.1.2 and numpy 1.22.3; the unmodified program launched successfully and displayed its home screen. Runtime checks imported the original module under SDL's dummy video driver and passed all 16 row/column/diagonal winning-line cases for both players, a non-winning full board, hard and medium immediate-win and immediate-block cases, 100 easy-move legality trials, and 100 hard-mode opposite-corner fork-defense trials. The menu capture was rendered with the original home-screen drawing calls; gameplay and winner captures were rendered with the original drawing functions against representative board states. DATE: project/main.py CreationTime is 2022-04-22 16:55:21; the file's opening comment says the game was made in about a day, after Cryptogram and one or two days before Blackjack. Month 2022-04 is therefore recorded, with the filesystem creation timestamp as provenance rather than presented as an independently verified publication date. USER-SUPPLIED CONTEXT 2026-09-15: this was a fun project that expanded on a tutorial and was used to learn Pygame. No public repository or deployed demo was identified, so links remains empty. Development classification still needs Michael's confirmation."
 }
