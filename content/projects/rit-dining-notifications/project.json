@@ -93,9 +93,9 @@
       "layout": "media-right",
       "media": [
         {
-          "src": "media/telegram_bot_demo.mp4",
+          "src": "media/telegram_bot_demo_refined.mp4",
           "kind": "video",
-          "poster": "media/telegram_bot_demo.poster.webp",
+          "poster": "media/telegram_bot_demo_refined.poster.webp",
           "alt": "Phone recording of the RIT Notifications Telegram bot handling help, budget-check, refresh and Duo-login steps",
           "caption": "The Telegram side of the project, recorded in August 2024. Only the old connection code and dollar figures are softly blurred; the commands, response labels, and complete refresh flow remain visible."
         }
