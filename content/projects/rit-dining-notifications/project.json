@@ -22,11 +22,11 @@
     }
   ],
   "hero": {
-    "src": "media/tigerspend_statement_picker.webp",
+    "src": "media/rit_dining_notifications_cover.webp",
     "kind": "image",
     "poster": null,
-    "alt": "TigerSpend account statement form with Dining Dollars selected and a six-month statement period",
-    "caption": "The live TigerSpend statement workflow in 2026. The page changed after I built the project, but the same account-and-period selection still leads to the transaction table."
+    "alt": "RIT Dining Notifications cover showing a TigerSpend transaction panel flowing through scrape, save, budget and notify steps to phone alerts",
+    "caption": "The project turned TigerSpend purchases into a saved ledger, a recalculated spending budget, and Telegram updates."
   },
   "sections": [
     {
