@@ -3,7 +3,7 @@
   "title": "WastedAsphalt",
   "tagline": "Scores how much of a county's parking asphalt is sitting visibly empty, from satellite imagery",
   "summary": "A local web app that measures how much parking surface a New York county is carrying and how much of it is visibly in use. It loads county boundaries from a TIGER/Line shapefile, pulls every amenity=parking polygon from OpenStreetMap through Overpass, downloads a Mapbox satellite chip for each lot, and runs a classical image pipeline that samples the lot's own asphalt color and measures how much of the surface deviates from it. Monroe County resolves to 3,726 lots, 3,697 of them analyzed, at a 26% county average. Jobs are pausable and resumable, and results export as GeoPackage, GeoJSON, or CSV for ArcGIS.",
-  "published": false,
+  "published": true,
   "featured": false,
   "date": "2026-04",
   "status": null,
