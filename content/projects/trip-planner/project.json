@@ -1,0 +1,128 @@
+{
+  "slug": "trip-planner",
+  "title": "Trip Planner",
+  "tagline": "A shared itinerary where friends propose plans, vote on conflicts, and pack together",
+  "summary": "I built Trip Planner as a shared home base for organizing a group trip without losing decisions across a long message thread. The Flask application combines a day-by-day itinerary, competing plans at the same time, participant voting, a collaborative packing list, and account administration in one responsive interface. Underneath the simple UI, hand-built Server-Sent Events keep every open browser current while locked JSON writes protect the shared data.",
+  "published": false,
+  "featured": false,
+  "date": "2025-08",
+  "status": null,
+  "development": null,
+  "tech": [
+    "Python",
+    "Flask",
+    "Server-Sent Events",
+    "Vanilla JavaScript",
+    "Jinja templates",
+    "Portalocker",
+    "Werkzeug authentication"
+  ],
+  "links": [
+    {
+      "label": "GitHub",
+      "href": "https://github.com/Michael-Lizzio/TripPlanner"
+    }
+  ],
+  "hero": {
+    "src": "media/trip_planner_overview.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "Trip Planner itinerary showing a Finger Lakes weekend organized into dated cards with events and voting controls",
+    "caption": "The itinerary turns a group trip into a shared sequence of days, events, links, locations, and decisions."
+  },
+  "sections": [
+    {
+      "heading": "Planning outside the group chat",
+      "body": [
+        "Trip Planner gives everyone on a trip the same source of truth. After signing in, a participant can browse the schedule by day, add an event with a time, title, description, location, or reference link, and see changes made by the rest of the group without refreshing the page.",
+        "The interface is intentionally compact: itinerary cards surface the information needed while traveling, and a small participant count shows how many people can weigh in. I kept the client in plain HTML, CSS, and JavaScript so the application could stay focused on the group workflow instead of a large front-end stack."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Conflicts become choices",
+      "body": [
+        "Two ideas scheduled for the same time are grouped into an explicit set of options instead of silently overlapping. Each signed-in participant can vote an option up or down, change that vote later, and immediately see the totals. That turns a scheduling conflict into a small, visible decision the group can resolve together.",
+        "Ownership rules prevent one participant from casually erasing someone else's suggestion. An event can be removed by its creator or an administrator, and the server also permits deletion after every other participant has downvoted it. The rule joins the account system, vote records, and event lifecycle rather than treating voting as decoration."
+      ],
+      "layout": "media-right",
+      "media": [
+        {
+          "src": "media/trip_planner_voting.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Trip Planner itinerary with two competing 11 AM activities grouped as options and visible upvote and downvote controls",
+          "caption": "Plans at the same time become alternatives the whole group can evaluate; the 8 AM coffee run was added and upvoted during the live test."
+        }
+      ]
+    },
+    {
+      "heading": "Real-time updates without a front-end framework",
+      "body": [
+        "I implemented the live layer with Server-Sent Events. Every connected browser receives a bounded queue, and the Flask server publishes an update after itinerary, voting, packing, or account data changes. A keepalive is sent during quiet periods so intermediaries do not mistake an idle trip for a dead connection.",
+        "This is a deliberately small real-time design: the browser listens to one event stream, then requests fresh data and re-renders the relevant view. Bounded queues keep a slow or abandoned client from growing memory forever. The implementation is process-local, which is appropriate for the original single-process deployment but would need Redis or another shared message broker before scaling to multiple workers."
+      ],
+      "codeBlocks": [
+        "browser action -> Flask route -> locked JSON write\n              |\n              +-> publish update -> bounded client queues -> EventSource -> refresh view"
+      ],
+      "media": []
+    },
+    {
+      "heading": "A safe write path for simple storage",
+      "body": [
+        "The project stores its itinerary, votes, packing items, and users in JSON rather than a database. To make that choice safer under concurrent requests, every update follows a locked read-modify-write sequence using Portalocker. The server rewinds the file, writes the complete new document, flushes and fsyncs it, and truncates any stale bytes left by a previously longer version.",
+        "That approach kept deployment and inspection simple while teaching the boundary between a convenient file format and a storage system. For a larger or internet-facing version, I would move the records to a database with stable identifiers and transactions, then keep the same API and interface concepts."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Packing is part of the plan",
+      "body": [
+        "A separate shared packing view covers the other half of group travel. Participants can add an item, quantity, and category; give useful suggestions a heart; and remove their own entries. Items are organized into Items, Snacks, and Other so equipment, food, and general preparation remain easy to scan.",
+        "The heart state is recorded per user, just like itinerary voting, so reopening the application preserves who has reacted instead of storing only an anonymous total."
+      ],
+      "layout": "media-left",
+      "media": [
+        {
+          "src": "media/trip_planner_packing.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Trip Planner packing page with categorized cards for a first-aid kit, board games, snacks, coffee, and a shared playlist",
+          "caption": "The collaborative checklist records quantities, categories, creators, and per-user hearts."
+        }
+      ]
+    },
+    {
+      "heading": "Accounts, roles, and ownership",
+      "body": [
+        "Users authenticate with hashed passwords, and the current account becomes the owner of anything it creates. Administrators get a dedicated account screen for adding participants, resetting passwords, deleting accounts, and changing roles. Those roles are checked again on the server for protected actions rather than relying on whether a button is visible.",
+        "The event editor uses the same compact approach as the rest of the application. Only a title is required; time, description, location, and link can be added when they help the group."
+      ],
+      "media": [
+        {
+          "src": "media/trip_planner_admin.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Trip Planner account administration page listing four synthetic users with password reset, role, and deletion controls",
+          "caption": "Administrators can invite the group and manage access from inside the application."
+        },
+        {
+          "src": "media/trip_planner_event_editor.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Add Event dialog in Trip Planner with fields for time, title, description, location, and link",
+          "caption": "The event editor supports quick ideas as well as fully described reservations or activities."
+        }
+      ]
+    },
+    {
+      "heading": "Running the original project again",
+      "body": [
+        "I returned to the August 2025 code in September 2026 and ran it locally with a completely synthetic Finger Lakes trip. I verified login, the itinerary and packing APIs, the administrator page, and the rendered browser interface. I then added a new coffee run through the real dialog and upvoted it; the itinerary updated through the live event stream without a manual refresh.",
+        "That run also made the next engineering steps concrete. Event routes currently address positions in an array, so stable record IDs would make edits resilient to sorting. A production revision should also add CSRF protection, environment-only secrets and debug settings, database migrations, automated tests, and shared pub/sub for multiple server workers. The current version remains a compact demonstration of how authentication, collaborative state, voting rules, file locking, and live browser updates fit together in one application."
+      ],
+      "media": []
+    }
+  ],
+  "notes": "DATE: 2025-08 is verified from the TripPlanner Git history; all three commits in the inspected repository were made on 2025-08-05. SOURCE: inspected C:/Users/mjliz_9kaompp/PycharmProjects/TripPlanner at commit 3600a91 and confirmed the public remote https://github.com/Michael-Lizzio/TripPlanner.git. RUN VERIFICATION: on 2026-09-16, the original Flask application compiled and ran locally with its existing virtual environment. A Flask test-client smoke test verified successful login, /api/me, /api/data with four days, /api/packing with five items, and a 200 response from /admin. The browser test verified login, itinerary rendering, same-time grouping, packing, account administration, opening the add-event dialog, creating an 8:00 AM event, receiving the live SSE update, and toggling an upvote. MEDIA PROVENANCE: all five screenshots were captured from that run in a detached source worktree using synthetic Finger Lakes trip data and synthetic users; no original personal trip data or passwords appear in the media. The synthetic password was used only in the disposable demo worktree. The original source checkout was not changed for this portfolio entry. LIMITS OBSERVED IN SOURCE: SSE subscribers are held in process memory and therefore assume one server process; event mutation routes use array indexes that can become stale after sorting; there is no CSRF protection, database, migration system, day-management interface, or automated test suite; the checked-in app uses a fallback secret and debug mode; URLs are not scheme-restricted. These are described as future work, not as implemented behavior. DEVELOPMENT: human-led versus AI-assisted classification was not stated, so development remains null. STATUS: not inferred. No video was captured; screenshots document each verified surface and the live interaction is described only to the extent observed."
+}
