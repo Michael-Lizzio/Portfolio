@@ -3,7 +3,7 @@
   "title": "Tic-Tac-Toe",
   "tagline": "My first Pygame project, with three levels of computer opponent",
   "summary": "I made this in April 2022 as my first graphical game, starting from a tutorial and then turning it into a complete Tic-Tac-Toe program of my own. I added a home screen, scorekeeping, local two-player play, three computer difficulties, forfeits, and custom end screens. The project was a fun way to learn Pygame before I used it for the much larger Blackjack game that followed.",
-  "published": false,
+  "published": true,
   "featured": false,
   "date": "2022-04",
   "status": "Complete",
