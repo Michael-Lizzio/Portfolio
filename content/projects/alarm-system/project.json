@@ -2,52 +2,221 @@
   "slug": "alarm-system",
   "title": "Automated Alarm System",
   "tagline": "Three generations of a home alarm built from hacked hardware, a Raspberry Pi, and custom software",
-  "summary": "This project grew through three very different versions. My dad and I first soldered into a cheap RF alarm panel so a Raspberry Pi could read its lights, announce open doors, and keep logs. I later built my own Pygame control panel, then replaced that with a remotely accessible web system made from several small services talking over a shared TCP protocol.",
+  "summary": "This home alarm grew from a 2020 Raspberry Pi experiment with my dad into a custom Pygame console and, later, a remotely accessible web system. The first version decoded the indicator lights on an inexpensive RF alarm panel; the current version separates sensors, data, motion, cameras, audio, notifications, and the web interface into independent services connected by a JSON-over-TCP protocol. This page follows that evolution, including the long-runtime failure that forced me to rethink how the system stored state.",
   "published": true,
   "featured": false,
-  "date": null,
+  "date": "2020",
   "status": null,
+  "development": "ai-assisted",
   "tech": [
     "Python",
     "Raspberry Pi",
     "Pygame",
     "Flask",
-    "TCP and JSON",
+    "Threaded TCP services",
+    "JSON file store",
+    "Server-sent events",
     "Tailscale",
     "Telegram",
+    "OpenAI text-to-speech",
+    "ESP32 camera ingest",
     "Relays and RF sensors"
   ],
   "links": [],
   "hero": {
-    "src": "media/alarm_system_cover.webp",
+    "src": "media/web_dashboard.webp",
     "kind": "image",
     "poster": null,
-    "alt": "Black Pygame alarm panel in Auto Night mode with settings, mode arrows, Wi-Fi status and four door sensors",
-    "caption": null
+    "alt": "AlarmSystem web dashboard showing the garage, gate and back door closed while the front door is open",
+    "caption": "The current browser dashboard running locally with isolated demonstration sensor data."
   },
   "sections": [
     {
-      "heading": "Version one: hacking the alarm panel",
+      "heading": "Version one: reading the alarm panel",
       "body": [
-        "My dad and I opened an inexpensive Amazon alarm and soldered connections onto the LEDs it used for its wireless door sensors. The Raspberry Pi watched those voltage patterns, worked out which door or gate was open, announced it with a wonderfully robotic voice, and saved an event log."
+        "The project started around 2020 when my dad and I opened an inexpensive RF alarm panel and soldered leads onto the LEDs it used to show its wireless door-sensor states. A Raspberry Pi with a Pi-Plates TINKERplate sampled four analog channels for the garage, gate, back door, and front door. Instead of replacing the panel, the program learned to interpret the hardware that was already there.",
+        "The decoder classified voltage ranges as no power, LED off, or LED on. It also counted the panel's blinking pattern over a 15-second window so it could distinguish a genuinely open sensor from a finicky one. Relays let the Pi silence the panel's native beeper or briefly interrupt its power for a reset. The embedded version notes show email alerts, daily rotating logs, mode-specific audio, Wi-Fi failure handling, and motion detection arriving between August 2020 and August 2021."
       ],
-      "media": []
+      "media": [
+        {
+          "src": "media/panel-opened.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Original wireless alarm panel opened with its circuit board removed from the black plastic enclosure",
+          "caption": "The inexpensive RF alarm panel opened on the workbench before the status-light signals were brought out to the Raspberry Pi."
+        },
+        {
+          "src": "media/led-wiring.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Alarm panel circuit board with multicolored wires soldered around its four red status LEDs",
+          "caption": "The key hardware hack: leads soldered into the panel's indicator-light circuitry so the software could observe the four sensor states."
+        },
+        {
+          "src": "media/panel-interface.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Modified alarm panel enclosure with the new wiring routed to a nine-pin external connector",
+          "caption": "The added connector kept the modified panel self-contained while giving the external interface a clean place to attach."
+        }
+      ]
     },
     {
-      "heading": "Version two: the Pygame panel",
+      "heading": "From the panel's LEDs to named sensor states",
       "body": [
-        "I built the next interface myself in Pygame, without AI. It had alarm modes, sensor status, settings, sound behavior, notifications, and statistics. I had much bigger plans for it, but a memory leak eventually killed the process after a week or two of continuous use."
+        "The early photos and videos show the whole idea more clearly than a diagram can. We kept the alarm panel as the RF receiver, tapped the signals it already displayed through its LEDs, routed those lines through a connector in the case, and built the Raspberry Pi-side interface around an expansion board, relays, and a small breadboard. The software then turned voltage levels and blink patterns into the garage, gate, back-door, and front-door states used everywhere else in the system.",
+        "These are raw iPhone tests from July 2020, not a later recreation. The first clip checks the existing wireless sensor at the garage door. The second captures the modified panel changing its own indicator lights on the bench. The last places that hardware beside the running decoder, showing the physical alarm state reaching the program as readable output."
+      ],
+      "media": [
+        {
+          "src": "media/pi-interface.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Early Raspberry Pi alarm interface with ribbon cable, relay and input expansion board, breadboard, jumper wires and indicator LED",
+          "caption": "The early Pi-side bench setup used an expansion board, relay channels, a ribbon cable, and a breadboard indicator while we worked through the hardware interface."
+        },
+        {
+          "src": "media/garage-sensor-test.mp4",
+          "kind": "video",
+          "poster": "media/garage-sensor-test.poster.webp",
+          "alt": "July 2020 phone video testing the wireless magnetic sensor mounted above the garage door",
+          "caption": "Testing the existing wireless garage-door sensor in place before following its state through the rest of the system."
+        },
+        {
+          "src": "media/panel-led-test.mp4",
+          "kind": "video",
+          "poster": "media/panel-led-test.poster.webp",
+          "alt": "July 2020 bench video of the modified alarm panel switching between green and red indicator lights",
+          "caption": "A bench test of the panel's original status display—the signals the Raspberry Pi interface was built to read."
+        },
+        {
+          "src": "media/decoder-bench-test.mp4",
+          "kind": "video",
+          "poster": "media/decoder-bench-test.poster.webp",
+          "alt": "July 2020 bench video showing the modified alarm panel beside live sensor-state output on a computer monitor",
+          "caption": "An early end-to-end test with the physical panel in front of the live decoder output."
+        }
+      ]
+    },
+    {
+      "heading": "Version two: a completely custom Pygame console",
+      "body": [
+        "In August 2022 I turned the script into a full-screen control panel built entirely with Pygame, without AI assistance. Every panel, button, arrow, translucent overlay, line, label, and light/dark state was drawn with reusable Pygame primitives. Building those layout helpers taught me far more than simply following a tutorial would have: I was effectively making a small UI toolkit inside a game library.",
+        "The home screen combined the current mode, automatic day/night state, Wi-Fi and power indicators, four large sensor tiles, settings access, and a screen saver intended to reduce burn-in on an always-on display. The archived hardware calls are disabled on this PC, but the interface itself still runs under its original Python 3.9 and Pygame 2.1.2 environment."
+      ],
+      "layout": "media-right",
+      "media": [
+        {
+          "src": "media/alarm_system_cover.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Black Pygame alarm console in Auto Night mode with mode arrows, settings, Wi-Fi status and four sensor tiles",
+          "caption": "The main Pygame display in AUTO / NIGHT mode."
+        }
+      ]
+    },
+    {
+      "heading": "Modes, settings, locks, and statistics",
+      "body": [
+        "HOME, NIGHT, OUT, and AWAY could each enable a different combination of messages, periodic status updates, motion alerts, voice, chimes, reminders, and other audio. AUTO selected HOME or NIGHT from configurable start times. Separate pages controlled master and category-level audio, screen and settings timeouts, motion-recording duration, notification cadence, and per-recipient email or SMS preferences.",
+        "The settings hub also included PIN-protected administrative areas and a facts page. It tracked total and daily openings for each sensor, time spent open, average openings per day, average open duration, and finicky detections. The small mushroom in the corner was a deliberately playful hidden exit control."
+      ],
+      "layout": "media-left",
+      "media": [
+        {
+          "src": "media/pygame_settings.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Pygame settings hub with large Audio, Time, Modes, Facts, Motion, Emails and Exit buttons plus a mushroom icon",
+          "caption": "The settings hub, captured directly from the running Pygame framebuffer."
+        }
+      ]
+    },
+    {
+      "heading": "The failure that changed the design",
+      "body": [
+        "The Pygame version ran continuously on a Raspberry Pi, but after roughly a week or two it could exhaust resources and crash. I remembered the failure as an ever-growing list of alarm states. The surviving snapshot does not contain that exact unbounded list: its sensor, status, and blink arrays stay fixed at four entries. It does, however, run its main render loop with the 60 FPS limiter commented out and repeatedly reread small text files throughout that loop, so the precise trigger cannot be proven from this archive alone.",
+        "Debugging a failure that only appears after days of uptime was an important lesson. The current design makes the intended safeguards explicit: service change buffers use bounded deques, log files rotate nightly with retention limits, and one data service owns persistent writes. That experience changed how I think about queues, logging, resource ownership, and testing software meant to run indefinitely."
       ],
       "media": []
     },
     {
       "heading": "Version three: a network of services",
       "body": [
-        "The final version moved to a Flask web interface that could be reached through Tailscale. Hardware, relays, motion, audio, notifications, data, cameras, and system state were split into services that communicated over TCP with a shared JSON protocol.",
-        "I arrived at that design by solving the communication problems as they appeared, before I had formally learned the term microservices. There is much more to show here later, especially the hardware, camera idea, interfaces, and how the services fit together."
+        "The 2025 rebuild moved the interface to Flask and split the system into independently testable processes. I arrived at the shape by separating each responsibility and solving the communication problems as they appeared, before I had formally learned to call the result a microservice architecture. I did use ChatGPT while developing this generation; the earlier Raspberry Pi and Pygame versions were human-led.",
+        "The main orchestrator starts the stack, waits for readiness, polls each service at an appropriate cadence, resolves AUTO into the active HOME or NIGHT policy, and routes events to audio and notification behavior. The hardware-server prototype remains in the source but is not started, and its default port currently collides with the motion server; the diagram marks that unfinished edge with an asterisk."
+      ],
+      "media": [
+        {
+          "src": "media/architecture.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Mermaid architecture diagram connecting alarm LEDs, motion nodes, ESP32 cameras and phones to the alarm system's local services, orchestrator, web dashboard and alert providers",
+          "caption": "A Mermaid service map of the current system. Ports are the defaults found in the source; the hardware-server prototype's 9103 port overlaps the active motion server."
+        }
+      ]
+    },
+    {
+      "heading": "The services",
+      "body": [
+        "The Data Server is the only process that reads and writes the JSON store, using locks and atomic replacement. The System Server polls ADC voltages, applies the legacy blink-state algorithm, updates facts, and controls reset and beeper relays. The Audio Server serializes sound and speech requests through a playback queue and caches generated TTS. The Motion Server accepts bearer-authenticated Wi-Fi sensor posts, opens an event, extends it with new triggers, and closes it after an idle timeout followed by a cooldown.",
+        "The Relay Server combines device-presence tracking with an HTTP bridge for iOS Shortcuts. The Notification Server handles Telegram commands and alerts with Gmail fallback. The Camera Hub accepts JPEG frames from ESP32-class devices, keeps only a short bounded frame buffer, watches liveness, and exposes an MJPEG viewer. Finally, the Flask app combines that state into the dashboard, facts, history, settings, and administrator pages."
+      ],
+      "codeBlocks": [
+        "request\n{\n  \"clientName\": \"MAIN->SYS\",\n  \"clientCode\": \"…\",\n  \"endpoint\": \"get_state\",\n  \"body\": {}\n}\n\nresponse\n{\n  \"status\": \"ok\",\n  \"endpoint\": \"get_state\",\n  \"body\": { \"alarm\": { \"sensors\": { \"…\": \"…\" } } }\n}"
+      ],
+      "media": []
+    },
+    {
+      "heading": "A web dashboard for a physical system",
+      "body": [
+        "The browser interface preserves the glanceable four-sensor layout while making the system usable from laptops and phones. Closed sensors are green, open sensors are red, and live updates arrive without a page refresh. A separate facts view turns the long-running history into totals and per-door averages instead of forcing someone to interpret raw logs.",
+        "Settings expose the selected operating mode, audio categories, the AUTO schedule, per-mode alert toggles, screen behavior, light/dark themes, security controls, and Telegram preferences. The history page can display event, motion, and system logs as a chronological timeline or grouped view, with filters and downloads."
+      ],
+      "layout": "media-right",
+      "media": [
+        {
+          "src": "media/web_facts.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "AlarmSystem facts dashboard showing 418 tracking days, totals, and per-door opening and finicky statistics",
+          "caption": "The facts page with isolated demonstration values used for the local test."
+        }
+      ]
+    },
+    {
+      "heading": "Device approval and private remote access",
+      "body": [
+        "Access is tied to the requesting device's IP address. A new address is recorded as pending; from the administrator console, a super user can name it and grant user, admin, or super access. The console also shows which approved devices are online or recently active, what page they last visited, their Telegram mapping, and controls for creating or editing accounts.",
+        "At home the site is served on the local network. Tailscale extends that private network so the same dashboard can be reached remotely through a VPN without publishing it as a public website. The current implementation trusts the forwarded client-IP header, which is acceptable only behind a trusted proxy and is one of the security boundaries I would harden before treating the design as a general-purpose product."
+      ],
+      "layout": "media-left",
+      "media": [
+        {
+          "src": "media/web_admin.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "AlarmSystem administrator overview listing a super-user console, an admin kitchen tablet and a guest phone with online status",
+          "caption": "The administrator overview populated with fictional devices and documentation-only IP addresses."
+        }
+      ]
+    },
+    {
+      "heading": "Motion, cameras, and notifications",
+      "body": [
+        "Wi-Fi motion nodes authenticate with a per-device code, then report activity to the ingest server. The server treats the first trigger as the start of a session, extends the deadline for later triggers, automatically closes an idle session, and waits through a cooldown before starting another. Camera nodes follow a similar enrollment idea: an ESP32 can send JPEG frames to the hub, which reports frame rate and up/down state while serving the latest frames to the dashboard.",
+        "Telegram was the most practical remote-control and alert channel to set up, so the system can apply each account's choices for door, motion, critical, status, and reminder messages. Gmail provides a fallback. Locally, the audio service can queue sound effects or cached voice announcements so two events do not talk over one another."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Where I would take it next",
+      "body": [
+        "The original sensors were physically wired into one Raspberry Pi through the alarm panel. The newer architecture makes it possible to add Wi-Fi sensor nodes built from Raspberry Pi Picos and camera nodes built from ESP32 hardware, extending coverage without running every signal back to the same board.",
+        "If I rebuilt the transport today, I would evaluate Redis for shared state and queues or Kafka for durable event streams instead of maintaining every protocol primitive myself. Even so, writing the TCP framing, retrying clients, bounded queues, data ownership, and service supervision by hand made the reasons for those tools concrete rather than theoretical."
       ],
       "media": []
     }
   ],
-  "notes": "REPAIR PASS (2026-09-13): The alarm_system_cover asset was inspected directly and its alt text now describes the visible Pygame control panel. The unrelated Blackjack gallery and broken intended alarm-photo references remain omitted; this published entry therefore uses one authentic project image and text-only sections. The historical extraction notes below are retained for provenance.\n\nREMOVED SECTION \"Project Photos\": it had a heading, zero media and a body that was a porting note rather than published copy, so it rendered on /work/alarm-system as a photo section with no photos and an explanation aimed at the author. Kept verbatim here: The legacy page opens with a large display image and a row of five clickable thumbnails; clicking a thumbnail swaps it into the big display slot above. Every one of those images points into data/project_images/blackjack/, a copy-paste leftover from the Blackjack page — they are Blackjack card-game screenshots, not alarm system photos, so none of them are carried over here. No alarm system photos exist anywhere in the repo, so this section has no media until the author supplies some. Restore it as a section only once real alarm system photos exist. || HOMEPAGE LISTING: this project is NOT in the live data/projects.json, which contains only foosball and cryptogram, so the homepage grid never renders an Alarm System card. It IS present in the duplicate data/projects copy.json as key \"alarm_system\" with title \"Home Alarm System\", images [\"alarm_system_cover.png\"], page \"alarm_system\". The copy file is the fuller list (it also carries blackjack, cyber_TTM and wordle_solver); the live file appears to have been trimmed. Cover image resolves via scripts.js as data/project_images/<projectId>/<images[0]> = data/project_images/alarm_system/alarm_system_cover.png, which exists in the manifest and is the only alarm_system media file in the repo. TITLE DISCREPANCY: three different names exist — <title>Alarm System</title>, on-page <h2>Automated Alarm System</h2>, and \"Home Alarm System\" in projects copy.json. I used the on-page h2. PLACEHOLDER MEDIA (important): every one of the 9 <img> tags on this page points into data/project_images/blackjack/, because alarm_system.html was cloned from project_pages/blackjack/blackjack.html and the image paths were never repointed. The ../../ prefix itself is correct from project_pages/<slug>/; only the folder name is wrong. Five of those files exist in the manifest but are Blackjack card-game screenshots, not alarm system photos, so I deliberately left them out of \"media\": data/project_images/blackjack/screen_0.png (used as #mainImage and thumbnail 1), screen_1.png, screen_2.png, screen_3.png, screen_4.png — all in the \"Project Photos\" section. BROKEN REFERENCES (not in the manifest at all, 404s), with the alt text that says what each was meant to show: ../../data/project_images/blackjack/hardware.png alt=\"Hardware Image\" (Project Story section), .../hardware_components.png alt=\"Hardware Components\" (Hardware Components), .../main_screen.png alt=\"Main Screen\" (Main Screen Features), .../settings_screen.png alt=\"Settings Screen\" (Settings Screen Enhancements). The five placeholder Blackjack images carry only generic alt text: \"Main Image\" on #mainImage and \"Image 1\" through \"Image 5\" on the thumbnails. No real alarm system screenshots, hardware photos or videos exist anywhere in the repo — a porter must either source new images from the author or ship these sections text-only. There is no data/project_videos/alarm_system directory. JS BEHAVIOUR: alarm_system.js is 4 lines and defines only changeMainImage(newSrc), which sets #mainImage.src; the thumbnails call it via inline onclick=\"changeMainImage(this.src)\". So the gallery is a click-to-enlarge swap with no lightbox, no keyboard navigation, no captions and no slideshow ordering beyond DOM order (screen_0 through screen_4, with screen_0 also the initial large image). CSS / DROPPED SECTIONS: alarm_system.css is a verbatim copy of the shared project-page stylesheet and still carries rules for #project-videos, .videos-container, .video-box (including a .video-box p caption style) and #project-epilogue — none of which appear in alarm_system.html. Blackjack’s page does use #project-videos and cryptogram.html uses #project-epilogue, so a videos section and an epilogue may have been planned here and never written — that is inference from the shared stylesheet, not something the source states. LAYOUT INTENT: navy page background (#365175) with off-white rounded cards (#f9f9f9, 10px radius, soft shadow) per section; the title card is centered with a pill-shaped bordered heading; .project-section stacks image-over-text on mobile and becomes a row at >=768px with the image on the left and left-aligned text (max-width 800px); .big-image gets a 4px #333 border; .image-row thumbnails are max 150px wide, flex-wrapped with 20px gaps and scale to 1.1 on hover. MARKUP QUIRKS: the Overview and the four story sections all use class=\"project-story\" rather than the id=\"project-story\" used in blackjack.html. The Hardware/Main Screen/Settings bullets are div.bullet-point elements with a <strong> label, but alarm_system.css defines no .bullet-point rule at all, so they render as unstyled stacked divs — rebuild them as a real list. The Project Story section's prose lives in a single <p> that actually holds two paragraphs; I split it at \"The subsequent version...\". SCRIPT WIRING: the page loads <script src=\"../scripts.js\">, i.e. project_pages/scripts.js, which does not exist (the only scripts.js is at the repo root), so it 404s; even if it loaded, it calls document.querySelector('.project-grid') and .mobile-exclaimer-container, neither of which exists on a project page, and fetches '../data/projects.json' with a prefix that is wrong from this depth. The navbar is injected at runtime by fetching ../../tools/navbar/navbar.html into #navbar-container, and that navbar links its stylesheet with an absolute /tools/navbar/navbar.css path that breaks under file:// or any non-root deploy; its nav links (/index.html, /pages/about.html, /pages/connect.html, /live_projects/symposium/home.html) are likewise root-absolute, and an Archive link is commented out. DATES/STATUS: the page states no year, no status, no external or repository links, and no captions anywhere; year and status are null. The only date signal on the whole site is the homepage footer \"Last Update 7/20/24 © 2024 Michael Lizzio\", which is site-wide, not project-specific. No lorem ipsum or placeholder prose — all text is real authored copy. No \"copy\" variants of the alarm_system html/js/css exist (unlike foosball, which has a \"foosball copy.css\"). Curly apostrophe U+2019 preserved in \"alarm system’s power cord\". CRITIC PASS: removed \"GPIO\" from the tech list (the source only says the Pi Hat \"reads voltages\"; GPIO is never mentioned) and reworded the summary, which had said the Pygame GUI \"replaced\" the LCD-and-button version — the source only says the subsequent version \"further expanded the user interface and available features\", and never says the LCD was removed. Everything else checked out verbatim against the source."
+  "notes": "2020 IPHONE MEDIA REVIEW (2026-09-16): Michael supplied the original July 2020 iPhone files in Downloads. All eight stills and twenty-two videos in the IMG_7879 through IMG_7927 sequence were visually reviewed. Four stills and three short clips were selected because together they show the opened RF panel, soldered LED taps, added external connector, Pi-side interface, installed garage sensor, panel-light response, and live decoder output without repeating the same view. Source mapping: panel-opened.webp = IMG_7879.JPG; led-wiring.webp = IMG_7884.JPG; panel-interface.webp = IMG_7888.JPG; pi-interface.webp = IMG_7911.JPG; garage-sensor-test.mp4 = a 1.5-second head trim of IMG_7897.MOV; panel-led-test.mp4 = IMG_7909.MOV trimmed before its obscured ending; decoder-bench-test.mp4 = IMG_7918.MOV. The originals remain untouched in Downloads. Captions describe only visible content plus the already verified system architecture; there was no intelligible spoken narration in the selected clips.\n\nEXPANSION AND RUNTIME AUDIT (2026-09-15): The project lineage was established from three local source trees. C:/Users/mjliz_9kaompp/PycharmProjects/Alarm/main.py contains an internal version history dated 2020-08-01 through 2021-08-16; the author independently recalled beginning the project with his dad around 2020, so top-level date is 2020. C:/Users/mjliz_9kaompp/PycharmProjects/AlarmSystemGUI 0 contains the custom Pygame generation with files beginning 2022-08-24. C:/Users/mjliz_9kaompp/PycharmProjects/AlarmSystem has Git history beginning 2025-07-22 for the Flask/service generation. development is ai-assisted because the author explicitly stated that ChatGPT was used while building the current web generation; the 2022 Pygame interface is explicitly described in-page as having no AI assistance.\n\nRUNTIME VERIFICATION: The Pygame interface ran from its own Python 3.9.13 / Pygame 2.1.2 environment. Hardware calls are commented in this PC copy, so only the UI was exercised; pygame_settings.webp is a direct framebuffer capture from that run. The current web system was copied into an isolated preview directory without its .env or live data, then Data Server, System Server, Motion Server, Camera Hub, Audio Server, and Flask app were run locally with fictional fixtures. Browser checks covered sensor cards and live updates, motion, cameras, facts, event history, General/Security/Telegram settings, and Admin Overview/Accounts/Add. No Telegram message, email, real TTS generation, real GPIO operation, VPN connection, or other external side effect was attempted. web_dashboard.webp, web_facts.webp, and web_admin.webp contain only fictional names, RFC 5737 documentation IP addresses, localhost, and synthetic statistics. The motion ingest accepted two authenticated test triggers and exposed an active session with its idle deadline; the camera hub accepted eight generated JPEG frames, reported 8.78 FPS, and returned an MJPEG stream containing JPEG data. Audio endpoints were tested without an external API call: empty TTS was a no-op success, missing and unknown sound keys returned the expected validation errors. Existing Data Server tests passed 5/5 including concurrent access and 1,000 writes; Relay Server tests passed 6/6. The repository's System Server test file is stale and fails during import because it expects SENSOR_ORDER and older constructor/method names. A direct current-API probe confirmed the change queue remains capped at 10,000 entries but also found that the unmodified simulator reports initial/open/closed sensor choices as open after they pass through the legacy decoder; the portfolio screenshot therefore used a temporary simulator-only logical-state override in the isolated copy.\n\nLONG-RUNTIME FAILURE HONESTY: The author remembers the Pygame system failing after roughly one or two weeks and believes an ever-growing state list caused it. No persistent unbounded sensor/status append exists in this surviving snapshot: make_lists creates four fixed entries and get_led creates a fresh local list per poll. The snapshot does show an uncapped main loop because fpsClock.tick(fps) is commented out, plus repeated whole-file reads in the hot path and queued/logged disk I/O. Those are verified resource-pressure risks, but the precise historical memory leak was not reproduced or proven. The public copy therefore distinguishes the observed long-runtime crash, the author's recollection, and what this archived source actually establishes. architecture.webp is a code-derived diagram; the Hardware Server is marked as an unfinished prototype because it is present in source, not launched by main.py, and shares default port 9103 with Motion Server.\n\nREPAIR PASS (2026-09-13): The alarm_system_cover asset was inspected directly and its alt text now describes the visible Pygame control panel. The unrelated Blackjack gallery and broken intended alarm-photo references remain omitted. Authentic July 2020 hardware photos and test videos were added in the later iPhone media review described above. DATE AUDIT (2026-09-15): 2022-04 is inferred from the preserved first-version source at C:/Users/mjliz_9kaompp/PycharmProjects/Alarm/main.py, whose creation and last-write timestamps are both 2022-04-01. The later Pygame GUI has preserved files from August 2022 onward, and the service-based rewrite has Git history beginning 2025-07-22. The historical extraction notes below are retained for provenance.\n\nREMOVED SECTION \"Project Photos\": it had a heading, zero media and a body that was a porting note rather than published copy, so it rendered on /work/alarm-system as a photo section with no photos and an explanation aimed at the author. Kept verbatim here: The legacy page opens with a large display image and a row of five clickable thumbnails; clicking a thumbnail swaps it into the big display slot above. Every one of those images points into data/project_images/blackjack/, a copy-paste leftover from the Blackjack page — they are Blackjack card-game screenshots, not alarm system photos, so none of them are carried over here. No alarm system photos exist anywhere in the repo, so this section has no media until the author supplies some. Restore it as a section only once real alarm system photos exist. || HOMEPAGE LISTING: this project is NOT in the live data/projects.json, which contains only foosball and cryptogram, so the homepage grid never renders an Alarm System card. It IS present in the duplicate data/projects copy.json as key \"alarm_system\" with title \"Home Alarm System\", images [\"alarm_system_cover.png\"], page \"alarm_system\". The copy file is the fuller list (it also carries blackjack, cyber_TTM and wordle_solver); the live file appears to have been trimmed. Cover image resolves via scripts.js as data/project_images/<projectId>/<images[0]> = data/project_images/alarm_system/alarm_system_cover.png, which exists in the manifest and is the only alarm_system media file in the repo. TITLE DISCREPANCY: three different names exist — <title>Alarm System</title>, on-page <h2>Automated Alarm System</h2>, and \"Home Alarm System\" in projects copy.json. I used the on-page h2. PLACEHOLDER MEDIA (important): every one of the 9 <img> tags on this page points into data/project_images/blackjack/, because alarm_system.html was cloned from project_pages/blackjack/blackjack.html and the image paths were never repointed. The ../../ prefix itself is correct from project_pages/<slug>/; only the folder name is wrong. Five of those files exist in the manifest but are Blackjack card-game screenshots, not alarm system photos, so I deliberately left them out of \"media\": data/project_images/blackjack/screen_0.png (used as #mainImage and thumbnail 1), screen_1.png, screen_2.png, screen_3.png, screen_4.png — all in the \"Project Photos\" section. BROKEN REFERENCES (not in the manifest at all, 404s), with the alt text that says what each was meant to show: ../../data/project_images/blackjack/hardware.png alt=\"Hardware Image\" (Project Story section), .../hardware_components.png alt=\"Hardware Components\" (Hardware Components), .../main_screen.png alt=\"Main Screen\" (Main Screen Features), .../settings_screen.png alt=\"Settings Screen\" (Settings Screen Enhancements). The five placeholder Blackjack images carry only generic alt text: \"Main Image\" on #mainImage and \"Image 1\" through \"Image 5\" on the thumbnails. No real alarm-system hardware media existed in the legacy repo at the time of that audit; the authentic July 2020 iPhone media added later is documented above. There is no data/project_videos/alarm_system directory. JS BEHAVIOUR: alarm_system.js is 4 lines and defines only changeMainImage(newSrc), which sets #mainImage.src; the thumbnails call it via inline onclick=\"changeMainImage(this.src)\". So the gallery is a click-to-enlarge swap with no lightbox, no keyboard navigation, no captions and no slideshow ordering beyond DOM order (screen_0 through screen_4, with screen_0 also the initial large image). CSS / DROPPED SECTIONS: alarm_system.css is a verbatim copy of the shared project-page stylesheet and still carries rules for #project-videos, .videos-container, .video-box (including a .video-box p caption style) and #project-epilogue — none of which appear in alarm_system.html. Blackjack’s page does use #project-videos and cryptogram.html uses #project-epilogue, so a videos section and an epilogue may have been planned here and never written — that is inference from the shared stylesheet, not something the source states. LAYOUT INTENT: navy page background (#365175) with off-white rounded cards (#f9f9f9, 10px radius, soft shadow) per section; the title card is centered with a pill-shaped bordered heading; .project-section stacks image-over-text on mobile and becomes a row at >=768px with the image on the left and left-aligned text (max-width 800px); .big-image gets a 4px #333 border; .image-row thumbnails are max 150px wide, flex-wrapped with 20px gaps and scale to 1.1 on hover. MARKUP QUIRKS: the Overview and the four story sections all use class=\"project-story\" rather than the id=\"project-story\" used in blackjack.html. The Hardware/Main Screen/Settings bullets are div.bullet-point elements with a <strong> label, but alarm_system.css defines no .bullet-point rule at all, so they render as unstyled stacked divs — rebuild them as a real list. The Project Story section's prose lives in a single <p> that actually holds two paragraphs; I split it at \"The subsequent version...\". SCRIPT WIRING: the page loads <script src=\"../scripts.js\">, i.e. project_pages/scripts.js, which does not exist (the only scripts.js is at the repo root), so it 404s; even if it loaded, it calls document.querySelector('.project-grid') and .mobile-exclaimer-container, neither of which exists on a project page, and fetches '../data/projects.json' with a prefix that is wrong from this depth. The navbar is injected at runtime by fetching ../../tools/navbar/navbar.html into #navbar-container, and that navbar links its stylesheet with an absolute /tools/navbar/navbar.css path that breaks under file:// or any non-root deploy; its nav links (/index.html, /pages/about.html, /pages/connect.html, /live_projects/symposium/home.html) are likewise root-absolute, and an Archive link is commented out. LEGACY PAGE DATES/STATUS: the page itself states no year, no status, no external or repository links, and no captions anywhere; the project date now comes from the separate preserved source lineage described in the date audit above, while status remains null. The only date signal on the whole site is the homepage footer \"Last Update 7/20/24 © 2024 Michael Lizzio\", which is site-wide, not project-specific. No lorem ipsum or placeholder prose — all text is real authored copy. No \"copy\" variants of the alarm_system html/js/css exist (unlike foosball, which has a \"foosball copy.css\"). Curly apostrophe U+2019 preserved in \"alarm system’s power cord\". CRITIC PASS: removed \"GPIO\" from the tech list (the source only says the Pi Hat \"reads voltages\"; GPIO is never mentioned) and reworded the summary, which had said the Pygame GUI \"replaced\" the LCD-and-button version — the source only says the subsequent version \"further expanded the user interface and available features\", and never says the LCD was removed. Everything else checked out verbatim against the source."
 }
