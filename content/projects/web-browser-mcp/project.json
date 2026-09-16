@@ -3,7 +3,7 @@
   "title": "Web Browser MCP",
   "tagline": "A visual Chrome control layer that gives AI agents reliable hands on the web",
   "summary": "I built a local browser-control system that lets Claude Code and other MCP clients operate a real Chrome session instead of relying on raw HTTP requests. It combines persistent browser identities, human-like interaction, visual element snapshots, screenshots, page extraction, live observability, and a FastMCP adapter over one shared session API. I originally developed it as reusable infrastructure inside larger automation projects, then separated it into its own standalone repository so the browser engine, REST API, and agent tools could be used independently.",
-  "published": false,
+  "published": true,
   "featured": false,
   "date": "2026-09",
   "status": "Local automation toolkit",
@@ -21,7 +21,13 @@
     "MJPEG streaming"
   ],
   "links": [],
-  "hero": null,
+  "hero": {
+    "src": "media/cover.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "Web Browser MCP cover showing a browser window beside a snapshot, act, and verify tool loop",
+    "caption": "A local browser-control layer shared by Claude Code, MCP clients, and automation scripts."
+  },
   "sections": [
     {
       "heading": "Why I built it",
@@ -38,10 +44,16 @@
         "The lower layer is a FastAPI browser-session service. It owns Chrome profiles, launches undetected-chromedriver, keeps track of sessions and tabs, performs browser actions, captures pages, and exposes live activity. The upper layer is a thin FastMCP server that turns the most useful operations into tools such as browser_navigate, browser_snapshot, browser_click, browser_type, browser_read, and browser_screenshot.",
         "Keeping the MCP adapter separate from the browser process solved an important practical problem: Chrome locks a profile to one process. Scripts and Claude can now share the same HTTP-managed session instead of starting competing browser instances or losing an authenticated profile between tools. The MCP server checks the service health, starts it when necessary, and reuses an existing session on the configured profile."
       ],
-      "codeBlocks": [
-        "CLAUDE CODE / MCP CLIENT\n          |\n          | stdio tools\n          v\nFASTMCP ADAPTER\n          |\n          | local HTTP\n          v\nBROWSER SESSION SERVICE\n  | profiles | sessions | actions | capture | live feed |\n          |\n          v\nUNDETECTED CHROME"
-      ],
-      "media": []
+      "codeBlocks": [],
+      "media": [
+        {
+          "src": "media/architecture.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Architecture diagram connecting Claude Code through FastMCP and FastAPI to a browser engine with profiles, actions, capture, and live observability",
+          "caption": "The MCP adapter translates agent tools into calls against the session service that owns Chrome."
+        }
+      ]
     },
     {
       "heading": "Giving an AI both vision and structure",
@@ -50,7 +62,15 @@
         "The normal control loop is open, navigate, snapshot, act, and verify. Navigation can wait until the document is loaded and the DOM has stopped changing, which helps with single-page applications that report themselves ready before their useful interface appears. After an action, the agent can read clean visible text, take another screenshot, wait for text or a selector, or inspect the updated snapshot."
       ],
       "codeBlocks": [],
-      "media": []
+      "media": [
+        {
+          "src": "media/agent-loop.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Four-step agent interaction loop showing snapshot, reason, act, and verify followed by waiting for a settled page",
+          "caption": "A screenshot supplies visual context while element references keep actions precise and repeatable."
+        }
+      ]
     },
     {
       "heading": "A complete browser-control surface",
@@ -98,5 +118,5 @@
       "media": []
     }
   ],
-  "notes": "SOURCE: Extracted from the tracked shared/browser-mcp and shared/stealth-browser toolkits in the local Co-opTracker repository. The same toolkit also existed as an untracked shared copy in SimpleInventoryPromoter; the substantive browser and MCP code matched, apart from project-specific documentation and one explanatory comment. DATE: 2026-09 is based on the first tracked commit in Co-opTracker on 2026-09-03, not a filesystem modification time. STANDALONE EXTRACTION: Copied into /Users/michael/cursor/automations/WebBrowserMCP with .env files, local Chrome profiles, screenshots, caches, and other runtime data excluded. The default MCP profile and documentation were generalized so the standalone project does not depend on the original repository's private profile ID or paths. VERIFIED FROM SOURCE: FastMCP tools; FastAPI session API; persistent JSON-backed profiles; undetected-chromedriver; CDP automation-signal changes; human mouse, typing, scrolling, and dwell behavior; settled navigation; set-of-marks snapshots; screenshots; visible text and raw HTML; file upload; select control; JavaScript execution; multi-tab and multi-session control; Anthropic-style computer actions; action history; SSE feeds; MJPEG streaming; live viewer; secret-safe typed-text logging; stale-lock recovery. PROXY HONESTY: No proxy argument or Chrome proxy configuration exists in the reviewed code. Only an opt-in timezone setting mentions keeping time consistent with a proxy configured elsewhere, so the public page explicitly says proxy routing is not implemented. RUNTIME: Source and requirements were inspected. A full browser demonstration has not yet been recorded or added as media; the page remains unpublished with hero null. DEVELOPMENT DISCLOSURE: The source does not establish whether the implementation was human-led, AI-assisted, or AI-generated, so development remains null until Michael classifies it. LINKS: The new standalone repository is local and has no verified public remote, so links remains empty."
+  "notes": "SOURCE: Extracted from the tracked shared/browser-mcp and shared/stealth-browser toolkits in the local Co-opTracker repository. The same toolkit also existed as an untracked shared copy in SimpleInventoryPromoter; the substantive browser and MCP code matched, apart from project-specific documentation and one explanatory comment. DATE: 2026-09 is based on the first tracked commit in Co-opTracker on 2026-09-03, not a filesystem modification time. STANDALONE EXTRACTION: Copied into /Users/michael/cursor/automations/WebBrowserMCP with .env files, local Chrome profiles, screenshots, caches, and other runtime data excluded. The default MCP profile and documentation were generalized so the standalone project does not depend on the original repository's private profile ID or paths. VERIFIED FROM SOURCE: FastMCP tools; FastAPI session API; persistent JSON-backed profiles; undetected-chromedriver; CDP automation-signal changes; human mouse, typing, scrolling, and dwell behavior; settled navigation; set-of-marks snapshots; screenshots; visible text and raw HTML; file upload; select control; JavaScript execution; multi-tab and multi-session control; Anthropic-style computer actions; action history; SSE feeds; MJPEG streaming; live viewer; secret-safe typed-text logging; stale-lock recovery. PROXY HONESTY: No proxy argument or Chrome proxy configuration exists in the reviewed code. Only an opt-in timezone setting mentions keeping time consistent with a proxy configured elsewhere, so the public page explicitly says proxy routing is not implemented. RUNTIME: All 15 standalone Python files were parsed, and the FastAPI application and FastMCP adapter imported successfully using the existing shared validation environment. A full browser demonstration has not yet been recorded; the three current WebP visuals are manually authored portfolio diagrams rather than runtime screenshots. DEVELOPMENT DISCLOSURE: The source does not establish whether the implementation was human-led, AI-assisted, or AI-generated, so development remains null until Michael classifies it. LINKS: The new standalone repository is local and has no verified public remote, so links remains empty. MEDIA: cover.webp, architecture.webp, and agent-loop.webp were manually designed as SVG diagrams, rendered to 1600-pixel-wide WebP files, visually inspected, and passed through the repository media command."
 }
