@@ -4,7 +4,7 @@
   "tagline": "An AI calendar assistant that turns chats, syllabi, and email into reviewable events",
   "summary": "CalCardo was my first major full-stack project that I took from an idea to a production deployment. I built it to make keeping a real calendar feel easier: I could type a request, upload a syllabus, or let it find an event in Gmail, review what it proposed, and then push the accepted change to Google Calendar. The frontend is React and TypeScript with Tailwind CSS, the API is FastAPI and Python, and Supabase handles authentication, Postgres data, and storage.",
   "published": true,
-  "featured": false,
+  "featured": true,
   "date": "2025-11",
   "status": "Paused",
   "development": "ai-assisted",

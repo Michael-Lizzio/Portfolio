@@ -4,7 +4,7 @@
   "tagline": "A geospatial tool for comparing Seattle homes by what matters nearby",
   "summary": "The Parcel Web Analyzer is a web-based tool that helps users compare residential parcels in the Seattle area using their own proximity-based requirements. It combines King County parcel polygons with live OpenStreetMap amenities, scores each parcel with a custom weighting algorithm, and explains why a parcel scored well.",
   "published": true,
-  "featured": false,
+  "featured": true,
   "date": "2025-12",
   "status": "IGME 382 final project",
   "tech": [

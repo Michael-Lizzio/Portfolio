@@ -4,7 +4,7 @@
   "tagline": "An AI-powered assistant that records, transcribes, and summarizes lectures",
   "summary": "Imagine never having to take notes again. Symposium Notes is an AI-powered assistant that records, transcribes, and summarizes lectures and meetings, allowing you to pay full attention. I created the listener logic and the AI interfaces that populated the display during BrickHack 11.",
   "published": true,
-  "featured": true,
+  "featured": false,
   "date": "2025-02",
   "status": "BrickHack 11 project",
   "tech": [

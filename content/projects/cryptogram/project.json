@@ -4,7 +4,7 @@
   "tagline": "A backtracking program that cracks cryptogram puzzles word by word",
   "summary": "A program that solves cryptogram (substitution-cipher) puzzles automatically. It started just before February school break 2022, after the author grabbed an unsolved puzzle from an optional computer science lesson on cryptography and his dad challenged him to solve it with him; it grew into a backtracking search worked out on a whiteboard before he knew the technique had a name. The solver organizes the puzzle's words to try the largest ones first, tries candidate words from 22 word lists indexed by word length and ordered from common to uncommon, and backtracks whenever a guess leaves no possibilities. The page collects the original class handout, the program's solved output, the whiteboard photo, and two videos of the solver running against puzzles from a puzzle website.",
   "published": true,
-  "featured": true,
+  "featured": false,
   "date": "2022-02",
   "status": null,
   "tech": [

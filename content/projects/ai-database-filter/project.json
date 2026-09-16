@@ -4,7 +4,7 @@
   "tagline": "A local AI assistant for exploring a complex database in plain English",
   "summary": "I built an end-to-end filtering system for a county traffic-signal management application covering more than 2,000 signals and a large network of related records. The finished feature combined a flexible visual query builder with a local AI assistant that could understand plain-English requests, propose filters for review, and help users repair filters they had already created. I also expanded it into a shared filter library, where people could save useful filters and groups to their accounts, organize them, and share them with the rest of the team. This page follows the project from the first manual controls through retrieval, model evaluation, prompt tuning, database safeguards, sharing, and production integration.",
   "published": true,
-  "featured": false,
+  "featured": true,
   "date": "2026-06",
   "status": "Internship project",
   "development": "ai-assisted",

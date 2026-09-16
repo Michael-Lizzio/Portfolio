@@ -4,7 +4,7 @@
   "tagline": "KURT (Killer.Ultimate.Robot.Teammate), a camera-tracked robotic foosball goalie",
   "summary": "A build log for KURT (Killer.Ultimate.Robot.Teammate), an automated foosball goalie built onto a $50 secondhand foosball table. A Raspberry Pi and an overhead camera track the ball with an OpenCV color tracker and a Kalman filter predicts where it is heading, while a stepper motor and driver move the goalie back and forth. The page is a dated timeline of seven videos from hauling the table upstairs in October 2022 to a working goalie on December 25, 2022, followed by a click-to-fullscreen photo gallery of the same milestones.",
   "published": true,
-  "featured": true,
+  "featured": false,
   "date": "2022-12",
   "status": "Working version by the end of December 2022",
   "tech": [
