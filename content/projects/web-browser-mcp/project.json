@@ -1,0 +1,102 @@
+{
+  "slug": "web-browser-mcp",
+  "title": "Web Browser MCP",
+  "tagline": "A visual Chrome control layer that gives AI agents reliable hands on the web",
+  "summary": "I built a local browser-control system that lets Claude Code and other MCP clients operate a real Chrome session instead of relying on raw HTTP requests. It combines persistent browser identities, human-like interaction, visual element snapshots, screenshots, page extraction, live observability, and a FastMCP adapter over one shared session API. I originally developed it as reusable infrastructure inside larger automation projects, then separated it into its own standalone repository so the browser engine, REST API, and agent tools could be used independently.",
+  "published": false,
+  "featured": false,
+  "date": "2026-09",
+  "status": "Local automation toolkit",
+  "development": null,
+  "tech": [
+    "Python",
+    "Model Context Protocol",
+    "FastMCP",
+    "FastAPI",
+    "Selenium",
+    "undetected-chromedriver",
+    "Chrome DevTools Protocol",
+    "Anthropic computer use",
+    "Server-Sent Events",
+    "MJPEG streaming"
+  ],
+  "links": [],
+  "hero": null,
+  "sections": [
+    {
+      "heading": "Why I built it",
+      "body": [
+        "Several of my automation projects needed to work with real, JavaScript-heavy websites while keeping an authorized signed-in session. A normal scraper could download HTML, but it could not always see what a person saw, interact with controls that appeared after the page loaded, or let an AI reason from a screenshot. I kept rebuilding pieces of that browser layer, so I turned them into one reusable system.",
+        "The goal was to give an agent reliable hands without hiding what it was doing. The browser runs locally, every session has an ID, and the same session can be controlled through Python, a REST API, a command line, Anthropic's computer-use action format, or native MCP tools in Claude Code."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Two layers, one browser session",
+      "body": [
+        "The lower layer is a FastAPI browser-session service. It owns Chrome profiles, launches undetected-chromedriver, keeps track of sessions and tabs, performs browser actions, captures pages, and exposes live activity. The upper layer is a thin FastMCP server that turns the most useful operations into tools such as browser_navigate, browser_snapshot, browser_click, browser_type, browser_read, and browser_screenshot.",
+        "Keeping the MCP adapter separate from the browser process solved an important practical problem: Chrome locks a profile to one process. Scripts and Claude can now share the same HTTP-managed session instead of starting competing browser instances or losing an authenticated profile between tools. The MCP server checks the service health, starts it when necessary, and reuses an existing session on the configured profile."
+      ],
+      "codeBlocks": [
+        "CLAUDE CODE / MCP CLIENT\n          |\n          | stdio tools\n          v\nFASTMCP ADAPTER\n          |\n          | local HTTP\n          v\nBROWSER SESSION SERVICE\n  | profiles | sessions | actions | capture | live feed |\n          |\n          v\nUNDETECTED CHROME"
+      ],
+      "media": []
+    },
+    {
+      "heading": "Giving an AI both vision and structure",
+      "body": [
+        "The most agent-focused feature is the set-of-marks snapshot. The server discovers interactive elements, assigns each one a short reference, records its role, accessible name, position, and visibility, and can draw numbered red boxes over a screenshot. Claude receives both the structured list and the image, so it can reason visually and then click a specific reference instead of guessing a brittle CSS selector or screen coordinate.",
+        "The normal control loop is open, navigate, snapshot, act, and verify. Navigation can wait until the document is loaded and the DOM has stopped changing, which helps with single-page applications that report themselves ready before their useful interface appears. After an action, the agent can read clean visible text, take another screenshot, wait for text or a selector, or inspect the updated snapshot."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "A complete browser-control surface",
+      "body": [
+        "The system supports clicks by element reference, selector, or screenshot coordinate; human-paced typing; key chords; scrolling; mouse movement and drag actions; file uploads; select menus; JavaScript execution; visible-text extraction; raw HTML; PNG screenshots; and opening, switching, and closing tabs. The lower-level computer endpoint accepts the same general action vocabulary as Anthropic's computer-use tool and returns a fresh screenshot after each visual action.",
+        "Sessions are addressable by generated IDs and can run with different profiles, viewport sizes, headless settings, and human-behavior options. That makes the server usable as a one-browser MCP tool or as shared infrastructure for several automation jobs."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Persistent identities and cautious stealth",
+      "body": [
+        "Each browser identity is a persistent Chrome profile stored in an isolated managed directory. Cookies and authorized logins survive between runs, while friendly labels, notes, creation time, and last-used time are kept in a small JSON registry. The launcher detects the installed Chrome version, selects the matching driver, clears a stale profile lock only when its owning process is dead, and avoids interfering with my normal daily browser by default.",
+        "The stealth layer uses undetected-chromedriver, removes common automation signals, keeps language settings consistent, and applies human-like mouse paths, typing delays, reading pauses, and scrolling. It deliberately does not fabricate a different hardware fingerprint because mismatched GPU, font, screen, locale, and network signals can be more suspicious than the real machine. Headless mode is available but treated as the more detectable option."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Watching and debugging an agent live",
+      "body": [
+        "Every browser action is recorded with its sequence, time, duration, success state, and a short safe description. Typed values are represented only by their length so a password or private message does not leak into the activity feed. A Server-Sent Events stream publishes those records live for one session or across all sessions.",
+        "The server also exposes an MJPEG page stream and a ready-made viewer that places the live browser beside the action feed. This made it much easier to understand why an automation was stuck, supervise a long task, and build a control interface without screen-sharing the entire desktop."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Where it is useful",
+      "body": [
+        "I designed the toolkit for authorized workflows where a plain request library is not enough: extracting information from rendered applications, testing an interface from a user's point of view, operating an internal dashboard, uploading content, collecting screenshots, or letting an agent complete a repeatable multi-step browser task. Persistent profiles are especially useful when a workflow requires a legitimate account and would otherwise stop at every login.",
+        "It can also act as a debugging bridge between scripted automation and visual computer use. A workflow can use reliable selectors and element references for routine steps, fall back to screenshot coordinates when the page offers no useful structure, and leave a visible event trail for a person to review."
+      ],
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Boundaries and next steps",
+      "body": [
+        "This is a local toolkit, not a hosted browser service, and it should only be used on websites and accounts where automation or testing is authorized. The current code does not provide proxy routing. It has a timezone override that can be aligned with a proxy supplied somewhere else, but describing that as built-in proxy support would be inaccurate.",
+        "The next portfolio step is a short side-by-side demonstration using a clean browser profile and a safe test page. The recording will show Claude asking for a snapshot, receiving the numbered controls and screenshot, choosing an element reference, completing a small form or navigation task, and verifying the result while the live viewer displays the browser stream and action log. No personal accounts, tokens, notifications, or private page data will appear in the recording."
+      ],
+      "codeBlocks": [],
+      "media": []
+    }
+  ],
+  "notes": "SOURCE: Extracted from the tracked shared/browser-mcp and shared/stealth-browser toolkits in the local Co-opTracker repository. The same toolkit also existed as an untracked shared copy in SimpleInventoryPromoter; the substantive browser and MCP code matched, apart from project-specific documentation and one explanatory comment. DATE: 2026-09 is based on the first tracked commit in Co-opTracker on 2026-09-03, not a filesystem modification time. STANDALONE EXTRACTION: Copied into /Users/michael/cursor/automations/WebBrowserMCP with .env files, local Chrome profiles, screenshots, caches, and other runtime data excluded. The default MCP profile and documentation were generalized so the standalone project does not depend on the original repository's private profile ID or paths. VERIFIED FROM SOURCE: FastMCP tools; FastAPI session API; persistent JSON-backed profiles; undetected-chromedriver; CDP automation-signal changes; human mouse, typing, scrolling, and dwell behavior; settled navigation; set-of-marks snapshots; screenshots; visible text and raw HTML; file upload; select control; JavaScript execution; multi-tab and multi-session control; Anthropic-style computer actions; action history; SSE feeds; MJPEG streaming; live viewer; secret-safe typed-text logging; stale-lock recovery. PROXY HONESTY: No proxy argument or Chrome proxy configuration exists in the reviewed code. Only an opt-in timezone setting mentions keeping time consistent with a proxy configured elsewhere, so the public page explicitly says proxy routing is not implemented. RUNTIME: Source and requirements were inspected. A full browser demonstration has not yet been recorded or added as media; the page remains unpublished with hero null. DEVELOPMENT DISCLOSURE: The source does not establish whether the implementation was human-led, AI-assisted, or AI-generated, so development remains null until Michael classifies it. LINKS: The new standalone repository is local and has no verified public remote, so links remains empty."
+}
