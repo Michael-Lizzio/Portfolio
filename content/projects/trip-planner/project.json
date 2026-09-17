@@ -3,7 +3,7 @@
   "title": "Trip Planner",
   "tagline": "A shared itinerary where friends propose plans, vote on conflicts, and pack together",
   "summary": "I built Trip Planner as a shared home base for organizing a group trip without losing decisions across a long message thread. The Flask application combines a day-by-day itinerary, competing plans at the same time, participant voting, a collaborative packing list, and account administration in one responsive interface. Underneath the simple UI, hand-built Server-Sent Events keep every open browser current while locked JSON writes protect the shared data.",
-  "published": false,
+  "published": true,
   "featured": false,
   "date": "2025-08",
   "status": null,
