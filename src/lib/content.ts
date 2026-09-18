@@ -33,6 +33,7 @@ import {
   type ResolvedMedia,
   type ResolvedProject,
 } from "./schema";
+import { compareProjectsByDate } from "./project-order";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
 const PROJECTS_DIR = path.join(CONTENT_DIR, "projects");
@@ -195,26 +196,6 @@ async function resolveProject(slug: string, project: Project): Promise<ResolvedP
 }
 
 /* -------------------------------------------------------------------------- */
-/* ordering                                                                   */
-/* -------------------------------------------------------------------------- */
-
-/**
- * Newest date first, then undated. Ties break on title so
- * the order is identical on every machine and every build — static output must
- * not depend on how the filesystem happened to list the directory.
- *
- * Dates are "YYYY" or "YYYY-MM", so plain string comparison already sorts them.
- */
-function byDate(a: ResolvedProject, b: ResolvedProject): number {
-  if (a.date !== b.date) {
-    if (a.date === null) return 1;
-    if (b.date === null) return -1;
-    return b.date.localeCompare(a.date);
-  }
-  return a.title.localeCompare(b.title) || a.slug.localeCompare(b.slug);
-}
-
-/* -------------------------------------------------------------------------- */
 /* loaders (cached per render pass)                                           */
 /* -------------------------------------------------------------------------- */
 
@@ -259,7 +240,7 @@ const loadProjects = cache(async (): Promise<ResolvedProject[]> => {
     }),
   );
 
-  return projects.sort(byDate);
+  return projects.sort((a, b) => compareProjectsByDate(a, b, "desc"));
 });
 
 /* -------------------------------------------------------------------------- */

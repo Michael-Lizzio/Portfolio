@@ -5,7 +5,8 @@
   "summary": "U-Fund: A New Page was my SWEN 261 team project. We built a full-stack system where incarcerated people could request books, prison administrators could approve or deny them, and outside helpers could fund approved requests. It was one of my first chances to work on a fairly complex application with several roles and workflows shared across a team.",
   "published": true,
   "featured": false,
-  "date": "2025-04",
+  "date": "2025-02",
+  "endDate": "2025-04",
   "status": "RIT SWEN 261 team project",
   "development": "human-led",
   "tech": [

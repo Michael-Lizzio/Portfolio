@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { ResolvedProject } from "@/lib/schema";
 import { DevelopmentBadge } from "./DevelopmentBadge";
 import { TechPill } from "./TechPill";
-import { formatProjectDate } from "./date";
+import { formatProjectDateRange } from "./date";
 
 /** More than four pills stops reading as a list and starts reading as noise. */
 const MAX_PILLS = 4;
@@ -23,6 +23,7 @@ const HERO_SIZES = "(min-width: 64rem) 22rem, (min-width: 48rem) 45vw, 100vw";
 export function ProjectCard({ project }: { project: ResolvedProject }) {
   const pills = project.tech.slice(0, MAX_PILLS);
   const remaining = project.tech.length - pills.length;
+  const date = formatProjectDateRange(project.date, project.endDate);
 
   // A hero may be a video; its poster frame is the still we want on the card.
   const cover =
@@ -78,13 +79,9 @@ export function ProjectCard({ project }: { project: ResolvedProject }) {
               </ul>
             ) : null}
 
-            {project.date || project.development ? (
+            {date || project.development ? (
               <div className="flex flex-wrap items-center gap-2">
-                {project.date ? (
-                  <p className="font-mono text-xs text-fg-faint">
-                    <time dateTime={project.date}>{formatProjectDate(project.date)}</time>
-                  </p>
-                ) : null}
+                {date ? <p className="font-mono text-xs text-fg-faint">{date}</p> : null}
                 {project.development ? (
                   <DevelopmentBadge development={project.development} />
                 ) : null}

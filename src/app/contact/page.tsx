@@ -89,11 +89,6 @@ export default async function ContactPage() {
               </ul>
             </>
           ) : null}
-
-          <p className="mt-10 text-sm text-fg-muted">
-            There is no contact form here on purpose: there is no backend behind it yet, and a
-            form that quietly drops what you wrote is worse than no form at all.
-          </p>
         </Container>
       </section>
     </>

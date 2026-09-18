@@ -45,6 +45,10 @@ export const LinkSchema = z.object({
   href: z.string().url(),
 });
 
+const ProjectDateSchema = z
+  .string()
+  .regex(/^\d{4}(-(0[1-9]|1[0-2]))?$/, 'use "YYYY" or "YYYY-MM"');
+
 export const ProjectSchema = z.object({
   /** Must equal the folder name. Lowercase kebab-case. */
   slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "lowercase-kebab-case only"),
@@ -59,12 +63,10 @@ export const ProjectSchema = z.object({
   /** Promotes the project to the top of the work page and onto the homepage. */
   featured: z.boolean().default(false),
 
-  /** "YYYY" or "YYYY-MM". Drives ordering — newest first. null sorts last. */
-  date: z
-    .string()
-    .regex(/^\d{4}(-\d{2})?$/, 'use "YYYY" or "YYYY-MM"')
-    .nullable()
-    .default(null),
+  /** Start date. "YYYY" or "YYYY-MM". null sorts after dated work. */
+  date: ProjectDateSchema.nullable().default(null),
+  /** Optional finish date, or "present" for active work. */
+  endDate: z.union([ProjectDateSchema, z.literal("present")]).nullable().default(null),
   status: z.string().nullable().default(null),
 
   /** How the implementation was produced, not whether the finished product contains AI. */
@@ -83,6 +85,28 @@ export const ProjectSchema = z.object({
 
   /** Internal. Never rendered. Use it to leave notes for yourself or the next agent. */
   notes: z.string().nullable().default(null),
+}).superRefine((project, context) => {
+  if (project.endDate !== null && project.date === null) {
+    context.addIssue({
+      code: "custom",
+      path: ["endDate"],
+      message: "needs a start date in date",
+    });
+    return;
+  }
+
+  if (
+    project.date !== null &&
+    project.endDate !== null &&
+    project.endDate !== "present" &&
+    project.endDate < project.date
+  ) {
+    context.addIssue({
+      code: "custom",
+      path: ["endDate"],
+      message: "cannot be earlier than date",
+    });
+  }
 });
 
 export const ProfileSchema = z.object({

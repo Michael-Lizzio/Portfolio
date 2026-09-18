@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { Container } from "@/components/Container";
 import { PageHeader } from "@/components/PageHeader";
-import { ProjectCard } from "@/components/ProjectCard";
+import { WorkProjectGrid } from "@/components/WorkProjectGrid";
 import { getProjects } from "@/lib/content";
 
 /**
@@ -27,7 +27,7 @@ export default async function WorkPage() {
     <>
       <PageHeader
         title="Work"
-        tagline="Everything with a write-up — robotics, algorithms, embedded hardware and web apps. Newest first."
+        tagline="Everything with a write-up — robotics, algorithms, embedded hardware and web apps."
         meta={
           <p className="font-mono text-xs text-fg-faint">
             {projects.length} {projects.length === 1 ? "project" : "projects"}
@@ -41,14 +41,7 @@ export default async function WorkPage() {
             <>
               {/* The cards carry <h3>; without this the page would jump h1 → h3. */}
               <h2 className="sr-only">All projects</h2>
-
-              <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {projects.map((project) => (
-                  <li key={project.slug}>
-                    <ProjectCard project={project} />
-                  </li>
-                ))}
-              </ul>
+              <WorkProjectGrid projects={projects} />
             </>
           ) : (
             /* Reachable only if every project is unpublished. Say so plainly

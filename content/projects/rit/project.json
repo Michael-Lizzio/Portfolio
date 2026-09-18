@@ -3,7 +3,7 @@
   "title": "RIT Dorm Dashboard & SWEN 101",
   "tagline": "Two standalone RIT pages: a dorm control-panel UI and an intro page that flees the cursor.",
   "summary": "The RIT folder holds two unrelated coursework-era pages that happen to share a directory. dorm-dashboard.html is a dark, RIT-orange control panel for a dorm room: light ON/OFF buttons, a current/target temperature readout and an activity log table with Download and Load More controls. swen101.html is a personal introduction page for SWEN 101 whose four content boxes scatter to random positions on load and physically run away from the mouse pointer. Both are plain HTML, CSS and vanilla JavaScript with no build step, no framework and no shared navigation; neither page is linked from anywhere else in the site.",
-  "published": true,
+  "published": false,
   "featured": false,
   "date": "2024-10",
   "status": null,
