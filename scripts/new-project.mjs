@@ -34,6 +34,7 @@ function template(slug) {
     featured: false,
 
     date: null,
+    endDate: null,
     status: null,
     development: null,
 

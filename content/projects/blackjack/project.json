@@ -5,7 +5,7 @@
   "summary": "Blackjack was the first really big project I completed on my own. I learned each piece as I needed it and slowly built a full multiplayer casino game with accounts, saved statistics, chip betting, splits, insurance, surrender, hotkeys, settings, and a complete round flow. Somehow all 3,372 lines live in one Python file, and somehow it works.",
   "published": true,
   "featured": false,
-  "date": null,
+  "date": "2024-08",
   "status": null,
   "development": "human-led",
   "tech": [

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Container } from "@/components/Container";
 import { ProjectCard } from "@/components/ProjectCard";
 import { getProfile, getProjects } from "@/lib/content";
+import { compareProjectsByRelevance } from "@/lib/project-order";
 import type { Profile } from "@/lib/schema";
 
 /**
@@ -40,8 +41,9 @@ function heroBlurb(profile: Profile): string | null {
 export default async function HomePage() {
   const [profile, projects] = await Promise.all([getProfile(), getProjects()]);
 
-  const featured = projects.filter((project) => project.featured);
-  const highlights = featured.length > 0 ? featured : projects.slice(0, FALLBACK_COUNT);
+  const relevantProjects = [...projects].sort(compareProjectsByRelevance);
+  const featured = relevantProjects.filter((project) => project.featured);
+  const highlights = (featured.length > 0 ? featured : relevantProjects).slice(0, FALLBACK_COUNT);
 
   const github = profile.links.find((link) => link.label.toLowerCase() === "github") ?? null;
   const blurb = heroBlurb(profile);

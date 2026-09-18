@@ -3,7 +3,7 @@
   "title": "Library Database & REST API",
   "tagline": "A library system built in layers while learning PostgreSQL, Python, and REST",
   "summary": "This was the main project I built while learning full-stack development in SWEN 344. I first modeled a multi-branch library in PostgreSQL and wrote its business logic in Python, then turned the same system into a Flask REST API with users, sessions, book management, and history. It was a useful way to learn how a database, domain layer, and HTTP API fit together.",
-  "published": true,
+  "published": false,
   "featured": false,
   "date": "2025",
   "status": "RIT SWEN 344 coursework",

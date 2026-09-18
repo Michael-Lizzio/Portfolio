@@ -12,7 +12,7 @@ import { ProjectLightbox } from "@/components/ProjectLightbox";
 import { RockPaperScissorsGame } from "@/components/RockPaperScissorsGame";
 import { RomanNumeralConverter } from "@/components/RomanNumeralConverter";
 import { TechPill } from "@/components/TechPill";
-import { formatProjectDate } from "@/components/date";
+import { formatProjectDateRange } from "@/components/date";
 import { getProject, getProjectSlugs, getProjects } from "@/lib/content";
 import type { ResolvedMedia, ResolvedProject, ResolvedSection } from "@/lib/schema";
 
@@ -90,7 +90,7 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
   const previous = index > 0 ? projects[index - 1] : null;
   const next = index >= 0 && index < projects.length - 1 ? projects[index + 1] : null;
 
-  const date = formatProjectDate(project.date);
+  const date = formatProjectDateRange(project.date, project.endDate);
   const gallery = projectImageGallery(project);
 
   return (
@@ -132,7 +132,7 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
 
             {date || project.status ? (
               <p className="font-mono text-xs text-fg-faint">
-                {date ? <time dateTime={project.date ?? undefined}>{date}</time> : null}
+                {date}
                 {date && project.status ? <span aria-hidden="true"> · </span> : null}
                 {project.status}
               </p>
