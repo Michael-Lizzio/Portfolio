@@ -3,7 +3,7 @@
   "title": "RMF Checklist Automation",
   "tagline": "A review-first Python toolchain for safely updating DISA STIG checklist files",
   "summary": "I built this desktop toolchain for TTM Technologies to turn a slow, error-prone cybersecurity reporting task into a reviewable workflow. It cross-references DISA STIG findings with the controls required by a system's NIST Risk Management Framework, generates an editable answer sheet, converts approved answers to XML, and applies them to a CKL checklist only when its safety checks pass. I developed the matching and XML-editing logic from scratch with Python's standard library, wrapped each stage in a custom Tkinter interface, and iterated on the design with the people who would use it for quarterly reporting.",
-  "published": false,
+  "published": true,
   "featured": false,
   "date": "2024-06",
   "status": null,
