@@ -1,0 +1,150 @@
+{
+  "slug": "ai-aboard",
+  "title": "AI-Aboard",
+  "tagline": "An Azure-backed onboarding workspace that turns code repositories into living documentation",
+  "summary": "AI-Aboard was my four-person SWEN 566 team project: a full-stack workspace that cloned a GitHub or GitLab repository, filtered its source, and generated structured onboarding documentation with Microsoft Azure AI services. The result was more than a one-shot report: users could translate documents, ask questions about them, revise them through an AI editing chat, manage templates, and export the finished material. I led the UX and frontend work and also contributed across the Flask backend, task APIs, document lifecycle, translation, and our separate tool-using coding agent.",
+  "published": false,
+  "featured": false,
+  "date": "2026-03",
+  "endDate": "2026-04",
+  "status": "RIT SWEN 566 team project",
+  "development": "ai-assisted",
+  "tech": [
+    "React 19",
+    "TypeScript",
+    "Vite",
+    "Python",
+    "Flask",
+    "Azure OpenAI",
+    "Azure AI Language",
+    "Azure Translator",
+    "GitHub and GitLab cloning",
+    "Background task polling",
+    "Markdown and DOCX export",
+    "Custom coding agent"
+  ],
+  "links": [],
+  "hero": {
+    "src": "media/ai-aboard-document-workspace.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "AI-Aboard document workspace showing generated French documentation beside an AI editing conversation",
+    "caption": "Generated documentation remained editable: this view combines translated Markdown, project navigation, and a document-specific AI conversation."
+  },
+  "sections": [
+    {
+      "heading": "The onboarding problem",
+      "body": [
+        "Joining an unfamiliar codebase usually means collecting context from source files, setup notes, architecture decisions, and teammates before useful work can begin. Our goal was to turn that scattered discovery process into a repeatable workflow: point AI-Aboard at a repository, choose the documents a new contributor needs, and receive an organized project workspace instead of a generic summary.",
+        "The project form accepted GitHub and GitLab HTTPS repositories, optional access credentials, a branch, a project description, and one or more documentation templates. The token shown in this preserved class demo is masked; no credential is included in the portfolio media."
+      ],
+      "layout": "media-right",
+      "codeBlocks": [],
+      "media": [
+        {
+          "src": "media/ai-aboard-project-form.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "AI-Aboard new-project form with repository, branch, description, token, and document template fields",
+          "caption": "A single intake screen defined the repository and the set of onboarding documents to generate."
+        }
+      ]
+    },
+    {
+      "heading": "From repository to documentation",
+      "body": [
+        "The Flask backend cloned the selected repository into a temporary workspace, ignored generated and dependency-heavy paths, extracted the relevant source, and built a bounded context for the AI pipeline. Azure AI Language could summarize large inputs before Azure OpenAI generated Markdown against the chosen templates. AI-Aboard then persisted the project metadata, source digest, documents, translations, and conversations so the output could be reviewed and improved over time.",
+        "The architecture separated repository ingestion, document generation, translation, chat, templates, and administration behind HTTP APIs. That boundary let the React interface remain responsive while the backend coordinated file work and remote Azure calls."
+      ],
+      "layout": "media-left",
+      "codeBlocks": [],
+      "media": [
+        {
+          "src": "media/ai-aboard-system-diagram.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "AI-Aboard system diagram connecting the React interface, Flask backend, repository providers, Azure services, and stored project documents",
+          "caption": "The team's final system diagram: a React client over a Flask API, with repository ingestion and Azure-backed generation services behind it."
+        }
+      ]
+    },
+    {
+      "heading": "Long-running work without a frozen interface",
+      "body": [
+        "Cloning a repository and waiting on model or translation APIs is network-bound work, so the final design did not hold the original browser request open. The backend created a task, started the work on a background thread, and immediately returned a task identifier. The frontend polled a task endpoint for progress and refreshed the project when the result had been written.",
+        "This was deliberately lightweight rather than a distributed job queue, but it gave the class project a clear asynchronous contract and made failures visible to the interface."
+      ],
+      "layout": "stack",
+      "codeBlocks": [
+        "submit repository\n        ↓\ncreate task + return task ID\n        ↓\nbackground clone / summarize / generate\n        ↓\nfrontend polls status\n        ↓\npersist and open documents"
+      ],
+      "media": []
+    },
+    {
+      "heading": "Documents became a workspace",
+      "body": [
+        "Generation was the start of the workflow, not the finish. The document viewer rendered Markdown, kept the original and translated versions together, and supported create, save, delete, undo, and redo operations. A document-aware chat could answer questions or propose edits, with the editing history available when a generated change needed to be reversed.",
+        "Users could translate through Azure Translator or the Foundry-backed model path and export the results as Markdown, DOCX, or a print-ready PDF."
+      ],
+      "layout": "stack",
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "Reusable templates",
+      "body": [
+        "Templates made the system useful across very different repositories. The library included structures for executive summaries, developer onboarding, technical documentation, architecture, requirements, code quality, testing, deployment, API references, troubleshooting, and user guides. Users could inspect a template, duplicate it, edit it, or ask the model to generate a new one from a description."
+      ],
+      "layout": "media-right",
+      "codeBlocks": [],
+      "media": [
+        {
+          "src": "media/ai-aboard-template-library.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "AI-Aboard template library listing reusable documentation templates and their descriptions",
+          "caption": "The template library turned the generation pipeline into a configurable documentation tool rather than a single fixed report."
+        }
+      ]
+    },
+    {
+      "heading": "Administration and observability",
+      "body": [
+        "The admin view collected recent application activity, severity, source IP, message text, and timestamps behind filters for log level and search. The preserved demo used synthetic addresses and events, which made it possible to exercise the interface without exposing production data.",
+        "This page complemented backend file logging and made task failures or suspicious activity inspectable from the product itself."
+      ],
+      "layout": "media-left",
+      "codeBlocks": [],
+      "media": [
+        {
+          "src": "media/ai-aboard-admin.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "AI-Aboard administration page showing filterable informational, warning, and error log entries",
+          "caption": "A filterable administrative log gave the team a product-level view of recent activity and failures."
+        }
+      ]
+    },
+    {
+      "heading": "My role and our coding agent",
+      "body": [
+        "I was assigned the UX and frontend lead role, but my contribution expanded across the stack. My commits established the early interface, connected frontend and backend demo data, added and refined task routes, improved document generation, implemented translation flows, built document save/delete/undo/redo behavior, added chat-driven edits, and developed the template management APIs and screens.",
+        "Alongside AI-Aboard itself, we built a command-line coding agent backed by Microsoft Foundry. It could inspect files, search the project, apply edits, and run shell commands under frontend, backend, or full-stack configurations. We used Cursor for much of the day-to-day implementation and also exercised this custom agent against the codebase. The most important lesson was that generated changes still needed verification: better prompts, narrower tools, and explicit guardrails consistently produced safer results."
+      ],
+      "layout": "stack",
+      "codeBlocks": [],
+      "media": []
+    },
+    {
+      "heading": "A four-person build",
+      "body": [
+        "AI-Aboard was built by a four-person team. Liang Chu led project management and AI integration, Tyler Kranzen led architecture and backend work, I led UX and frontend development, and Zhiwei Liu focused on quality assurance and code quality. The boundaries were useful for ownership, but the final repository shows substantial overlap as we integrated the UI, APIs, Azure workflows, testing, and presentation milestones.",
+        "I reran the preserved project locally in September 2026. The React production build completed, all 41 backend tests passed, and the saved demo workspace loaded successfully. I did not send a repository to Azure during this review, so the portfolio describes the cloud-generation path from the source, tests, diagrams, and recorded class demonstrations rather than claiming a new paid cloud run."
+      ],
+      "layout": "stack",
+      "codeBlocks": [],
+      "media": []
+    }
+  ],
+  "notes": "PROVENANCE: Built from the supplied SWEN 566 Phase 1-5 decks and reports in drive-download-20260919T193047Z-1-001.zip, the local source repository at C:/Users/mjliz_9kaompp/vscode/RIT/swen-566/ai-systems-application-group7, the repository README files, design diagrams, git history, and a local runtime review. The proposal names the four team roles quoted on the page. Michael's git identities have 26 commits in the available repository history; the listed contributions are based on those commit subjects and inspected source, not on title alone. DATE: March-April 2026 is inferred from the dated class proposal/decks and the available git history, whose active implementation commits run through April 2026. DEVELOPMENT: ai-assisted is based on Michael's direct statement that Cursor was used, the team's separate ai-agents/code-agent implementation, the recorded code-agent demo, and the phase presentation discussing generated code and guardrails. This page does not claim the custom agent exclusively built AI-Aboard. RUNTIME: In September 2026 the existing backend venv was completed with the declared requirements, then backend pytest passed 41 tests in 22.92 seconds. The frontend production build passed. Frontend lint still reports one prefer-const error in App.tsx plus three React hook dependency warnings; source was not modified because this documentation task is not a repair of the class repository. The Flask API and Vite client loaded locally using preserved demo/test data. No Azure generation or translation call was made during the review, avoiding credentials and billable activity. MEDIA: document workspace, template library, project form, and admin screenshots were extracted directly from the team's Phase 5 presentation; the system diagram is from doc/Design-Document-Images/System-Diagram.png in the source repository. The project form screenshot contains only a masked token. LINKS: the source remote is an RIT GitLab course repository and was not verified as publicly accessible, so links is empty. PRIVACY: no contractor, student credential, repository token, or live Azure secret is included."
+}
