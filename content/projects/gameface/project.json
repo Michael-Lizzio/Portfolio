@@ -3,7 +3,7 @@
   "title": "GameFace",
   "tagline": "An AWS face-matching app that finds the professional athlete you resemble",
   "summary": "GameFace was my SWEN 514 team project, an AWS application that compared an uploaded photo with professional athletes and returned the five closest matches. I built the face-recognition side from an early local prototype into four Python Lambda functions, then used Terraform to connect them to Rekognition, S3, DynamoDB, API Gateway, CloudWatch, and SNS. The finished system combined that backend with my teammates' sports-data scraper and React interface in one repeatable deployment.",
-  "published": false,
+  "published": true,
   "featured": false,
   "date": "2026-04",
   "status": "RIT SWEN 514 team project",

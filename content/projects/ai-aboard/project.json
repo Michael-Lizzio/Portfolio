@@ -3,7 +3,7 @@
   "title": "AI-Aboard",
   "tagline": "An Azure-backed onboarding workspace that turns code repositories into living documentation",
   "summary": "AI-Aboard was my four-person SWEN 566 team project: a full-stack workspace that cloned a GitHub or GitLab repository, filtered its source, and generated structured onboarding documentation with Microsoft Azure AI services. The result was more than a one-shot report: users could translate documents, ask questions about them, revise them through an AI editing chat, manage templates, and export the finished material. I led the UX and frontend work and also contributed across the Flask backend, task APIs, document lifecycle, translation, and our separate tool-using coding agent.",
-  "published": false,
+  "published": true,
   "featured": false,
   "date": "2026-03",
   "endDate": "2026-04",
