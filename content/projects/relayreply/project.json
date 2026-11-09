@@ -1,14 +1,20 @@
 {
   "slug": "relayreply",
   "title": "RelayReply",
-  "tagline": "An AI that makes phone calls for you while you read the captions and decide on cards",
-  "summary": "RelayReply makes phone calls for people who can't, or would rather not, talk on the phone. You type what you need, an AI voice makes a real call to the business, and you read both sides as live captions. When something comes up that only you can decide, you get a card. It's in a private beta right now.",
+  "tagline": "Type what you need, and RelayReply makes the phone call, speaks for you, and asks you first when there's a decision to make.",
+  "summary": "RelayReply is a web app that makes phone calls for you. You type what you need, RelayReply makes the call and speaks for you, and you read every word as a caption. When there's a decision to make, it asks you first. It's in a public beta now.",
+  "overview": {
+    "what": "A web app that makes phone calls for you. You type what you need, RelayReply makes the call and speaks for you, and you read every word as a caption.",
+    "why": "For a lot of people the phone call is the hardest part of getting something done, like people who are Deaf or hard of hearing, or who have trouble speaking on the phone.",
+    "did": "I'm building all of it, using AI as a coding tool: the web app, the server that runs every call, and the part that turns each decision into a card for you.",
+    "result": "It's in a public beta at relayreply.com, free to start with free practice calls."
+  },
   "published": true,
   "featured": true,
   "date": "2026-04",
   "endDate": "present",
-  "status": "Private beta",
-  "development": null,
+  "status": "Public beta",
+  "development": "ai-assisted",
   "tech": [
     "React",
     "TypeScript",
@@ -19,7 +25,12 @@
     "Supabase",
     "Stripe"
   ],
-  "links": [],
+  "links": [
+    {
+      "label": "relayreply.com",
+      "href": "https://relayreply.com"
+    }
+  ],
   "hero": {
     "src": "media/relayreply_cover.webp",
     "kind": "image",
@@ -30,37 +41,53 @@
   },
   "sections": [
     {
-      "heading": "Why I built it",
-      "body": [
-        "For a lot of people, the phone call is the hardest part of getting something done. That includes people who are Deaf or hard of hearing, people who stutter or can't speak, and anyone who just gets anxious on the phone. Booking an appointment or refilling a prescription still usually means calling.",
-        "So I wanted to see if an AI voice could do the talking for you, while you still stay in control of what gets said."
-      ],
-      "media": []
-    },
-    {
       "heading": "How a call works",
       "body": [
-        "You type who to call and what you want, like refilling a prescription. The server places a real phone call, and an AI voice talks to the business for you. By default it tells them it's an AI assistant and that it's transcribing.",
-        "Everything both sides say shows up on your screen as captions. When the pharmacy asks something only you should answer, like 30 days or 90 days, a card pops up with the options. You tap one or type your own answer, and the AI says it. It's designed to bring money, times and anything personal to you as a card first."
+        "You type who to call and what you need, like refilling a prescription. RelayReply places a real phone call and does the talking, and you read both sides as captions while it happens.",
+        "When there's a decision to make, like a 30-day or a 90-day supply, you get a card with the options. You tap one or type your own answer, and the AI says it for you."
       ],
-      "media": []
-    },
-    {
-      "heading": "The system behind it",
-      "body": [
-        "The server owns every call, and the web app is basically a remote control. If you close the tab or lose signal, the call keeps going, and when you come back it catches you up on what you missed.",
-        "Each call really has two AIs working together. One is the voice that does the talking. The other listens along, decides when something needs a card, and handles small jobs on the side. Before building the real product, I worked out how calls should go in a separate test lab (about 8,000 lines of Python), then moved that \"call brain\" into the production server.",
-        "I started RelayReply as an iPhone app in the spring of 2026. In the fall I started over web first, so it works in any browser, and the iPhone app will come back on top of the same server. The web app is React and TypeScript, the call server is Python and FastAPI, Twilio handles the phone calls, and Supabase handles accounts and the database."
-      ],
-      "media": []
+      "media": [],
+      "diagram": {
+        "label": "How a RelayReply call works, in three steps",
+        "caption": null,
+        "steps": [
+          {
+            "arrow": null,
+            "nodes": [
+              {
+                "title": "You type what you need",
+                "detail": "Who to call and what you want done"
+              }
+            ]
+          },
+          {
+            "arrow": "calls",
+            "nodes": [
+              {
+                "title": "RelayReply makes the call",
+                "detail": "It speaks for you, and you read every word"
+              }
+            ]
+          },
+          {
+            "arrow": "asks",
+            "nodes": [
+              {
+                "title": "You decide on a card",
+                "detail": "Tap or type, and the AI says your answer"
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "heading": "Where it's at",
       "body": [
-        "RelayReply is in a private beta. It isn't a relay service, it can't call 911, and it only calls US numbers. Like any AI it can miss a question, which is why you can always see the captions. Next up is getting the beta to more people and then bringing back the iPhone app."
+        "RelayReply is in a public beta. It isn't a relay service (TRS or 711), and it can't call 911. More about it is on relayreply.com."
       ],
       "media": []
     }
   ],
-  "notes": "Added in the November 2026 refresh. Facts from Business/SocialDiffusion/config/facts/relayreply.yaml (2026-11-04/06) and startups/RelayReply branch v3 README.md and docs/plans/RelayReply-Architecture-2026-09-30.md. posting_state is not_posting_yet, so this page has no link to relayreply.com and no prices until Michael says so. Recordings policy is unconfirmed, so the page says nothing about recordings. Model names and latency left out on purpose. 'Why I built it' is written from the product brief's audience; Michael has not told the origin story, so check it with him. Date 2026-04 is the repo's first commit (older iOS app); v3 web restart was late September 2026. Hero is TooAvid's relayreply og.png; there is no real call-screen screenshot yet. development is null until Michael classifies it."
+  "notes": "Words pass 2026-11-09 (Michael's decisions, Nov 9): RelayReply is a PUBLIC beta, AI-assisted, and the page stays light and brief because he is publishing his own site and guides soon. Wording follows relayreply.com's current homepage source (startups/RelayReply, branch v3.3, web/src/features/onboarding/home: the lead 'Type what you need. RelayReply makes the call, speaks for you, and shows every word as a caption. When there's a decision to make, it asks you first.', his short phone lead, 'Free to start, with free practice calls.', and the not-a-relay-service notice). The old 'Phone calls, without the phone' line and 'private beta' are gone. Left out on purpose: prices, model names, how the AI introduces itself on a call, recordings, and the deep architecture. The hero and card image are the look agent's job (real product screenshots from a local build of the site). Date 2026-04 is the repo's first commit (older iOS app); the v3 web restart was late September 2026."
 }

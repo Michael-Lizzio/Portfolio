@@ -14,6 +14,7 @@
  *   - content/profile.json parses and passes ProfileSchema
  *   - content/work.json parses and passes WorkSchema, and links real projects
  *   - no em dash (U+2014) anywhere in content, notes included (Michael's rule)
+ *   - Michael's own pages (ownWords) still show exactly his words       (pinned)
  *   - every content/projects/*./project.json parses and passes ProjectSchema
  *   - slug equals the folder name, and no two projects share a slug
  *   - every media src/poster points at a file that is actually on disk
@@ -28,6 +29,7 @@
  * truth, no drift between what the site accepts and what the gate accepts.
  * Dependencies: zod and node builtins. Nothing else.
  */
+import { createHash } from "node:crypto";
 import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
@@ -47,6 +49,37 @@ const PROJECTS_DIR = path.join(ROOT, "content", "projects");
 const PROFILE_FILE = path.join(ROOT, "content", "profile.json");
 const WORK_FILE = path.join(ROOT, "content", "work.json");
 const EM_DASH = "\u2014";
+
+/**
+ * Michael's own pages, restored word for word in November 2026 after an earlier
+ * port reworded them (cryptogram and foosball from his old site at 081ec8c,
+ * symposium from his SynapsisNotes README). The hash covers every word the
+ * site shows from the file: tagline, summary, headings, paragraphs, bullets,
+ * code blocks and captions. Alt text is not pinned. If this check fails,
+ * someone changed his words: put them back. Only update a hash when Michael
+ * himself asked for that exact change.
+ */
+const OWN_WORDS: Record<string, string> = {
+  cryptogram: "45f0cfc87cd202b3",
+  foosball: "dfa62883de276be1",
+  symposium: "87b282fe2cd4a63c",
+};
+
+function ownWordsHash(project: Project): string {
+  const text = [
+    project.tagline,
+    project.summary,
+    project.hero?.caption ?? "",
+    ...project.sections.flatMap((section) => [
+      section.heading ?? "",
+      ...section.body,
+      ...section.bullets,
+      ...section.codeBlocks,
+      ...section.media.map((media) => media.caption ?? ""),
+    ]),
+  ].join("\n");
+  return createHash("sha256").update(text).digest("hex").slice(0, 16);
+}
 
 const MAX_MEDIA_BYTES = 8 * 1024 * 1024;
 const IMAGE_EXTENSIONS = new Set([".webp", ".jpg", ".jpeg", ".png"]);
@@ -268,6 +301,30 @@ async function validateProject(folder: string): Promise<ProjectResult> {
       file: rel(file),
       message: `slug: "${project.slug}" does not match the folder name "${folder}"`,
       fix: `media resolves to /media/${folder}/… - set slug to "${folder}" or rename the folder`,
+    });
+  }
+
+  // --- Michael's own words --------------------------------------------------
+  const pinned = OWN_WORDS[project.slug];
+  if (pinned !== undefined && !project.ownWords) {
+    report(group, {
+      level: "ERROR",
+      file: rel(file),
+      message: "ownWords must stay true: this is one of Michael's own pages",
+    });
+  } else if (pinned === undefined && project.ownWords) {
+    report(group, {
+      level: "ERROR",
+      file: rel(file),
+      message: "ownWords is only for Michael's own pages (cryptogram, foosball, symposium)",
+      fix: "remove ownWords and write an overview instead",
+    });
+  } else if (pinned !== undefined && ownWordsHash(project) !== pinned) {
+    report(group, {
+      level: "ERROR",
+      file: rel(file),
+      message: "the visible text no longer matches Michael's original words",
+      fix: "undo the text change; see docs/REFRESH-NOV-2026.md for his exact words",
     });
   }
 

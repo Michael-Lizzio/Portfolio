@@ -3,6 +3,12 @@
   "title": "Legacy Data Cleanup",
   "tagline": "Tools for finding and fixing decades of messy records, with a person approving the fixes",
   "summary": "The county was moving from an old DOS system to a new web app, and a lot of the old data came over broken. Notes were split across rows, words were stuck together, and values ended up in the wrong place. At my 2026 internship I built tools that find these problems, suggest fixes, and let a person approve each one.",
+  "overview": {
+    "what": "Tools that find and fix messy records left over from a county's old DOS system, with a person approving each fix.",
+    "why": "When the old data moved to a new web app, notes got split across rows, words got stuck together and values landed in the wrong place.",
+    "did": "At my 2026 internship at GPI, I designed the steps and checked the work, and AI wrote most of the code: scripts that flag odd values, an AI pass in small batches, a review app and a strict spacing fixer.",
+    "result": "A dry run on all the data found 21,616 spacing fixes with zero rule breaks, and every other change goes through a person first."
+  },
   "published": true,
   "featured": false,
   "date": "2026-07",
@@ -40,9 +46,58 @@
         "The flagged records went to an AI in small batches, with instructions for how to read the table and exactly what format to answer in. Anything that came back incomplete or didn't match its batch got rejected. Then a review app showed each suggestion next to the original cells, and a person approved, edited or dismissed it."
       ],
       "media": [],
-      "codeBlocks": [
-        "LEGACY RECORDS\n      ↓\nPROFILE + DETECT  →  suspicious cells and fragments\n      ↓\nJSON BATCHES      →  AI reconstruction and review\n      ↓\nHUMAN REVIEW      →  approve · edit · flag · dismiss\n      ↓\nSTAGED CHANGES    →  verify · back up · apply"
-      ]
+      "codeBlocks": [],
+      "diagram": {
+        "label": "The cleanup steps, from the old records to approved changes",
+        "caption": null,
+        "steps": [
+          {
+            "arrow": null,
+            "nodes": [
+              {
+                "title": "Old records",
+                "detail": "Imported from the DOS system"
+              }
+            ]
+          },
+          {
+            "arrow": null,
+            "nodes": [
+              {
+                "title": "Profile and detect",
+                "detail": "Flags suspicious cells and pieces of notes"
+              }
+            ]
+          },
+          {
+            "arrow": null,
+            "nodes": [
+              {
+                "title": "AI in small batches",
+                "detail": "Suggests how to put them back together"
+              }
+            ]
+          },
+          {
+            "arrow": null,
+            "nodes": [
+              {
+                "title": "Human review",
+                "detail": "Approve, edit, flag or dismiss"
+              }
+            ]
+          },
+          {
+            "arrow": null,
+            "nodes": [
+              {
+                "title": "Staged changes",
+                "detail": "Verify, back up, then apply"
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "heading": "Fixing the easy ones automatically",

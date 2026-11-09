@@ -3,6 +3,12 @@
   "title": "Automated Alarm System",
   "tagline": "A home alarm my dad and I hacked together in 2020, and I've rebuilt twice since",
   "summary": "This started in 2020, when my dad and I opened up a cheap wireless alarm panel and wired its lights into a Raspberry Pi. Since then it's gone through three versions: the original script, a full-screen Pygame console, and now a web dashboard I can check from my phone.",
+  "overview": {
+    "what": "A home alarm system built around a cheap wireless alarm panel and a Raspberry Pi. It started as a script reading the panel's lights and is now a web dashboard I can check from my phone.",
+    "why": "In 2020 our alarm panel could only light up an LED for each open door. My dad and I wanted it to do a lot more, like send alerts, silence the beeper and keep track of everything.",
+    "did": "My dad and I wired the panel's lights into a Pi. Then I wrote three versions of the software: the first script, a full-screen Pygame console with no AI help, and a set of small programs with a Flask dashboard.",
+    "result": "It runs on our home network today. Each rebuild fixed what broke the last one, and it's how I learned about memory that keeps growing and splitting a program into parts."
+  },
   "published": true,
   "featured": false,
   "date": "2020",

@@ -5,10 +5,12 @@ import { Fragment } from "react";
 
 import { Container } from "@/components/Container";
 import { DevelopmentBadge } from "@/components/DevelopmentBadge";
+import { FlowDiagram } from "@/components/FlowDiagram";
 import { MediaFigure } from "@/components/MediaFigure";
 import { PageHeader } from "@/components/PageHeader";
 import { Prose } from "@/components/Prose";
 import { ProjectLightbox } from "@/components/ProjectLightbox";
+import { ProjectOverview } from "@/components/ProjectOverview";
 import { RockPaperScissorsGame } from "@/components/RockPaperScissorsGame";
 import { RomanNumeralConverter } from "@/components/RomanNumeralConverter";
 import { TechPill } from "@/components/TechPill";
@@ -117,7 +119,8 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
 
       <PageHeader
         title={project.title}
-        tagline={project.tagline}
+        // An ownWords page is Michael's text only; its tagline is for cards.
+        tagline={project.ownWords ? undefined : project.tagline}
         meta={
           <>
             {/* The card caps the pill list at four; here the full stack is the
@@ -167,16 +170,35 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
       />
 
       <article className="py-14 md:py-20">
-        {/* Only the hero is priority: it is the LCP candidate when it exists. */}
-        {project.hero ? (
-          <Container size="prose">
-            <MediaFigure media={project.hero} gallery={gallery} priority />
-          </Container>
-        ) : null}
+        {project.overview ? (
+          <>
+            {/* The 30-second version, then the details for anyone who wants them. */}
+            <ProjectOverview overview={project.overview} hero={project.hero} gallery={gallery} />
+            {project.sections.length > 0 ? (
+              <Container size="prose" className="mt-16 md:mt-20">
+                <p className="border-t border-border-default pt-6 font-mono text-xs uppercase tracking-wide text-fg-faint">
+                  The details
+                </p>
+              </Container>
+            ) : null}
+          </>
+        ) : (
+          <>
+            {/* Only the hero is priority: it is the LCP candidate when it exists. */}
+            {project.hero ? (
+              <Container size="prose">
+                <MediaFigure media={project.hero} gallery={gallery} priority />
+              </Container>
+            ) : null}
 
-        <Container size="prose" className={project.hero ? "mt-12" : undefined}>
-          <Prose paragraphs={[project.summary]} />
-        </Container>
+            {/* An ownWords page shows only Michael's text; its summary is for cards. */}
+            {project.ownWords ? null : (
+              <Container size="prose" className={project.hero ? "mt-12" : undefined}>
+                <Prose paragraphs={[project.summary]} />
+              </Container>
+            )}
+          </>
+        )}
 
         {project.slug === "one-line-rock-paper-scissors" ? (
           <RockPaperScissorsGame />
@@ -223,26 +245,37 @@ function ProjectSection({
   gallery: ImageMedia[];
 }) {
   const hasBody = section.body.length > 0;
+  const hasBullets = section.bullets.length > 0;
   const hasMedia = section.media.length > 0;
   const hasCode = section.codeBlocks.length > 0;
+  const diagram = section.diagram;
 
-  if (!section.heading && !hasBody && !hasCode && !hasMedia) return null;
+  if (!section.heading && !hasBody && !hasBullets && !hasCode && !hasMedia && !diagram) return null;
 
   const split =
     (section.layout === "media-left" || section.layout === "media-right") &&
     hasBody &&
+    !hasBullets &&
     !hasCode &&
+    !diagram &&
     section.media.length === 1;
   const wide = section.layout === "wide";
+
+  // A level-3 section belongs to the one above it: a smaller heading and a
+  // shorter gap, so "Images" and the three parts under it read as one group.
+  const sub = section.level === 3;
+  const sectionClass = sub ? "mt-10 md:mt-12" : "mt-14 md:mt-20";
+  const Heading = sub ? "h3" : "h2";
+  const headingClass = sub
+    ? "text-xl font-semibold tracking-tight text-fg"
+    : "text-2xl font-semibold tracking-tight text-fg";
 
   if (split) {
     const mediaFirst = section.layout === "media-left";
     return (
-      <section className="mt-14 md:mt-20">
+      <section className={sectionClass}>
         <Container>
-          {section.heading ? (
-            <h2 className="text-2xl font-semibold tracking-tight text-fg">{section.heading}</h2>
-          ) : null}
+          {section.heading ? <Heading className={headingClass}>{section.heading}</Heading> : null}
           <div className="mt-6 grid items-center gap-8 md:grid-cols-2 md:gap-12">
             <div className={mediaFirst ? "md:order-1" : "md:order-2"}>
               <MediaFigure media={section.media[0]} gallery={gallery} />
@@ -257,12 +290,10 @@ function ProjectSection({
   }
 
   return (
-    <section className="mt-14 md:mt-20">
-      {section.heading || hasBody || hasCode ? (
+    <section className={sectionClass}>
+      {section.heading || hasBody || hasBullets || hasCode ? (
         <Container size="prose">
-          {section.heading ? (
-            <h2 className="text-2xl font-semibold tracking-tight text-fg">{section.heading}</h2>
-          ) : null}
+          {section.heading ? <Heading className={headingClass}>{section.heading}</Heading> : null}
 
           {hasBody ? (
             <div className={section.heading ? "mt-5" : undefined}>
@@ -270,7 +301,27 @@ function ProjectSection({
             </div>
           ) : null}
 
+          {hasBullets ? (
+            <ul
+              className={`${section.heading || hasBody ? "mt-5" : ""} max-w-prose list-disc space-y-2 pl-6 text-lg text-fg marker:text-fg-faint`}
+            >
+              {section.bullets.map((bullet, i) => (
+                <li key={i}>{bullet}</li>
+              ))}
+            </ul>
+          ) : null}
+
           {hasCode ? <CodeBlocks blocks={section.codeBlocks} /> : null}
+        </Container>
+      ) : null}
+
+      {/* A little wider than the reading column, so three boxes in a row
+          still have room for their words. */}
+      {diagram ? (
+        <Container className="mt-8">
+          <div className="mx-auto max-w-4xl">
+            <FlowDiagram diagram={diagram} />
+          </div>
         </Container>
       ) : null}
 
@@ -319,6 +370,32 @@ function SectionMedia({
     return (
       <Container className="mt-8">
         <MediaFigure media={media[0]} gallery={gallery} sizes="(min-width: 72rem) 72rem, 100vw" />
+      </Container>
+    );
+  }
+
+  // layout "wide" with several items: two big columns in the page column, for
+  // wide screenshots that are unreadable at a third of the page. An odd count
+  // gives the first item the full width.
+  if (wide) {
+    const odd = media.length % 2 === 1;
+    return (
+      <Container className="mt-10">
+        <ul className="grid gap-6 md:grid-cols-2">
+          {media.map((item, i) => (
+            <li key={`${i}-${item.src}`} className={odd && i === 0 ? "md:col-span-2" : undefined}>
+              <MediaFigure
+                media={item}
+                gallery={gallery}
+                sizes={
+                  odd && i === 0
+                    ? "(min-width: 72rem) 72rem, 100vw"
+                    : "(min-width: 72rem) 35rem, (min-width: 48rem) 50vw, 100vw"
+                }
+              />
+            </li>
+          ))}
+        </ul>
       </Container>
     );
   }

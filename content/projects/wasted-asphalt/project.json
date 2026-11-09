@@ -3,6 +3,12 @@
   "title": "WastedAsphalt",
   "tagline": "Scores how empty every parking lot in a county is, using satellite images",
   "summary": "I wanted to know how much of a city is paved over for parking that nobody is using. WastedAsphalt takes every parking lot in a New York county from OpenStreetMap, grabs a satellite image of each one, and scores how much of it looks empty. Monroe County came out to 3,726 lots with a 26% average score.",
+  "overview": {
+    "what": "A tool that takes every parking lot in a New York county from OpenStreetMap, grabs a satellite image of each one, and scores how empty it looks.",
+    "why": "I wanted to know how much of a city is paved over for parking that nobody is using, and all the data to answer that is public.",
+    "did": "I built a FastAPI and React app that runs a whole county as a job you can pause and resume, scores each lot with OpenCV, and exports the results for ArcGIS.",
+    "result": "Monroe County came out to 3,726 lots with a 26% average score. The score is a simple color trick, not a car detector, so painted lines and shadows count too."
+  },
   "published": true,
   "featured": false,
   "date": "2026-04",
@@ -65,7 +71,8 @@
           "alt": "Completed Monroe County analysis with thousands of parking lots colored on the map and job totals in the side panels",
           "caption": "The whole county, finished."
         }
-      ]
+      ],
+      "layout": "wide"
     },
     {
       "heading": "How a lot gets scored",

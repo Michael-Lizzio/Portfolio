@@ -3,12 +3,18 @@
   "title": "Burrow",
   "tagline": "An iPhone habit time tracker: tap an activity and your time starts",
   "summary": "Burrow is an iPhone app for making steady time for the things you care about, like reading, studying or side projects. You tap an activity's name to start a timer, answer a few questions you wrote yourself when you finish, and Marko the marmot cheers you on. It's been on the App Store since October 2026.",
+  "overview": {
+    "what": "An iPhone habit time tracker. You tap an activity to start a timer, answer a few questions you wrote yourself when you finish, and Marko the marmot cheers you on.",
+    "why": "At college I kept losing track of how much time I really spent on my projects and on reading, and a checkbox can't tell you if it was five minutes or two hours.",
+    "did": "I designed and built it in Swift and SwiftUI, using AI as a coding tool, with timers on the Lock Screen, goals, and nudges that only show up if you forget.",
+    "result": "It's been on the App Store since October 2026. Now the hard part is getting people to find it."
+  },
   "published": true,
   "featured": true,
   "date": "2026-09",
   "endDate": "present",
   "status": "On the App Store",
-  "development": null,
+  "development": "ai-assisted",
   "tech": [
     "Swift",
     "SwiftUI",

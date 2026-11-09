@@ -3,6 +3,12 @@
   "title": "Agentic Report Generator",
   "tagline": "An experiment in letting a local AI research a database and write its own reports",
   "summary": "At my 2026 internship I tried building an AI that could take a question, dig through a big database on its own, make charts and maps, and write up a report. It worked, but the small models we could run locally weren't smart enough to do it reliably, so it stayed an experiment.",
+  "overview": {
+    "what": "An AI that takes a question about a big database of traffic signals, digs through it on its own, makes charts and maps, and writes up a report.",
+    "why": "Making a report by hand means picking tables, writing SQL, exporting results and putting it all together yourself. I wanted to see if you could just ask a question in plain English instead.",
+    "did": "I built it at my 2026 internship at GPI: a server that plans the report, researches with read-only queries, saves what it finds, and writes each section from those findings.",
+    "result": "It worked, but the small models we could run locally weren't smart enough to do it reliably, so it stayed an experiment. It taught me how to tell when the problem is my code and when it's the model."
+  },
   "published": true,
   "featured": false,
   "date": "2026-06",
@@ -23,21 +29,71 @@
   "hero": null,
   "sections": [
     {
-      "heading": "The idea",
-      "body": [
-        "Instead of picking tables, writing SQL, exporting results and building a report by hand, you'd just ask a question in plain English. Simple questions got a short answer, and asking for a report started a longer process."
-      ],
-      "media": []
-    },
-    {
       "heading": "How it worked",
       "body": [
-        "I split it into steps, because one AI call couldn't do everything at once. First it planned the report and the questions to answer. Then it researched: it looked up the tables it needed, ran read-only queries, and saved each result as a finding. Last, it wrote each section from those saved findings, so the report was based on real numbers instead of whatever the model remembered."
+        "Simple questions got a short answer, and asking for a report started a longer process. I split that process into steps, because one AI call couldn't do everything at once. First it planned the report and the questions to answer. Then it researched: it looked up the tables it needed, ran read-only queries, and saved each result as a finding. Last, it wrote each section from those saved findings, so the report was based on real numbers instead of whatever the model remembered."
       ],
       "media": [],
-      "codeBlocks": [
-        "QUESTION\n   ↓\nUNDERSTAND  →  research plan + report outline\n   ↓\nRESEARCH    →  schema search → read-only SQL → saved findings\n   ↓                              ↘ charts + maps\nCOMPOSE     →  one grounded section at a time\n   ↓\nREPORT"
-      ]
+      "codeBlocks": [],
+      "diagram": {
+        "label": "The report generator's steps, from a question to a finished report",
+        "caption": null,
+        "steps": [
+          {
+            "arrow": null,
+            "nodes": [
+              {
+                "title": "Question",
+                "detail": "Asked in plain English"
+              }
+            ]
+          },
+          {
+            "arrow": "plan",
+            "nodes": [
+              {
+                "title": "Understand",
+                "detail": "A research plan and a report outline"
+              }
+            ]
+          },
+          {
+            "arrow": "research",
+            "nodes": [
+              {
+                "title": "Read-only SQL",
+                "detail": "Finds the tables and runs safe queries"
+              },
+              {
+                "title": "Saved findings",
+                "detail": "Every result is kept as evidence"
+              },
+              {
+                "title": "Charts and maps",
+                "detail": "Described by the AI, drawn by the server"
+              }
+            ]
+          },
+          {
+            "arrow": "write",
+            "nodes": [
+              {
+                "title": "Compose",
+                "detail": "One section at a time, from the findings"
+              }
+            ]
+          },
+          {
+            "arrow": null,
+            "nodes": [
+              {
+                "title": "Report",
+                "detail": null
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "heading": "Charts and maps",

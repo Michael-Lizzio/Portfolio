@@ -3,6 +3,12 @@
   "title": "Web Browser MCP",
   "tagline": "A tool that lets AI agents like Claude use a real Chrome browser",
   "summary": "I built a tool that lets Claude Code and other AI agents control a real Chrome browser on my computer, instead of just downloading raw web pages. It keeps logins between runs, shows the AI numbered boxes over everything it can click, and lets me watch what it's doing live.",
+  "overview": {
+    "what": "A tool that lets Claude Code and other AI agents use a real Chrome browser on my computer, instead of just downloading raw web pages.",
+    "why": "A lot of my automation projects kept needing the same thing: a browser that could handle modern websites and stay signed in. I kept rebuilding it, so I made it its own project.",
+    "did": "I built a small server that runs Chrome, and an MCP layer on top with tools like navigate, snapshot, click and type, plus numbered boxes over everything clickable and a live viewer.",
+    "result": "Claude and my scripts can share one signed-in browser, and the live viewer makes it easy to see why an agent is stuck. I only use it on sites and accounts where that's allowed."
+  },
   "published": true,
   "featured": false,
   "date": "2026-09",
@@ -26,13 +32,6 @@
     "caption": null
   },
   "sections": [
-    {
-      "heading": "Why I built it",
-      "body": [
-        "A lot of my automation projects kept needing the same thing: a browser that could handle modern, JavaScript-heavy websites and stay signed in. I kept rebuilding that piece, so I pulled it out into its own project that anything can use."
-      ],
-      "media": []
-    },
     {
       "heading": "How the AI sees a page",
       "body": [

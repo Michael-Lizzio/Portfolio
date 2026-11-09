@@ -45,6 +45,8 @@ Two consequences worth stating plainly:
 | `title` | `string` | yes | — |
 | `tagline` | `string` | yes | — |
 | `summary` | `string` | yes | — |
+| `overview` | `{ what, why, did, result } \| null` | no | `null` |
+| `ownWords` | `boolean` | no | `false` |
 
 **`slug`** — matched against `/^[a-z0-9]+(-[a-z0-9]+)*$/` and **must equal the directory name**.
 It is the URL (`/projects/cryptogram`), the media namespace (`/media/cryptogram/…`), and the identity
@@ -61,6 +63,17 @@ what it is and roughly how it works before you click.
 
 **`summary`** — two to four sentences at the top of the detail page. The good ones answer: what is
 it, how does it actually work, and what is on this page. It is the only prose many visitors read.
+When `overview` is set, the overview replaces the summary on the page.
+
+**`overview`** (November 2026) is the 30-second version at the top of the page, shown next to a large
+hero: `what` (what it is), `why` (why I made it), `did` (what I did) and `result` (how it turned out).
+One or two plain first-person sentences each. Every published project except the `ownWords` ones has
+one. The sections below it are the details for anyone who wants them, so they should add to the
+overview, not repeat it.
+
+**`ownWords`** marks Michael's own original pages (cryptogram, foosball, symposium). Every visible
+word on them is his, copied from his old site or README. The page shows no tagline and no summary
+(both are still his own sentences, used on the card and in search results). Never edit their text.
 
 ### Visibility and ordering
 
@@ -154,10 +167,13 @@ is the standard to aim at. It costs nothing and it is the only channel to the ne
 | Field | Type | Required | Default |
 |---|---|---|---|
 | `heading` | `string \| null` | no | `null` |
+| `level` | `2 \| 3` | no | `2` |
 | `body` | `string[]` | no | `[]` |
+| `bullets` | `string[]` | no | `[]` |
 | `codeBlocks` | `string[]` | no | `[]` |
 | `layout` | `"stack" \| "media-left" \| "media-right"` | no | `"stack"` |
 | `media` | `Media[]` | no | `[]` |
+| `diagram` | `Diagram \| null` | no | `null` |
 
 **`heading`** — `null` renders an unlabelled section, useful as a lead-in.
 
@@ -175,7 +191,21 @@ a divider. Keep ordinary paragraphs in `body`.
 **`layout`** — controls the desktop pairing when a section has body copy and exactly one media item.
 `media-left` and `media-right` create a two-column row that stacks on smaller screens. Sections with
 other shapes fall back to `stack`. `wide` puts a single media item in the full 72rem page column
-instead of the 45rem reading column (the cryptogram demo video uses it).
+instead of the 45rem reading column (the cryptogram demo video uses it). `wide` with several media
+items shows them in two big columns in the page column (an odd count gives the first one the full
+width), which is the layout for wide screenshots.
+
+**`level`**: `3` makes the heading one size smaller and the gap above it shorter, so the section
+reads as part of the one before it (cryptogram's "Images" and the three photos under it).
+
+**`bullets`**: plain-text bullet points, shown after `body`.
+
+**`diagram`**: a flow diagram drawn as HTML from text, so it works in light and dark mode and reads
+as a list to a screen reader: `{ "label": "what it shows", "caption": null, "steps": [ { "arrow":
+null, "nodes": [ { "title": "React frontend", "detail": "TypeScript and Tailwind CSS" } ] }, ... ] }`.
+Two to seven steps, one to three boxes per step, optional short text on the arrow into a step. Up to
+four steps run left to right on a wide screen; five or more run top to bottom. Use it instead of an
+ASCII diagram in `codeBlocks` (see CalCardo, Agentic Report Generator, Legacy Data Cleanup).
 
 A section may be prose-only, media-only, or both. Sections are the only structure available — there
 are no nested subsections and no rich text. If a project seems to need more, that's a signal to

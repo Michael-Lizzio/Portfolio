@@ -3,6 +3,12 @@
   "title": "AI Database Filter",
   "tagline": "A local AI assistant that turns plain English into database filters you can check",
   "summary": "At my 2026 internship I built a filtering system for a county traffic signal app that covers more than 2,000 signals. You could build filters by hand, or just ask in plain English and a small AI running on our own computer would suggest filters for you to approve. Later I turned it into a shared library so the team could save and share their filters.",
+  "overview": {
+    "what": "A filtering system for a county traffic signal app with more than 2,000 signals. You can build filters by hand, or ask in plain English and a small local AI suggests filters for you to approve.",
+    "why": "At my 2026 internship at GPI, the team needed an easier way to find the right signals in a big database full of connected tables and messy free text.",
+    "did": "I built the filter builder first, then a chat panel that turns plain English into filter cards, a test harness that ran 200 requests across 8 local models, and later a shared filter library.",
+    "result": "The model I picked answered in about 8 seconds instead of 43 and got to about 91% on my tests. It started as a prototype and ended up built into the team's real app."
+  },
   "published": true,
   "featured": false,
   "date": "2026-06",
@@ -109,7 +115,8 @@
           "alt": "Saved filter editor showing visibility controls, a numeric range condition, description field, share link, and grouped filters",
           "caption": "Editing a saved filter."
         }
-      ]
+      ],
+      "layout": "wide"
     },
     {
       "heading": "Where it ended up",

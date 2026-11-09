@@ -3,6 +3,12 @@
   "title": "RIT Dining Notifications",
   "tagline": "A Telegram bot that told me how much I could spend on food each day at RIT",
   "summary": "RIT gives you Dining Dollars for the whole semester, but the balance doesn't tell you how much you can actually spend today. So I built a Telegram bot that logged into my account, grabbed my new purchases, and told me my daily and weekly budget.",
+  "overview": {
+    "what": "A Telegram bot that logged into my RIT dining account, grabbed my new purchases and told me how much I could spend on food each day.",
+    "why": "RIT gives you Dining Dollars for the whole semester, but the balance doesn't tell you how much you can actually spend today.",
+    "did": "I wrote it in Python with Selenium and Beautiful Soup, and I talked to Telegram's API directly instead of using a library.",
+    "result": "It gave me a budget that changed as I spent. The RIT site has changed since then, enough to break it, which is the problem with scrapers."
+  },
   "published": true,
   "featured": false,
   "date": "2024-08",

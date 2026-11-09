@@ -223,6 +223,8 @@ thing in English, and `npm run validate` quotes it back at you when you get it w
 | `title` | string | **yes** | How a human says it. `"Cryptogram Solver"`, not `"cryptogram_solver"`. |
 | `tagline` | string | **yes** | One line, max 140 chars, aim under 90. It is the whole card. Say what it *does*: `"A backtracking program that cracks cryptogram puzzles word by word"`. |
 | `summary` | string | **yes** | 2–4 sentences, shown at the top of the detail page. What it is, how it works, what's on this page. |
+| `overview` | object \| null | no, defaults `null` | The 30-second top block: `{ "what", "why", "did", "result" }`, one or two first-person sentences each. When set it replaces the summary on the page. See `docs/CONTENT_MODEL.md`. |
+| `ownWords` | boolean | no, defaults `false` | Only for Michael's own original pages (cryptogram, foosball, symposium). **Never set it, and never edit those pages.** |
 | `published` | boolean | no — defaults `false` | `false` hides it from the site entirely without deleting it. **Leave it `false`.** |
 | `featured` | boolean | no — defaults `false` | Puts the project in "Selected work" on the homepage. **Not yours to set.** Leave `false`. |
 | `date` | string \| null | no — defaults `null` | `"YYYY"` or `"YYYY-MM"` only. `"2022"`, `"2024-03"`. `"March 2024"` fails. Drives ordering. `null` sorts last — use `null` if you genuinely can't date it. |
@@ -258,6 +260,11 @@ Every path you write is relative. The build rewrites `media/cover.webp` →
 `/media/<slug>/cover.webp` before any component sees it. **Never do that path math yourself.**
 
 ### A real, filled-in example
+
+(November 2026: cryptogram is now one of Michael's own pages, restored word for word to his old
+site, so its file no longer matches the slices below and is not a model for new copy. The slices
+still show the JSON shape. For a page written the new way, with an `overview`, open
+`content/projects/calcardo/project.json`.)
 
 The best model in the repo is `content/projects/cryptogram/project.json` — 155 lines, 8 sections,
 images, videos with posters, and a long `notes`. Open it. What follows are two **verbatim** slices

@@ -9,13 +9,19 @@ directions) is a separate step and is not part of this branch.
 
 ## Quick summary
 
+**Update, November 9:** your cryptogram, foosball and Symposium Notes pages are back to your own words,
+every other project has a 30-second top block, RelayReply is a public beta, and some pages got real
+diagrams and bigger screenshots. See "November 9: words and project pages" below. Where an older line
+in this file disagrees with that section, the November 9 section is current.
+
 - **New projects:** Engine Miles, Burrow and RelayReply are now the three projects in "Selected work"
   on the home page and the first three on the Projects page.
 - **Nav:** Home, Projects, Work, About, Contact, Resume. The old "Work" tab is now "Projects"
   (`/projects/`). "Work" (`/work/`) is a new page with the jobs from your resume.
 - **Ranking:** Projects page shows the best 12 first, the rest behind a "Load more" button.
 - **Copy:** every published page was rewritten in first person, shorter and plainer, except the
-  cryptogram and foosball body text, which is untouched.
+  cryptogram and foosball body text, which is untouched. (November 9: those two pages and Symposium
+  Notes are now entirely your original words, see below.)
 - **No em dashes** anywhere in content or site code. `npm run validate` now fails if one shows up.
 - **Cryptogram videos:** the webpage-only video is gone. The solving video is now full page width
   and plays (muted, looped) when you scroll to it, and pauses when you scroll away.
@@ -131,6 +137,9 @@ RIT, B.S. in Software Engineering, 2024 to 2029, GIS immersion, GPA 3.8. No phon
 
 ## Your pages (cryptogram and foosball)
 
+*Superseded on November 9: the summaries, captions, titles and help line described here are gone, and
+both pages are back to your original text. See "November 9: words and project pages".*
+
 Body text, headings and captions are exactly as they were. What changed:
 
 - **Cryptogram summary** (the paragraph under the photo) was third person ("after the author
@@ -176,6 +185,218 @@ npm run build && python3 -m http.server -d out 3000    # or: npm run dev
 
 Pushing the branch makes a Cloudflare preview; that preview is safe. Merging is deploying.
 
+
+## November 9: words and project pages
+
+This part follows your decisions from November 9. It covers the words and the project pages. The
+new look (home page, carousel, app cards) is a separate change on this branch.
+
+### Your three pages are your words again
+
+Cryptogram, foosball and Symposium Notes now show only your own words. Every heading, paragraph,
+caption and line on those pages is copied from your originals, character for character:
+
+- **Cryptogram and foosball:** your old site at commit 081ec8c (`project_pages/cryptogram/cryptogram.html`
+  and `project_pages/foosball/foosball.html` in `Michael-Lizzio.github.io`). Nothing from b3a8718 or
+  later was used.
+- **Symposium Notes:** your README in `github.com/Michael-Lizzio/SynapsisNotes` (commit e947210, Feb 24
+  2025). The other repo, `SymposiumNotes`, only has the filler line "This is a filler Description to be
+  changed later", so the SynapsisNotes README is the real source.
+
+**What I took out** (all of it was added by an agent, none of it was yours):
+
+- *Cryptogram:* the summary at the top ("My program that solves cryptogram puzzles. It started in
+  February 2022..."), the tagline under the title ("A backtracking program that cracks cryptogram
+  puzzles word by word"), the captions "The original handout, solved independently by my dad and me.",
+  "The same handout solved by the program." and "The whiteboard I used to work out the search
+  process.", the "Worked Example" heading, the apostrophe added to "Teachers Original Handout", the
+  typo fixes ("my dad's work", "human (my dad)", "an encrypted word", "where in some cases",
+  "G=E, W=U"), curly quotes on "BEGINNING", and the paragraph breaks added inside the Backstory and
+  the Epilogue.
+- *Foosball:* the summary ("KURT (Killer.Ultimate.Robot.Teammate) is the automated foosball goalie I
+  built on a $50 table..."), the tagline ("KURT (Killer.Ultimate.Robot.Teammate), a camera-tracked
+  robotic foosball goalie"), the status line "Working version by the end of December 2022", all seven
+  video titles ("Bringing the Table Home", "First Setup: Raspberry Pi and a Janky Camera Mount", "Ball
+  Tracking with OpenCV and a Kalman Filter", "Stepper Motor, Motor Driver, and a Jingle Bells Melody",
+  "Designing and Building the Rig", "First Movement", "Final Setup: A Functional Foosball Goalie"), the
+  "Photo Gallery" heading, the help line "Select any image to open the gallery, then use the arrow keys
+  or on-screen controls to move through the build.", the typo fixes ("Facebook Marketplace",
+  "planning"), the paragraph break in the stepper motor story, and the photo order (photos had been
+  sorted by date).
+- *Symposium Notes:* the summary, the tagline ("A hackathon app that records lectures and turns them
+  into notes"), the status line "BrickHack 11 project", every caption ("The working hackathon demo with
+  a transcript and generated notes.", "The two-pane workspace before recording begins.", "Bricky opens
+  the transcript-aware chat assistant."), and all the rewritten sections ("What it does", "Challenges
+  and accomplishments", "What we learned", "What's next"), which paraphrased your README.
+
+**What is there now:**
+
+- *Cryptogram:* Cryptogram Examples, The Backstory, then Images with Teachers Original Handout, Solved
+  Quote and My Whiteboard under it (each photo with your caption "(To view the image larger, just click
+  on it!)"), Videos with your caption, and the Epilogue with "Just by guessing QUESTION..." and the
+  cipher lines.
+- *Foosball:* "Making an Automated Foosball Goalie!", then each video under its date (your date boxes,
+  now small headings) with your description, "Thanks for having a visit with KURT, my Automated Foosball
+  Goalie!", and the gallery with your line "Click on The Image to View Them Fullscreen!" and the date
+  under every photo, in your original order (cover_photo is back at the end).
+- *Symposium Notes:* your README's sections and bullets: Inspiration, What It Does (with its six parts),
+  Challenges We Ran Into, Accomplishments We're Proud Of, What We Learned, What's Next for Symposium
+  Notes?, and your last line.
+- *All three:* no tagline under the title and no summary paragraph. The project cards still need one
+  line, so each card uses one of your own sentences, word for word:
+  - Cryptogram card: "My program uses what some would call a brute force approach and consists of a few
+    main parts."
+  - Foosball card: "Finally, I was able to combine the ball tracking software with the motor controller
+    to create a functional foosball goalie."
+  - Symposium card: "I always struggled with juggling note-taking and actively listening, often missing
+    key points because I was too busy writing."
+- *Image descriptions* (alt text, only read by screen readers) are plain descriptions of the photo, with
+  no "the author", "my dad's" or "mine". Your old pages had placeholder alt text ("Image 1"), so there was
+  nothing of yours to restore there.
+- *Tech pills* on cryptogram and foosball now only use words from your text (for example "Brute force
+  approach", "Kalman Filter", "Motor driver").
+
+**The three things that are not exactly as in the original, on purpose:**
+
+1. Cryptogram: the second video ("This is the cryptogram solving the same puzzles from the website shown
+   in the other video, just showing the webpage.") is still gone, with its caption, as decided in the
+   first refresh. Say the word and it comes back.
+2. Symposium: your README has two em dashes. The site allows none, so each became a period: "it doesn't
+   allow data exports. Even after emailing..." and "dividing tasks efficiently. We had to strategize...".
+   No words changed. The one sub-bullet under Customizable Settings is joined onto its bullet ("...settings,
+   including: Calibration time, silence detection, and segment length."), and the README's last line (the
+   P.S. about the original repo being destroyed, with its link) is left off, since it's about the repo,
+   not the project.
+3. Layout only: the site shows caption text under a photo instead of above it, and in the two-column
+   rows the heading sits above the pair. The words and their order inside each block are the same.
+
+**Proof: word diff against the originals.** Made with a small script that lists every word the page
+shows (headings, paragraphs, bullets, code blocks, captions) and compares it with the original's visible
+text, word by word and then block by block. Cryptogram's first four "differences" are only the
+"(To view the image larger...)" captions and the "Solved Quote" heading sitting on the other side of a
+paragraph, because the old page's grid put them in a different order; the block check below each diff
+shows no text was changed or added.
+
+```
+=== cryptogram
+original words: 920   page words: 900   identical words in order: 880
+  delete: [-(To view the image larger, just click on it!)-] {++}   (after "...Images Teachers Original Handout")
+  insert: [--] {+(To view the image larger, just click on it!) Solved Quote+}   (after "...me to make it.")
+  delete: [-Solved Quote-] {++}   (after "...into the overall functionality.")
+  delete: [-(To view the image larger, just click on it!)-] {++}   (after "...on it!) My Whiteboard")
+  insert: [--] {+(To view the image larger, just click on it!)+}   (after "...finalize them on paper.")
+  delete: [-This is the cryptogram solving the same puzzles from the website shown in the other video, just showing the webpage.-] {++}   (after "...puzzle website I found.")
+blocks: original 23, page 20
+  original text not on the page: ['This is the cryptogram solving the same puzzles from the website shown in the other video, just showing the webpage.']
+  page text not in the original: none
+=== foosball
+original words: 729   page words: 729   identical words in order: 729
+  no differences
+blocks: original 34, page 34
+  original text not on the page: none
+  page text not in the original: none
+=== symposium
+original words: 450   page words: 441   identical words in order: 437
+  replace: [-exports[em dash]even-] {+exports. Even+}   (after "...it doesn’t allow data")
+  replace: [-efficiently[em dash]we-] {+efficiently. We+}   (after "...challenge was dividing tasks")
+  delete: [-P.S (Orginal Repo was destroyed) it can be found here: https://github.com/Michael-Lizzio/SymposiumNotes-] {++}   (after "...how this tool evolves.")
+blocks: original 45, page 42
+  original text not on the page: ['Originally, I planned to use Glean, a software with similar functionality. However, I discovered that it doesn’t allow data exports[em dash]even after emailing their support team back in October, I never received a response. So, I figured why not build it myself?', 'The biggest challenge was dividing tasks efficiently[em dash]we had to strategize how to integrate our individual work without stepping on each other’s toes.', 'P.S (Orginal Repo was destroyed) it can be found here:', 'https://github.com/Michael-Lizzio/SymposiumNotes']
+  page text not in the original: ['Originally, I planned to use Glean, a software with similar functionality. However, I discovered that it doesn’t allow data exports. Even after emailing their support team back in October, I never received a response. So, I figured why not build it myself?', 'Users can fine-tune audio processing settings, including: Calibration time, silence detection, and segment length.', 'The biggest challenge was dividing tasks efficiently. We had to strategize how to integrate our individual work without stepping on each other’s toes.']
+```
+
+**Typos I kept because they are yours.** If you want any of these fixed, tell me which and I'll fix only
+those: "Teachers Original Handout", "my dads work", "human(my dad)", "a encrypted word", "where In some
+cases", "G=E W=U", "white board" (cryptogram); "Facebook market place", "planing" (foosball); "Orginal"
+was in the P.S. that is left off (symposium).
+
+**One thing to check in your README's words:** the Customizable Settings bullet says "OpenAI API key is
+stored securely in local storage." Browser local storage isn't really secure storage. It's your wording,
+so I left it. You might want to change it to "stored in local storage".
+
+**A guard so this doesn't happen again.** `npm run validate` now fails if any word on these three pages
+changes (tagline, summary, headings, paragraphs, bullets, code blocks or captions). The pages are marked
+`ownWords: true`, and the validator keeps a fingerprint of their text. Only update the fingerprint when
+you ask for a specific change.
+
+### Every other project: a 30-second top block
+
+Every other published project (25 of them) now opens with a short block next to a big image: **What it
+is**, **Why I made it**, **What I did** and **How it turned out**, one or two sentences each. Below it, a
+small "The details" line starts the longer sections for anyone who wants more. All 25 blocks are in the
+appendix at the end of this file so you can read them in one go.
+
+Wording pass, using cryptogram and foosball as the voice: first person, plain, no em dashes.
+
+- **Rewritten to sound like you** (they read like a textbook before): Blackjack, Parcel Web Analyzer, RIT
+  Dorm Laundry Tracker, Roman Numeral Converter, Sudoku Creator and Solver, One-Line Rock Paper Scissors,
+  Wordle Solver. Captions on Parcel, Laundry and Sudoku too.
+- **Sections that repeated the new top block were cut or merged:** CalCardo's and Web Browser MCP's "Why
+  I built it", and Agentic Report Generator's "The idea" (its one new sentence moved into "How it
+  worked").
+- **Document Management System:** "in a blind test of 26 documents it got every type right" now reads "in
+  a blind test it got the type right on all 26 documents".
+- Everything else kept its wording; it already sounded like you.
+
+### RelayReply
+
+- **Public beta**, not private. Status says "Public beta" and the page links to relayreply.com.
+- **Wording from the current relayreply.com.** I found the site's source locally (`startups/RelayReply`,
+  branch v3.3, the homepage is built from `web/src/features/onboarding/home`). The tagline is your short
+  phone line: "Type what you need, and RelayReply makes the phone call, speaks for you, and asks you
+  first when there's a decision to make." "Phone calls without the phone" and "private beta" are gone.
+- **Light and brief:** two short sections now ("How a call works" with a three-step diagram, and "Where
+  it's at" with the not-a-relay-service and no-911 notice and a pointer to relayreply.com). The long
+  "Why I built it" and "The system behind it" sections are gone, so your own site and guides can tell
+  that story. No prices, model names, recordings or how the AI introduces itself on a call.
+- The page's big image and card image (real screenshots of the product) are part of the look work, not
+  this change.
+
+- About page, paragraph 3 (`content/profile.json`): "RelayReply is in a private beta" is now "public beta".
+  The home page's "Selected work" line still says "private beta"; that text lives in `src/app/page.tsx`,
+  which the look work is rebuilding.
+
+### AI-assisted badge
+
+Engine Miles, Burrow and RelayReply are marked AI-assisted, and their top blocks say "using AI as a
+coding tool".
+
+### Layout fixes
+
+- **Wide screenshots are big now.** A section with several wide screenshots can use the `wide` layout:
+  two large columns in the full page width, and with an odd number the first one spans both. Before,
+  three or more images became a row of three small thumbnails. Used on CalCardo (both screenshot sets,
+  which were the tiny ones), Blackjack's walkthrough, U-Fund's three users, RMF Checklist's three apps,
+  Wordle's examples, AI Database Filter's filter library, Document Management's team screens, Trip
+  Planner's admin screens and WastedAsphalt's maps.
+- Portrait phone screenshots and photos keep the three-up grid, since they're narrow anyway.
+
+### Real diagrams instead of text diagrams
+
+A new diagram block draws boxes and arrows from the project file. It's real text in the site's own
+colors, so it looks right in light and dark mode, sharpens at any zoom, runs left to right on a computer
+and top to bottom on a phone, and a screen reader reads it as a list.
+
+- **CalCardo:** React frontend, then FastAPI backend, then Supabase, Google Calendar and Gmail, and OpenAI.
+- **Agentic Report Generator:** replaces the arrow-and-text block (question, plan, research with SQL,
+  findings and charts, compose, report).
+- **Legacy Data Cleanup:** replaces the arrow-and-text block (old records, detect, AI batches, human review,
+  staged changes).
+- **RelayReply:** you type, RelayReply makes the call, you decide on a card.
+
+### Code and docs changed in this part
+
+| What | Where |
+|---|---|
+| New fields: `overview` (the top block), `ownWords` (your own pages), and on sections `level` (a smaller sub-heading), `bullets` and `diagram` | `src/lib/schema.ts` |
+| The top block next to the hero, and "The details" line | `src/components/ProjectOverview.tsx`, `src/app/projects/[slug]/page.tsx` |
+| The diagram | `src/components/FlowDiagram.tsx` |
+| Project page: sub-headings, bullets, diagrams, `wide` with several images, no tagline or summary on `ownWords` pages | `src/app/projects/[slug]/page.tsx` |
+| Validator: fails if the words on your three pages change | `scripts/validate-content.ts` |
+| The new fields explained for the next agent | `docs/CONTENT_MODEL.md`, `AGENTS.md` |
+| Content | every published `content/projects/*/project.json` (no media files changed) |
+
+`public/resume.pdf` and all media files are untouched.
 
 ---
 
@@ -2496,3 +2717,185 @@ New page.
 
 
 (Their internal `notes` may have had em dashes replaced.)
+
+---
+
+# Appendix: the top block on every project (November 9)
+
+These are the four short answers at the top of each project page (what it is, why I made it, what I did, how it turned out). Cryptogram, foosball and symposium don't have one, because those pages are only your words.
+
+## Engine Miles (`engine-miles`)
+
+- **What it is:** An iPhone app for hybrid and plug-in hybrid owners. You log your fill-ups, and it estimates how many miles the gas engine has actually run.
+- **Why I made it:** My dad keeps a paper logbook for his plug-in hybrid to work out how many miles are on the gas engine, because the car doesn't really tell you. I wanted to turn his notebook into an app.
+- **What I did:** I designed and built it in Swift and SwiftUI, using AI as a coding tool. Everything stays on your phone, with no account and no server, and my dad tested every build.
+- **How it turned out:** It's been live on the App Store since October 2026, with a free version and Engine Miles Pro. Now I'm working on getting it in front of more hybrid owners.
+
+## Burrow (`burrow`)
+
+- **What it is:** An iPhone habit time tracker. You tap an activity to start a timer, answer a few questions you wrote yourself when you finish, and Marko the marmot cheers you on.
+- **Why I made it:** At college I kept losing track of how much time I really spent on my projects and on reading, and a checkbox can't tell you if it was five minutes or two hours.
+- **What I did:** I designed and built it in Swift and SwiftUI, using AI as a coding tool, with timers on the Lock Screen, goals, and nudges that only show up if you forget.
+- **How it turned out:** It's been on the App Store since October 2026. Now the hard part is getting people to find it.
+
+## RelayReply (`relayreply`)
+
+- **What it is:** A web app that makes phone calls for you. You type what you need, RelayReply makes the call and speaks for you, and you read every word as a caption.
+- **Why I made it:** For a lot of people the phone call is the hardest part of getting something done, like people who are Deaf or hard of hearing, or who have trouble speaking on the phone.
+- **What I did:** I'm building all of it, using AI as a coding tool: the web app, the server that runs every call, and the part that turns each decision into a card for you.
+- **How it turned out:** It's in a public beta at relayreply.com, free to start with free practice calls.
+
+## CalCardo (`calcardo`)
+
+- **What it is:** An AI calendar assistant. You could type something like "lunch with Jack next Tuesday at one", upload a syllabus or connect Gmail, and it suggested events for you to approve before they went into Google Calendar.
+- **Why I made it:** During my first year at RIT, campus events were spread across emails, apps and flyers, and it was really easy to miss things. I wanted adding an event to feel like sending a text.
+- **What I did:** I built the whole thing, from the React frontend to the Python backend, and took it all the way to a live website. I wrote the early versions myself and used AI a lot to polish it.
+- **How it turned out:** Friends tested it and it worked, but getting Google to approve Gmail and Calendar access took forever, and the big AI apps started doing calendar chat too. So I paused it in April 2026.
+
+## AI Database Filter (`ai-database-filter`)
+
+- **What it is:** A filtering system for a county traffic signal app with more than 2,000 signals. You can build filters by hand, or ask in plain English and a small local AI suggests filters for you to approve.
+- **Why I made it:** At my 2026 internship at GPI, the team needed an easier way to find the right signals in a big database full of connected tables and messy free text.
+- **What I did:** I built the filter builder first, then a chat panel that turns plain English into filter cards, a test harness that ran 200 requests across 8 local models, and later a shared filter library.
+- **How it turned out:** The model I picked answered in about 8 seconds instead of 43 and got to about 91% on my tests. It started as a prototype and ended up built into the team's real app.
+
+## Document Management System (`document-management-system`)
+
+- **What it is:** A prototype that reads old scanned traffic signal records, figures out what each one is, and suggests a file name and details for a person to approve.
+- **Why I made it:** The county was scanning about 300,000 pages of records, some from 1972. After scanning, someone still had to open every PDF, work out what it was, rename it and log it by hand.
+- **What I did:** I built it at my 2026 internship at GPI: text reading for old scans, three separate ways of guessing each document's type, a review screen that shows where every suggestion came from, and accounts for helpers and experts.
+- **How it turned out:** When it was confident, it matched the county's own category about 97% of the time, and it got the type right on all 26 documents in a blind test. Dates and exact names were harder, so a person still checks every one.
+
+## Automated Alarm System (`alarm-system`)
+
+- **What it is:** A home alarm system built around a cheap wireless alarm panel and a Raspberry Pi. It started as a script reading the panel's lights and is now a web dashboard I can check from my phone.
+- **Why I made it:** In 2020 our alarm panel could only light up an LED for each open door. My dad and I wanted it to do a lot more, like send alerts, silence the beeper and keep track of everything.
+- **What I did:** My dad and I wired the panel's lights into a Pi. Then I wrote three versions of the software: the first script, a full-screen Pygame console with no AI help, and a set of small programs with a Flask dashboard.
+- **How it turned out:** It runs on our home network today. Each rebuild fixed what broke the last one, and it's how I learned about memory that keeps growing and splitting a program into parts.
+
+## Parcel Web Analyzer (`parcel-web-analyzer`)
+
+- **What it is:** A web map that scores every home in part of Seattle by what's nearby, like restaurants, parks and trails, and shows why each one scored the way it did.
+- **Why I made it:** My sister was house hunting in Seattle, and her list of what mattered to her turned into my GIS class final project.
+- **What I did:** I prepped the King County parcel data in ArcGIS Pro, then built the app with Flask, GeoPandas and Mapbox: draw an area, pull places from OpenStreetMap, rank what matters, and score the parcels.
+- **How it turned out:** High scores clustered in mixed-use areas near main streets, and the walking distance you pick changes the map a lot. The results export back into GIS as GeoJSON or a Shapefile.
+
+## RMF Checklist Automation (`cyber-ttm`)
+
+- **What it is:** Three small Python apps that update the big security checklist files a defense contractor has to fill out every quarter, with a person reviewing in the middle.
+- **Why I made it:** At my 2024 internship at TTM Technologies, the cybersecurity team updated those checklists by hand every quarter, which was slow and easy to mess up.
+- **What I did:** I learned the process from scratch, planned the three steps on a whiteboard, and built the apps with Python and Tkinter, including a check that never overwrites newer data.
+- **How it turned out:** The team used them for five quarterly reports.
+
+## Blackjack (`blackjack`)
+
+- **What it is:** A full blackjack game in Pygame for up to five players at one keyboard, with accounts, chip betting, splits, insurance, surrender, saved stats and settings.
+- **Why I made it:** I wanted to see if I could finish something really big on my own, so I picked a game I knew and kept adding to it.
+- **What I did:** I wrote all of it myself, one feature at a time, learning each piece as I needed it. Somehow all 3,372 lines ended up in one Python file.
+- **How it turned out:** It works, and finishing it was incredibly fulfilling. It showed me I could keep going on a big idea until it all came together, and it pulled me a lot deeper into coding.
+
+## Wordle Solver (`wordle-solver`)
+
+- **What it is:** A program that solves Wordle. It narrows down the possible answers from the colors, picks the best next guess, and in Super mode plays the game in the browser by itself.
+- **Why I made it:** When Wordle first came out in 2022, I wanted to know if I could make a program solve it consistently.
+- **What I did:** I wrote the filtering and the letter scoring in Python, then used OpenCV and later Selenium so it could read the board and type its own guesses.
+- **How it turned out:** It was my first big project, and I learned a lot in the process. It's where everything else on this site started, including the Cryptogram Solver.
+
+## Web Browser MCP (`web-browser-mcp`)
+
+- **What it is:** A tool that lets Claude Code and other AI agents use a real Chrome browser on my computer, instead of just downloading raw web pages.
+- **Why I made it:** A lot of my automation projects kept needing the same thing: a browser that could handle modern websites and stay signed in. I kept rebuilding it, so I made it its own project.
+- **What I did:** I built a small server that runs Chrome, and an MCP layer on top with tools like navigate, snapshot, click and type, plus numbered boxes over everything clickable and a live viewer.
+- **How it turned out:** Claude and my scripts can share one signed-in browser, and the live viewer makes it easy to see why an agent is stuck. I only use it on sites and accounts where that's allowed.
+
+## WastedAsphalt (`wasted-asphalt`)
+
+- **What it is:** A tool that takes every parking lot in a New York county from OpenStreetMap, grabs a satellite image of each one, and scores how empty it looks.
+- **Why I made it:** I wanted to know how much of a city is paved over for parking that nobody is using, and all the data to answer that is public.
+- **What I did:** I built a FastAPI and React app that runs a whole county as a job you can pause and resume, scores each lot with OpenCV, and exports the results for ArcGIS.
+- **How it turned out:** Monroe County came out to 3,726 lots with a 26% average score. The score is a simple color trick, not a car detector, so painted lines and shadows count too.
+
+## U-Fund: A New Page (`u-fund`)
+
+- **What it is:** A full-stack web app where people in prison request books, prison staff approve or deny them, and people outside pay for the approved ones.
+- **Why I made it:** It was my SWEN 261 team project at RIT, and one of my first times building a big app with several kinds of users.
+- **What I did:** I worked with Liam Pennino, Nina Sagawa and Selene Shen on both the Angular front end and the Spring Boot back end. We split up the features and made them fit together, with no AI.
+- **How it turned out:** It all worked by the final presentation, with at least 91% test coverage on every part of the back end, plus notifications we added on top of the requirements.
+
+## Sudoku Creator and Solver (`sudoku-creator`)
+
+- **What it is:** A Pygame app that makes Sudoku puzzles, lets you play them, checks your answers, and can solve any board one step at a time.
+- **Why I made it:** After the Cryptogram Solver, I wanted to try backtracking on a different kind of puzzle.
+- **What I did:** I wrote the puzzle generator, the play and hint modes, a way to type in your own puzzle, and a solver you can watch work.
+- **How it turned out:** It works most of the time, which is honestly part of the charm.
+
+## Warm Cold Square (`warm-cold-square`)
+
+- **What it is:** A Pygame game where a green square is hidden on the screen, and the only hint is a word like Warm or Cold that changes as your mouse gets closer. Touch a red bomb and you lose.
+- **Why I made it:** My cousin Justin and I wanted a quick challenge, like a mini hackathon: take a simple hot-and-cold idea and finish it in two days.
+- **What I did:** We built the menu, three difficulty levels, the distance-to-temperature words and random bomb fields that stay away from the target. Later I made a version that runs in the browser.
+- **How it turned out:** We finished it in two days in June 2022. Hard mode shrinks the target to the size of one bomb and puts 750 bombs on the screen.
+
+## Agentic Report Generator (`agentic-report-generator`)
+
+- **What it is:** An AI that takes a question about a big database of traffic signals, digs through it on its own, makes charts and maps, and writes up a report.
+- **Why I made it:** Making a report by hand means picking tables, writing SQL, exporting results and putting it all together yourself. I wanted to see if you could just ask a question in plain English instead.
+- **What I did:** I built it at my 2026 internship at GPI: a server that plans the report, researches with read-only queries, saves what it finds, and writes each section from those findings.
+- **How it turned out:** It worked, but the small models we could run locally weren't smart enough to do it reliably, so it stayed an experiment. It taught me how to tell when the problem is my code and when it's the model.
+
+## Legacy Data Cleanup (`legacy-data-cleanup`)
+
+- **What it is:** Tools that find and fix messy records left over from a county's old DOS system, with a person approving each fix.
+- **Why I made it:** When the old data moved to a new web app, notes got split across rows, words got stuck together and values landed in the wrong place.
+- **What I did:** At my 2026 internship at GPI, I designed the steps and checked the work, and AI wrote most of the code: scripts that flag odd values, an AI pass in small batches, a review app and a strict spacing fixer.
+- **How it turned out:** A dry run on all the data found 21,616 spacing fixes with zero rule breaks, and every other change goes through a person first.
+
+## Duolingo Hack (`duolingo-hack`)
+
+- **What it is:** A bot that did my Duolingo lessons for me.
+- **Why I made it:** I got tired of doing the same Duolingo exercises every day.
+- **What I did:** I wrote it in Python with Selenium. The first version ran several story sessions at once, and the final one recorded each speaking prompt and played it right back through a virtual microphone.
+- **How it turned out:** It got me thousands of XP and a win in the Diamond League. I retired it once I started actually using Duolingo to learn, but I'm still keeping the streak alive.
+
+## Trip Planner (`trip-planner`)
+
+- **What it is:** A shared trip planner where friends add plans to a day-by-day itinerary, vote when two plans clash, and build a packing list together.
+- **Why I made it:** I wanted a group trip to have one shared plan instead of living in a giant group chat.
+- **What I did:** I built it in August 2025 with Flask and plain JavaScript, with live updates and JSON files that lock, so two people saving at once can't wipe each other out.
+- **How it turned out:** Everyone sees changes right away without refreshing. If more than a few friends used it, a real database would be the next step.
+
+## RIT Dining Notifications (`rit-dining-notifications`)
+
+- **What it is:** A Telegram bot that logged into my RIT dining account, grabbed my new purchases and told me how much I could spend on food each day.
+- **Why I made it:** RIT gives you Dining Dollars for the whole semester, but the balance doesn't tell you how much you can actually spend today.
+- **What I did:** I wrote it in Python with Selenium and Beautiful Soup, and I talked to Telegram's API directly instead of using a library.
+- **How it turned out:** It gave me a budget that changed as I spent. The RIT site has changed since then, enough to break it, which is the problem with scrapers.
+
+## RIT Dorm Laundry Tracker (`rit-laundry-tracker`)
+
+- **What it is:** A prototype website where RIT students pick their dorm, see which washers and dryers are free, and start a 55-minute laundry timer.
+- **Why I made it:** It was our team project for SWEN 101: check if a machine is free before you walk downstairs.
+- **What I did:** I worked with my team to plan the app, split up the pages, share our code and put it all together, in plain HTML, CSS and JavaScript.
+- **How it turned out:** It was only a front end, not connected to real machines, but it was my first real team project, and it's where I met my friend Jimmy.
+
+## Roman Numeral Converter (`roman-numerals`)
+
+- **What it is:** A Python program that converts Roman numerals to regular numbers and back, and checks whether a Roman numeral is written correctly.
+- **Why I made it:** It was one of the first things I wrote on my Raspberry Pi, before I even knew about while loops.
+- **What I did:** I came up with my own way to check the input: turn it into a number, turn that back into a Roman numeral, and see if it matches what you typed.
+- **How it turned out:** It works, and it's a fun snapshot of how I solved problems before I knew the normal tools for them. You can try it right on this page.
+
+## One-Line Rock Paper Scissors (`one-line-rock-paper-scissors`)
+
+- **What it is:** A rock paper scissors game in Python where the whole thing fits on two lines: one for the win, lose or tie logic and one for the game loop.
+- **Why I made it:** I wanted to see how much game logic I could squeeze into as little code as possible without breaking it.
+- **What I did:** I turned the rock, paper, scissors triangle into list positions so a little math decides who wins, then used chained conditional expressions and semicolons to cram it all in.
+- **How it turned out:** It works, and it's a terrible way to write a game, but finding the Python tricks that made it fit was the whole point. You can play it right on this page.
+
+## Tic-Tac-Toe (`tic-tac-toe`)
+
+- **What it is:** A tic-tac-toe game in Pygame with a home screen, scorekeeping, two-player mode and three levels of computer opponent.
+- **Why I made it:** It was my first game with graphics, in April 2022, and I wanted to learn Pygame.
+- **What I did:** I started from a tutorial and kept adding: the menus, the score, the end screens and a computer player that knows how to win, block and dodge the two-corner trick.
+- **How it turned out:** It's simple, but it's how I learned Pygame before I used it for the much bigger Blackjack game.
+

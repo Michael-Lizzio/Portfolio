@@ -35,18 +35,67 @@ export const MediaSchema = z.object({
   autoplay: z.boolean().default(false),
 });
 
+/**
+ * A simple flow diagram drawn from text, so it reads in light and dark mode and
+ * a screen reader gets it as a list. Steps run left to right on a wide screen
+ * (top to bottom from five steps, and always on a phone). A step holds one to
+ * three boxes side by side.
+ */
+export const DiagramSchema = z.object({
+  /** Read by screen readers before the steps. Say what the diagram shows. */
+  label: z.string().min(1),
+  caption: z.string().min(1).nullable().default(null),
+  steps: z
+    .array(
+      z.object({
+        /** Short text on the arrow that leads into this step. Ignored on the first step. */
+        arrow: z.string().min(1).max(40).nullable().default(null),
+        nodes: z
+          .array(
+            z.object({
+              title: z.string().min(1).max(40),
+              detail: z.string().min(1).max(90).nullable().default(null),
+            }),
+          )
+          .min(1)
+          .max(3),
+      }),
+    )
+    .min(2)
+    .max(7),
+});
+
 export const SectionSchema = z.object({
   heading: z.string().min(1).nullable().default(null),
+  /** 3 renders the heading one size down, as a part of the section above it. */
+  level: z.union([z.literal(2), z.literal(3)]).default(2),
   /** One string per paragraph. Plain text: no HTML, no markdown. */
   body: z.array(z.string().min(1)).default([]),
+  /** Optional bullet points, shown after the paragraphs. Plain text, one string each. */
+  bullets: z.array(z.string().min(1)).default([]),
   /** Optional fixed-width blocks for output, code, and alignment-sensitive text. */
   codeBlocks: z.array(z.string().min(1)).default([]),
   /**
    * Desktop relationship between a section's prose and its media. "wide" puts
-   * the media in the full page column instead of the reading column.
+   * the media in the full page column instead of the reading column: one item
+   * at full width, several in two big columns.
    */
   layout: z.enum(["stack", "media-left", "media-right", "wide"]).default("stack"),
   media: z.array(MediaSchema).default([]),
+  /** Optional diagram, shown after the text and before the media. */
+  diagram: DiagramSchema.nullable().default(null),
+});
+
+/**
+ * The 30-second version of a project, shown at the top of its page next to the
+ * hero: what it is, why I made it, what I did, and how it turned out. One or
+ * two plain sentences each, in first person.
+ */
+export const OverviewSchema = z.object({
+  what: z.string().min(1),
+  why: z.string().min(1),
+  did: z.string().min(1),
+  result: z.string().min(1),
 });
 
 export const LinkSchema = z.object({
@@ -64,8 +113,16 @@ export const ProjectSchema = z.object({
   title: z.string().min(1),
   /** One line, shown on the card. Keep under ~90 characters. */
   tagline: z.string().min(1).max(140),
-  /** Two to four sentences. Shown at the top of the detail page. */
+  /** Two to four sentences. Shown at the top of the detail page when there is no overview. */
   summary: z.string().min(1),
+  /** The short top block of the detail page. When it is set, it replaces the summary there. */
+  overview: OverviewSchema.nullable().default(null),
+  /**
+   * Michael's own original page, kept word for word (cryptogram, foosball,
+   * symposium). The page shows only his text: the tagline and summary are still
+   * used on cards and in search results, but not repeated on the page itself.
+   */
+  ownWords: z.boolean().default(false),
 
   /** false hides the project from the site entirely, without deleting it. */
   published: z.boolean().default(false),
@@ -160,6 +217,8 @@ export const WorkSchema = z.object({
 
 export type Media = z.infer<typeof MediaSchema>;
 export type Section = z.infer<typeof SectionSchema>;
+export type Diagram = z.infer<typeof DiagramSchema>;
+export type Overview = z.infer<typeof OverviewSchema>;
 export type Link = z.infer<typeof LinkSchema>;
 export type Project = z.infer<typeof ProjectSchema>;
 export type Profile = z.infer<typeof ProfileSchema>;

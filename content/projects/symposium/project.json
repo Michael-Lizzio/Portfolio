@@ -1,21 +1,18 @@
 {
   "slug": "symposium",
   "title": "Symposium Notes",
-  "tagline": "A hackathon app that records lectures and turns them into notes",
-  "summary": "Symposium Notes was my BrickHack 11 project in February 2025. It records a lecture, transcribes it, and turns it into bullet-point notes, so you can actually listen instead of scrambling to write everything down. I built the listening logic and hooked up the AI that fills in the notes and transcript.",
+  "tagline": "I always struggled with juggling note-taking and actively listening, often missing key points because I was too busy writing.",
+  "summary": "I've wanted to create this project since before coming to RIT. Back in high school, I would’ve loved to have a tool like this, especially for English and social studies, where lectures were a big part of learning. I always struggled with juggling note-taking and actively listening, often missing key points because I was too busy writing.",
+  "ownWords": true,
   "published": true,
   "featured": false,
   "date": "2025-02",
-  "status": "BrickHack 11 project",
+  "status": null,
   "tech": [
     "HTML",
     "CSS",
-    "Vanilla JavaScript",
-    "Web Audio API",
-    "MediaRecorder API",
-    "localStorage",
-    "OpenAI Whisper API",
-    "OpenAI GPT-4o"
+    "JavaScript",
+    "OpenAI Whisper API"
   ],
   "links": [
     {
@@ -40,66 +37,148 @@
     "kind": "image",
     "poster": null,
     "alt": "Symposium Notes showing a recorded conversation transcribed on the right and summarized into bullet-point notes on the left",
-    "caption": "The working hackathon demo with a transcript and generated notes."
+    "caption": null
   },
   "sections": [
     {
       "heading": "Inspiration",
       "body": [
-        "I've wanted to create this project since before coming to RIT. Back in high school, I would've loved to have a tool like this, especially for English and social studies, where lectures were a big part of learning. I always struggled with juggling note-taking and actively listening, often missing key points because I was too busy writing.",
-        "Originally, I planned to use Glean, a software with similar functionality. However, I discovered that it doesn't allow data exports. Even after emailing their support team back in October, I never received a response. So, I figured why not build it myself?"
+        "I've wanted to create this project since before coming to RIT. Back in high school, I would’ve loved to have a tool like this, especially for English and social studies, where lectures were a big part of learning. I always struggled with juggling note-taking and actively listening, often missing key points because I was too busy writing.",
+        "Originally, I planned to use Glean, a software with similar functionality. However, I discovered that it doesn’t allow data exports. Even after emailing their support team back in October, I never received a response. So, I figured why not build it myself?"
       ],
       "media": []
     },
     {
-      "heading": "What it does",
-      "body": [
-        "You can start and stop recording at any time. It detects speech on its own, breaks the recording into pieces wherever there's a pause, and turns the audio into text using OpenAI's Whisper API.",
-        "Then it writes a summary in bullet points, and you choose how many bullet points you want. Notes and transcripts are saved in the browser, and you can edit, import, export or clear them.",
-        "There's also a little chat assistant, Bricky, that answers questions about the lecture using the transcript. In settings you can adjust how long it calibrates, how much silence counts as a pause, and how long each piece is."
-      ],
-      "media": []
-    },
-    {
-      "heading": "Challenges and accomplishments",
-      "body": [
-        "Limited experience with JavaScript and CSS made certain features tricky. The biggest challenge was dividing tasks efficiently. We had to figure out how to integrate our individual work without stepping on each other's toes.",
-        "The system was fully functional, and we completed it in time for the hackathon. We built a working AI-powered tool in a short time, and working as a team was a fun and rewarding experience."
-      ],
+      "heading": "What It Does",
+      "body": [],
       "media": [
         {
           "src": "media/symposium_notes.webp",
           "kind": "image",
           "poster": null,
           "alt": "Empty Symposium Notes workspace with note and transcription panes, recording controls, settings, and the Bricky assistant",
-          "caption": "The two-pane workspace before recording begins."
-        }
-      ],
-      "layout": "media-right"
-    },
-    {
-      "heading": "What we learned",
-      "body": [
-        "Don't leave the Devpost submission for the last minute. Collaborating on a team project can be challenging, but it's also incredibly rewarding. Helping and teaching each other made the experience even more valuable."
-      ],
-      "media": []
-    },
-    {
-      "heading": "What's next",
-      "body": [
-        "The next steps were hosting it so people could use their own OpenAI API key, adding folders to organize notes by subject, and letting users upload PDFs and presentations so the AI could follow along and provide more detailed notes."
-      ],
-      "media": [
+          "caption": null
+        },
         {
           "src": "media/bricky.webp",
           "kind": "image",
           "poster": null,
           "alt": "Bricky, the app's orange brick mascot, winking and giving a thumbs-up",
-          "caption": "Bricky opens the transcript-aware chat assistant."
+          "caption": null
         }
+      ]
+    },
+    {
+      "heading": "Live Audio Recording & Segmentation",
+      "body": [],
+      "media": [],
+      "level": 3,
+      "bullets": [
+        "Users can start and stop recording at any time.",
+        "The system automatically detects speech and segments recordings based on pauses.",
+        "Each segment is stored for better organization and transcription."
+      ]
+    },
+    {
+      "heading": "AI Transcription & Summarization",
+      "body": [],
+      "media": [],
+      "level": 3,
+      "bullets": [
+        "Converts recorded audio into text using OpenAI’s Whisper API.",
+        "Generates AI-powered summaries in bullet points.",
+        "Users can customize how many bullet points they want."
+      ]
+    },
+    {
+      "heading": "Notes & Transcript Management",
+      "body": [],
+      "media": [],
+      "level": 3,
+      "bullets": [
+        "Locally stored notes that can be edited, exported, or cleared anytime.",
+        "Separate views for transcripts and notes for a better experience.",
+        "Users can delete individual notes or clear all when needed."
+      ]
+    },
+    {
+      "heading": "Customizable Settings",
+      "body": [],
+      "media": [],
+      "level": 3,
+      "bullets": [
+        "Users can fine-tune audio processing settings, including: Calibration time, silence detection, and segment length.",
+        "OpenAI API key is stored securely in local storage."
+      ]
+    },
+    {
+      "heading": "AI Chat Assistant",
+      "body": [],
+      "media": [],
+      "level": 3,
+      "bullets": [
+        "A floating chat assistant that answers follow-up questions about notes.",
+        "Uses transcript context to generate relevant responses.",
+        "Designed with a modern, sleek chat interface."
+      ]
+    },
+    {
+      "heading": "Import/Export Functionality",
+      "body": [],
+      "media": [],
+      "level": 3,
+      "bullets": [
+        "Users can import/export notes and transcripts as .txt files.",
+        "Enables easy backups and sharing of information."
+      ]
+    },
+    {
+      "heading": "Challenges We Ran Into",
+      "body": [],
+      "media": [],
+      "bullets": [
+        "Limited experience with JavaScript and CSS made certain features tricky.",
+        "The biggest challenge was dividing tasks efficiently. We had to strategize how to integrate our individual work without stepping on each other’s toes."
+      ]
+    },
+    {
+      "heading": "Accomplishments We’re Proud Of",
+      "body": [],
+      "media": [],
+      "bullets": [
+        "The system is fully functional, and we were able to complete it in time for the hackathon.",
+        "We built a working AI-powered tool in such a short time.",
+        "Working as a team was a fun and rewarding experience."
+      ]
+    },
+    {
+      "heading": "What We Learned",
+      "body": [],
+      "media": [],
+      "bullets": [
+        "Don’t leave the DevPost submission for the last minute.",
+        "Collaborating on a team project can be challenging, but it’s also incredibly rewarding.",
+        "Helping and teaching each other made the experience even more valuable."
+      ]
+    },
+    {
+      "heading": "What’s Next for Symposium Notes?",
+      "body": [],
+      "media": [],
+      "bullets": [
+        "Hosting on a free-tier platform so users can access it with their own OpenAI API key.",
+        "Adding folders to organize notes by subject.",
+        "Uploading PDFs and presentations so AI can follow along and provide more detailed notes."
+      ]
+    },
+    {
+      "heading": null,
+      "level": 3,
+      "body": [
+        "This is just the beginning, and we’re excited to see how this tool evolves."
       ],
-      "layout": "media-left"
+      "media": []
     }
   ],
-  "notes": "COPY SOURCE: Visible copy is adapted closely from the reviewed SynapsisNotes README and the matching Devpost submission, not reconstructed from source code. The Devpost page and its three media slides were checked on 2026-09-13. The filled transcript screenshot is the Devpost image captioned 'Text'; the empty workspace was captured from the live demo; Bricky comes from the repository. The YouTube embed resolves to bPjYdenq_go. Date 2025-02 comes from the repository's first commit and the BrickHack 11 submission period. The repository name is misspelled SynapsisNotes, while the product and Devpost title are Symposium Notes. Security note: the original browser-only build stores the user's API key in localStorage; do not describe that storage as secure."
+  "notes": "RESTORED 2026-11-09: every visible word on this page is Michael's own README for the project (github.com/Michael-Lizzio/SynapsisNotes, README.md at e947210, Feb 24 2025), word for word, with his headings, bullets and curly apostrophes. Only formatting changed: the markdown bold and backticks are dropped, the one sub-bullet under Customizable Settings is joined to its bullet, and the README's two em dashes became a period (\"exports. Even after\", \"efficiently. We had to\") because the site allows no em dashes. The README's last line, a P.S. pointing to the original SymposiumNotes repo (which only holds a filler README), is left off. Do not edit or reword this page. ownWords hides the tagline and summary on the page; both are his own sentences from the README. Captions are off because the README has none; alt text is neutral description. Facts for reference (not shown): BrickHack 11, February 2025; Devpost title Symposium Notes; the repo name is misspelled SynapsisNotes. The original browser-only build stores the user's API key in localStorage, which his README calls secure; that is his wording and is flagged for him in docs/REFRESH-NOV-2026.md. The word diff proving this is in docs/REFRESH-NOV-2026.md."
 }

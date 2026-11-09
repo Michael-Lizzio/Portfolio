@@ -3,6 +3,12 @@
   "title": "Document Management System",
   "tagline": "A tool that reads old scanned records and suggests how to file them, with a person approving each one",
   "summary": "At my 2026 internship, the county was scanning about 300,000 pages of traffic signal records, some going back to 1972. After scanning, someone still had to open every PDF, figure out what it was, find the date and signal number, rename it and log it in a spreadsheet. I built a prototype that does the reading first and hands a person a suggestion to approve.",
+  "overview": {
+    "what": "A prototype that reads old scanned traffic signal records, figures out what each one is, and suggests a file name and details for a person to approve.",
+    "why": "The county was scanning about 300,000 pages of records, some from 1972. After scanning, someone still had to open every PDF, work out what it was, rename it and log it by hand.",
+    "did": "I built it at my 2026 internship at GPI: text reading for old scans, three separate ways of guessing each document's type, a review screen that shows where every suggestion came from, and accounts for helpers and experts.",
+    "result": "When it was confident, it matched the county's own category about 97% of the time, and it got the type right on all 26 documents in a blind test. Dates and exact names were harder, so a person still checks every one."
+  },
   "published": true,
   "featured": false,
   "date": "2026-07",
@@ -110,12 +116,13 @@
           "alt": "Signal Scanner dashboard actively processing a folder while hundreds of completed documents wait in the review queue",
           "caption": "A big batch processing while finished documents wait for review."
         }
-      ]
+      ],
+      "layout": "wide"
     },
     {
       "heading": "How well it worked",
       "body": [
-        "When it was confident enough to suggest filing, it matched the county's existing category about 97% of the time, and in a blind test of 26 documents it got every type right. Dates and exact file names were much harder, which is why a person still checks every one.",
+        "When it was confident enough to suggest filing, it matched the county's existing category about 97% of the time, and in a blind test it got the type right on all 26 documents. Dates and exact file names were much harder, which is why a person still checks every one.",
         "I built it fast with a lot of help from AI. My job was mostly deciding what was safe to automate and testing it against real documents."
       ],
       "media": []

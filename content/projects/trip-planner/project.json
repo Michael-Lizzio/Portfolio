@@ -3,6 +3,12 @@
   "title": "Trip Planner",
   "tagline": "A shared trip plan where friends add ideas, vote on conflicts and pack together",
   "summary": "I built Trip Planner in August 2025 so a group trip didn't have to live in a giant group chat. Everyone signs in, adds plans to a day-by-day itinerary, votes when two plans clash, and adds to a shared packing list. Changes show up for everyone right away.",
+  "overview": {
+    "what": "A shared trip planner where friends add plans to a day-by-day itinerary, vote when two plans clash, and build a packing list together.",
+    "why": "I wanted a group trip to have one shared plan instead of living in a giant group chat.",
+    "did": "I built it in August 2025 with Flask and plain JavaScript, with live updates and JSON files that lock, so two people saving at once can't wipe each other out.",
+    "result": "Everyone sees changes right away without refreshing. If more than a few friends used it, a real database would be the next step."
+  },
   "published": true,
   "featured": false,
   "date": "2025-08",
@@ -90,7 +96,8 @@
           "alt": "Add Event dialog in Trip Planner with fields for time, title, description, location, and link",
           "caption": "Adding an event. Only the title is required."
         }
-      ]
+      ],
+      "layout": "wide"
     }
   ],
   "notes": "DATE: 2025-08 is verified from the TripPlanner Git history; all three commits in the inspected repository were made on 2025-08-05. SOURCE: inspected C:/Users/mjliz_9kaompp/PycharmProjects/TripPlanner at commit 3600a91 and confirmed the public remote https://github.com/Michael-Lizzio/TripPlanner.git. RUN VERIFICATION: on 2026-09-16, the original Flask application compiled and ran locally with its existing virtual environment. A Flask test-client smoke test verified successful login, /api/me, /api/data with four days, /api/packing with five items, and a 200 response from /admin. The browser test verified login, itinerary rendering, same-time grouping, packing, account administration, opening the add-event dialog, creating an 8:00 AM event, receiving the live SSE update, and toggling an upvote. MEDIA PROVENANCE: all five screenshots were captured from that run in a detached source worktree using synthetic Finger Lakes trip data and synthetic users; no original personal trip data or passwords appear in the media. The synthetic password was used only in the disposable demo worktree. The original source checkout was not changed for this portfolio entry. LIMITS OBSERVED IN SOURCE: SSE subscribers are held in process memory and therefore assume one server process; event mutation routes use array indexes that can become stale after sorting; there is no CSRF protection, database, migration system, day-management interface, or automated test suite; the checked-in app uses a fallback secret and debug mode; URLs are not scheme-restricted. These are described as future work, not as implemented behavior. DEVELOPMENT: human-led versus AI-assisted classification was not stated, so development remains null. STATUS: not inferred. No video was captured; screenshots document each verified surface and the live interaction is described only to the extent observed."

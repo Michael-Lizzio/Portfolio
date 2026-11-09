@@ -3,6 +3,12 @@
   "title": "Warm Cold Square",
   "tagline": "A two-day Pygame game: find the hidden square without hitting a bomb",
   "summary": "I made this with my cousin Justin in June 2022 as a quick two-day challenge. A green square is hidden somewhere on the screen, and the only hint is a word like Warm or Cold that changes as your mouse gets closer. You have to find it fast without touching any of the red bombs.",
+  "overview": {
+    "what": "A Pygame game where a green square is hidden on the screen, and the only hint is a word like Warm or Cold that changes as your mouse gets closer. Touch a red bomb and you lose.",
+    "why": "My cousin Justin and I wanted a quick challenge, like a mini hackathon: take a simple hot-and-cold idea and finish it in two days.",
+    "did": "We built the menu, three difficulty levels, the distance-to-temperature words and random bomb fields that stay away from the target. Later I made a version that runs in the browser.",
+    "result": "We finished it in two days in June 2022. Hard mode shrinks the target to the size of one bomb and puts 750 bombs on the screen."
+  },
   "published": true,
   "featured": false,
   "date": "2022-06",

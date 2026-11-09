@@ -2,7 +2,13 @@
   "slug": "wordle-solver",
   "title": "Wordle Solver",
   "tagline": "A Wordle solver that ranks guesses, narrows the answers, and can play automatically",
-  "summary": "When Wordle first came out, I wanted to know whether I could make a program solve it consistently. My solver filters the possible answers from the green, yellow, and gray feedback, scores the remaining words from their letter frequency, and avoids wasting guesses on repeated letters when new ones would teach it more. Super Wordle goes a step further and reads the browser game so it can play automatically.",
+  "summary": "When Wordle first came out, I wanted to know if I could make a program solve it consistently. My solver narrows down the answers from the green, yellow and gray tiles, scores the words that are left by how common their letters are, and picks the guess that tests the most new letters. Super Wordle goes a step further and plays the browser game by itself.",
+  "overview": {
+    "what": "A program that solves Wordle. It narrows down the possible answers from the colors, picks the best next guess, and in Super mode plays the game in the browser by itself.",
+    "why": "When Wordle first came out in 2022, I wanted to know if I could make a program solve it consistently.",
+    "did": "I wrote the filtering and the letter scoring in Python, then used OpenCV and later Selenium so it could read the board and type its own guesses.",
+    "result": "It was my first big project, and I learned a lot in the process. It's where everything else on this site started, including the Cryptogram Solver."
+  },
   "published": true,
   "featured": false,
   "date": "2022-02",
@@ -28,22 +34,22 @@
     {
       "heading": "Choosing the next word",
       "body": [
-        "After every guess, the solver removes words that no longer match the tile feedback. It counts how frequently each letter appears in what remains, then scores candidate guesses from those counts. Duplicate letters are discounted so an early guess can test as many useful letters as possible."
+        "After every guess, the solver throws out the words that don't match the colors anymore. It counts how often each letter shows up in the words that are left, and scores each possible guess from those counts. Repeated letters count for less, so early guesses test as many new letters as possible."
       ],
       "media": []
     },
     {
       "heading": "Normal mode and Super Wordle",
       "body": [
-        "Normal mode works beside any Wordle game: I enter the five tile colors as numbers and the program recommends another guess. Super mode automates the loop. An early version sampled exact tile colors from screenshots, while a later Selenium version clicked the on-screen keyboard and read each tile's state from the page.",
-        "I also added deliberately bad modes that can choose a random guess, a completely random word, or the worst-ranked option, mostly because it was funny to watch."
+        "Normal mode works next to any Wordle game: I type in the five colors as numbers, and it suggests the next guess. Super mode does the whole thing itself. An early version read the tile colors from screenshots, and a later Selenium version clicked the on-screen keyboard and read each tile from the page.",
+        "I also added some deliberately bad modes that pick a random guess, a totally random word, or the worst option, mostly because it was funny to watch."
       ],
       "media": []
     },
     {
       "heading": "Examples",
       "body": [
-        "The terminal explains its feedback codes, proposes candidate words and reports how many answers remain after each guess."
+        "The terminal explains the color codes, suggests words and says how many answers are left after each guess."
       ],
       "media": [
         {
@@ -67,7 +73,8 @@
           "alt": "Wordle Solver narrowing the candidates to SWOON and completing the browser puzzle",
           "caption": null
         }
-      ]
+      ],
+      "layout": "wide"
     },
     {
       "heading": "Videos",

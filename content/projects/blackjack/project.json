@@ -3,6 +3,12 @@
   "title": "Blackjack",
   "tagline": "The 3,372-line Pygame casino game that got me hooked on building big projects",
   "summary": "Blackjack was the first really big project I completed on my own. I learned each piece as I needed it and slowly built a full multiplayer casino game with accounts, saved statistics, chip betting, splits, insurance, surrender, hotkeys, settings, and a complete round flow. Somehow all 3,372 lines live in one Python file, and somehow it works.",
+  "overview": {
+    "what": "A full blackjack game in Pygame for up to five players at one keyboard, with accounts, chip betting, splits, insurance, surrender, saved stats and settings.",
+    "why": "I wanted to see if I could finish something really big on my own, so I picked a game I knew and kept adding to it.",
+    "did": "I wrote all of it myself, one feature at a time, learning each piece as I needed it. Somehow all 3,372 lines ended up in one Python file.",
+    "result": "It works, and finishing it was incredibly fulfilling. It showed me I could keep going on a big idea until it all came together, and it pulled me a lot deeper into coding."
+  },
   "published": true,
   "featured": false,
   "date": "2024-08",
@@ -26,29 +32,28 @@
     {
       "heading": "Building it one piece at a time",
       "body": [
-        "I did not begin with a grand architecture. I added one feature, figured out what it needed, and then moved to the next. Player and hand classes, dealing, bets, account passwords, lifetime statistics, settings, and all the special blackjack actions gradually became one very integrated game.",
-        "Finishing it was incredibly fulfilling. It proved to me that I could keep working through a large idea until the whole thing actually came together, and it pulled me much deeper into coding."
+        "I didn't start with a big plan. I added one feature, figured out what it needed, and then moved on to the next one. Player and hand classes, dealing, bets, account passwords, lifetime stats, settings and all the special blackjack moves slowly turned into one big connected game."
       ],
       "media": []
     },
     {
       "heading": "Fitting every hand on the table",
       "body": [
-        "One of my favorite details is the card display. The program calculates the angle and offset for every card, then fans the hand inside the space available for that player. As more cards are dealt, the layout tightens itself instead of spilling across the table."
+        "One of my favorite details is how the cards are drawn. The program works out the angle and offset for every card and fans each hand out in the space that player has. As more cards get dealt, the hand tightens up instead of spilling across the table."
       ],
       "media": []
     },
     {
       "heading": "More than hit or stand",
       "body": [
-        "The game supports as many as five players at the same keyboard. Players can bet with chips, split hands, double down, surrender, buy insurance, play as guests or sign into accounts, and review balances and lifetime results after a round."
+        "Up to five players can play at the same keyboard. You can bet with chips, split, double down, surrender, buy insurance, play as a guest or sign into an account, and check balances and lifetime results after each round."
       ],
       "media": []
     },
     {
       "heading": "Game walkthrough",
       "body": [
-        "The round moves from choosing the number of players and starting balances to placing bets, playing each hand and reviewing the new balances."
+        "A round goes from picking the number of players and their starting balances, to placing bets, playing each hand and seeing the new balances."
       ],
       "media": [
         {
@@ -86,7 +91,8 @@
           "alt": "Final balance summary for all five players with a Play Again button",
           "caption": null
         }
-      ]
+      ],
+      "layout": "wide"
     },
     {
       "heading": "Videos",

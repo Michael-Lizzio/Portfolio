@@ -3,6 +3,12 @@
   "title": "Tic-Tac-Toe",
   "tagline": "My first Pygame project, with three levels of computer opponent",
   "summary": "I made this in April 2022 as my first game with graphics. It started from a tutorial, and then I kept adding to it: a home screen, scorekeeping, two-player mode, three computer difficulties and custom end screens. It was how I learned Pygame before I used it for the much bigger Blackjack game.",
+  "overview": {
+    "what": "A tic-tac-toe game in Pygame with a home screen, scorekeeping, two-player mode and three levels of computer opponent.",
+    "why": "It was my first game with graphics, in April 2022, and I wanted to learn Pygame.",
+    "did": "I started from a tutorial and kept adding: the menus, the score, the end screens and a computer player that knows how to win, block and dodge the two-corner trick.",
+    "result": "It's simple, but it's how I learned Pygame before I used it for the much bigger Blackjack game."
+  },
   "published": true,
   "featured": false,
   "date": "2022-04",

@@ -3,6 +3,12 @@
   "title": "U-Fund: A New Page",
   "tagline": "A team project for requesting, approving and funding books for people in prison",
   "summary": "U-Fund: A New Page was my SWEN 261 team project. We built a full-stack app where incarcerated people could request books, prison staff could approve or deny them, and people outside could pay for the approved ones. It was one of my first times working on a big app with several kinds of users across a whole team.",
+  "overview": {
+    "what": "A full-stack web app where people in prison request books, prison staff approve or deny them, and people outside pay for the approved ones.",
+    "why": "It was my SWEN 261 team project at RIT, and one of my first times building a big app with several kinds of users.",
+    "did": "I worked with Liam Pennino, Nina Sagawa and Selene Shen on both the Angular front end and the Spring Boot back end. We split up the features and made them fit together, with no AI.",
+    "result": "It all worked by the final presentation, with at least 91% test coverage on every part of the back end, plus notifications we added on top of the requirements."
+  },
   "published": true,
   "featured": false,
   "date": "2025-02",
@@ -71,7 +77,8 @@
           "alt": "Helper funding basket showing two requested books and a seven dollar checkout total",
           "caption": "A helper's basket before checkout."
         }
-      ]
+      ],
+      "layout": "wide"
     },
     {
       "heading": "How we built it",

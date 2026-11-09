@@ -3,6 +3,12 @@
   "title": "RMF Checklist Automation",
   "tagline": "Python tools that made a defense contractor's quarterly security reports faster and safer",
   "summary": "My first internship was at TTM Technologies, a defense contractor, in the summer of 2024. Their cybersecurity team had to update big checklist files by hand every quarter for compliance reports. I built three small Python apps that do most of that work, with a review step in the middle so nothing changes without a person seeing it first.",
+  "overview": {
+    "what": "Three small Python apps that update the big security checklist files a defense contractor has to fill out every quarter, with a person reviewing in the middle.",
+    "why": "At my 2024 internship at TTM Technologies, the cybersecurity team updated those checklists by hand every quarter, which was slow and easy to mess up.",
+    "did": "I learned the process from scratch, planned the three steps on a whiteboard, and built the apps with Python and Tkinter, including a check that never overwrites newer data.",
+    "result": "The team used them for five quarterly reports."
+  },
   "published": true,
   "featured": false,
   "date": "2024-06",
@@ -75,7 +81,8 @@
           "alt": "CKL Modifier desktop window with Answer File and CKL inputs, comment placeholders, log filters and a detailed modification report",
           "caption": "Step 3: update the checklist and log every change."
         }
-      ]
+      ],
+      "layout": "wide"
     },
     {
       "heading": "Never overwrite something newer",
