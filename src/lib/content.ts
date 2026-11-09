@@ -2,20 +2,20 @@
  * The data-access seam for all portfolio content.
  *
  * THIS IS THE ONLY MODULE IN THE APP THAT TOUCHES THE FILESYSTEM FOR CONTENT.
- * Pages, layouts and components import from here and nothing else — they never
+ * Pages, layouts and components import from here and nothing else - they never
  * read `content/`, never join paths, never resolve a media URL themselves.
  *
  * That indirection is deliberate and load-bearing: the plan is to move content
  * into Supabase. When that happens, this file's body is replaced with queries
  * and every caller keeps working untouched, because the exported signatures and
- * the shapes in `schema.ts` are the contract — not the JSON on disk.
+ * the shapes in `schema.ts` are the contract - not the JSON on disk.
  * If you find yourself adding `node:fs` anywhere else, the seam has leaked.
  *
  * Reads are wrapped in React's `cache()`, so one render pass reads each file at
  * most once no matter how many components ask for it.
  *
  * Content that fails its zod schema throws, loudly, with the file path and the
- * offending field. A malformed project must break the build — never disappear
+ * offending field. A malformed project must break the build - never disappear
  * quietly from the site. `npm run validate` reports every problem at once;
  * this module stops at the first, because by then the build is already wrong.
  */
@@ -27,17 +27,20 @@ import type { ZodError } from "zod";
 import {
   ProfileSchema,
   ProjectSchema,
+  WorkSchema,
   type Media,
   type Profile,
   type Project,
   type ResolvedMedia,
   type ResolvedProject,
+  type Work,
 } from "./schema";
 import { compareProjectsByDate } from "./project-order";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
 const PROJECTS_DIR = path.join(CONTENT_DIR, "projects");
 const PROFILE_FILE = path.join(CONTENT_DIR, "profile.json");
+const WORK_FILE = path.join(CONTENT_DIR, "work.json");
 
 /* -------------------------------------------------------------------------- */
 /* failing loudly                                                             */
@@ -207,6 +210,14 @@ const loadProfile = cache(async (): Promise<Profile> => {
   return parsed.data;
 });
 
+const loadWork = cache(async (): Promise<Work> => {
+  const parsed = WorkSchema.safeParse(await readJson(WORK_FILE));
+  if (!parsed.success) {
+    throw contentError(WORK_FILE, formatIssues(parsed.error));
+  }
+  return parsed.data;
+});
+
 const loadProjects = cache(async (): Promise<ResolvedProject[]> => {
   let entries;
   try {
@@ -244,12 +255,17 @@ const loadProjects = cache(async (): Promise<ResolvedProject[]> => {
 });
 
 /* -------------------------------------------------------------------------- */
-/* public API — the whole surface the rest of the app is allowed to use        */
+/* public API - the whole surface the rest of the app is allowed to use        */
 /* -------------------------------------------------------------------------- */
 
 /** The site owner: name, headline, bio, links, long-form about copy. */
 export async function getProfile(): Promise<Profile> {
   return loadProfile();
+}
+
+/** Work experience and education, for the Work page. */
+export async function getWork(): Promise<Work> {
+  return loadWork();
 }
 
 /** Published projects only. Newest first, then undated. */

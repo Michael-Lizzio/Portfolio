@@ -8,7 +8,11 @@
   "date": null,
   "status": "Complete",
   "development": null,
-  "tech": ["Python", "NumPy", "Command-line interface"],
+  "tech": [
+    "Python",
+    "NumPy",
+    "Command-line interface"
+  ],
   "links": [
     {
       "label": "Cover photo: Sonse (CC BY 2.0)",
@@ -25,14 +29,16 @@
   "sections": [
     {
       "heading": "A strange but useful validator",
-      "body": ["The program decodes the Roman numeral, converts the answer back into a canonical Roman numeral, and compares that result with the original input. If the strings do not match, it can reject forms such as IIII and suggest IV instead."],
+      "body": [
+        "The program decodes the Roman numeral, converts the answer back into a canonical Roman numeral, and compares that result with the original input. If the strings do not match, it can reject forms such as IIII and suggest IV instead."
+      ],
       "media": []
     },
     {
       "heading": "How the two directions work",
       "body": [
         "Reading a Roman numeral goes from left to right. A symbol is added when it is at least as large as the symbol after it, but subtracted when a larger symbol follows it. That is why VI is 5 + 1, while IV is -1 + 5.",
-        "Writing a Roman numeral works in the other direction. The converter repeatedly takes the largest symbol or subtractive pair that fits into the number, appends it, and continues with the remainder. The playable trace above exposes each of those decisions."
+        "Writing a Roman numeral works in the other direction. The converter repeatedly takes the largest symbol or subtractive pair that fits into the number, appends it, and continues with the remainder. You can try it yourself in the converter above."
       ],
       "media": []
     }

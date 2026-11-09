@@ -11,7 +11,7 @@ import type { Media } from "@/lib/schema";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "How a Raspberry Pi at Christmas grew into years of programming — and what I look for in a project now.",
+    "How a Raspberry Pi I got for Christmas in 2018 turned into years of building things.",
 };
 
 /**
@@ -25,7 +25,8 @@ const COLLAGE: Media = {
   kind: "image",
   poster: null,
   alt: "A six-photo collage: skiing through falling snow, two swimmers standing in the surf, a beach at dusk, family and a dog beside a lighthouse, skis held overhead on a foggy slope, and a foosball table at home rigged with an overhead camera mount.",
-  caption: "Skiing, the ocean, home — and the foosball table that became KURT.",
+  caption: "Skiing, the ocean, home, and the foosball table that became KURT.",
+  autoplay: false,
 };
 
 export default async function AboutPage() {
@@ -53,11 +54,15 @@ export default async function AboutPage() {
           </div>
 
           <p className="mt-12 text-lg text-fg-muted">
-            The projects are on{" "}
+            You can see what I&apos;ve built on{" "}
+            <Link className="link" href="/projects">
+              the projects page
+            </Link>
+            , where I&apos;ve worked on{" "}
             <Link className="link" href="/work">
               the work page
             </Link>
-            , and the fastest way to reach me is on{" "}
+            , and how to reach me on{" "}
             <Link className="link" href="/contact">
               the contact page
             </Link>

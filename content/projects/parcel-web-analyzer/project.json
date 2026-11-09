@@ -1,10 +1,10 @@
 {
   "slug": "parcel-web-analyzer",
   "title": "Parcel Web Analyzer",
-  "tagline": "A geospatial tool for comparing Seattle homes by what matters nearby",
-  "summary": "The Parcel Web Analyzer is a web-based tool that helps users compare residential parcels in the Seattle area using their own proximity-based requirements. It combines King County parcel polygons with live OpenStreetMap amenities, scores each parcel with a custom weighting algorithm, and explains why a parcel scored well.",
+  "tagline": "A map tool for comparing Seattle homes by what matters nearby",
+  "summary": "For my GIS class final project, I built a web tool that compares homes in Seattle by what's nearby. You pick what matters to you, like restaurants, parks or trails, and it scores every residential parcel and shows you why each one scored the way it did.",
   "published": true,
-  "featured": true,
+  "featured": false,
   "date": "2025-12",
   "status": "IGME 382 final project",
   "tech": [
@@ -40,7 +40,7 @@
     {
       "heading": "The idea",
       "body": [
-        "This project was inspired by my sister’s recent home-buying search in Seattle and the criteria she shared: walkability to restaurants, access to parks and trails, and proximity to daily amenities. Her notes directly shaped the suitability factors I analyzed.",
+        "This project was inspired by my sister's recent home-buying search in Seattle and the criteria she shared: walkability to restaurants, access to parks and trails, and proximity to daily amenities. Her notes directly shaped the suitability factors I analyzed.",
         "The question I wanted to answer was: which residential parcels in Seattle best match a person's home-buying requirements, and how does that suitability change across the city?"
       ],
       "media": [
@@ -57,8 +57,8 @@
     {
       "heading": "How it works",
       "body": [
-        "Users load parcels, draw an area of interest, fetch nearby amenities from Overpass, build and reorder requirement groups, and then process the scores. Clicking a parcel shows its score and the count from each requirement group, so the result is explainable instead of just being a color on a map.",
-        "For each group, the app filters the included amenity types, buffers each amenity by the chosen distance, spatially joins those buffers to the parcels, and counts the intersections. Priority is handled with triangular weighting, so the first requirement has the most influence and each lower priority contributes less.",
+        "Users load parcels, draw an area of interest, fetch nearby amenities from OpenStreetMap, build and reorder requirement groups, and then process the scores. Clicking a parcel shows its score and the count from each requirement group, so the result is explainable instead of just being a color on a map.",
+        "For each group, the app takes the chosen amenity types, draws a circle of the chosen distance around each one, and counts how many of those circles touch each parcel. The first requirement has the most influence, and each lower priority counts a little less.",
         "The original King County dataset includes more than 500,000 parcels across many land uses. I used ArcGIS Pro to clip the study area and filter it down to residential parcels before loading it into the web app."
       ],
       "media": [
@@ -91,7 +91,7 @@
       "layout": "media-right"
     },
     {
-      "heading": "What I learned",
+      "heading": "Looking back",
       "body": [
         "Preprocessing mattered as much as the algorithm. Clipping, filtering, and exporting in ArcGIS Pro were essential to making the interactive analysis usable.",
         "I also learned how much a good interface changes a GIS tool. Operations that feel complex in ArcGIS can become much easier in a guided workflow. Building it made me think about all the GIS tools we take for granted, such as Google Maps, and how important it is to plan the interface around what someone is trying to do."

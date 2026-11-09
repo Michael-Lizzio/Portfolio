@@ -38,6 +38,7 @@ npm run dev        # http://localhost:3000
 ```
 content/
   profile.json              # name, bio, links, résumé
+  work.json                 # the Work page: jobs and education
   projects/
     cryptogram/
       project.json          # all the copy, and which media goes where
@@ -96,7 +97,8 @@ Two consequences of exporting statically, both handled in `next.config.ts`:
 - `redirects()` needs a server too. The legacy `michael-lizzio.github.io` URLs are redirected by
   [`public/_redirects`](public/_redirects) instead, which Cloudflare reads natively. Keep that file
   current as projects are published — it deliberately sends an unpublished project's old URL to
-  `/work/` rather than 301-ing a visitor onto a 404.
+  `/projects/` rather than 301-ing a visitor onto a 404. Since November 2026 it also sends the old
+  `/work/<slug>/` project URLs to `/projects/<slug>/`, because `/work/` is now the work-experience page.
 
 **When the Supabase admin panel arrives**, an authenticated write path needs a server and the
 static export stops being enough. That is a migration to [`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare)
@@ -106,7 +108,7 @@ only module that touches content.
 ## Layout
 
 ```
-src/app/          routes (/, /work, /work/[slug], /about, /contact) and globals.css
+src/app/          routes (/, /projects, /projects/[slug], /work, /about, /contact) and globals.css
 src/components/   Container, SiteNav, SiteFooter, PageHeader, ProjectCard, MediaFigure, TechPill, Prose, …
 src/lib/          schema.ts (the zod contract) and content.ts (the only content reader)
 scripts/          new-project, compress-media, sync-media, validate-content

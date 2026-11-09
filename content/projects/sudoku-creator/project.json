@@ -2,13 +2,18 @@
   "slug": "sudoku-creator",
   "title": "Sudoku Creator and Solver",
   "tagline": "A Pygame Sudoku app that generates, plays, checks, and solves puzzles",
-  "summary": "After building the Cryptogram Solver, I wanted to use backtracking on another kind of puzzle. This Pygame app can generate Sudoku boards, let you play them, accept a puzzle you enter yourself, and solve the board one step at a time. It mostly works most of the time, which is part of the charm of revisiting it now.",
+  "summary": "After building the Cryptogram Solver, I wanted to use backtracking on another kind of puzzle. This Pygame app can make Sudoku boards, let you play them, take a puzzle you type in yourself, and solve the board one step at a time. It works most of the time, which is honestly part of the charm.",
   "published": true,
   "featured": false,
   "date": "2022",
   "status": "Complete",
   "development": null,
-  "tech": ["Python", "Pygame", "Backtracking algorithm", "Puzzle generation"],
+  "tech": [
+    "Python",
+    "Pygame",
+    "Backtracking algorithm",
+    "Puzzle generation"
+  ],
   "links": [],
   "hero": {
     "src": "media/sudoku_interface.webp",
@@ -20,12 +25,16 @@
   "sections": [
     {
       "heading": "One program, several modes",
-      "body": ["The interface includes hints, answer checking, erasing, board entry, and a solver view. The generated puzzle keeps track of which cells are original clues, player guesses, hints, correct answers, wrong answers, or solver moves so each kind can be displayed differently."],
+      "body": [
+        "The interface includes hints, answer checking, erasing, board entry, and a solver view. The generated puzzle keeps track of which cells are original clues, player guesses, hints, correct answers, wrong answers, or solver moves so each kind can be displayed differently."
+      ],
       "media": []
     },
     {
       "heading": "Watching the solver work",
-      "body": ["Instead of solving the whole board instantly, the backtracking routine advances one action per frame. You can watch it try a value, reach a dead end, move backward, and continue until it fills the grid."],
+      "body": [
+        "Instead of solving the whole board instantly, the backtracking routine advances one action per frame. You can watch it try a value, reach a dead end, move backward, and continue until it fills the grid."
+      ],
       "media": []
     }
   ],

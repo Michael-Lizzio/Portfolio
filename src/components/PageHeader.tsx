@@ -3,7 +3,7 @@ import { Container } from "./Container";
 
 /**
  * The single page-opening block: one `<h1>`, an optional standfirst, and an
- * optional meta row (tech pills, a date, a back-link — whatever the route needs).
+ * optional meta row (tech pills, a date, a back-link - whatever the route needs).
  *
  * Every page uses this one, which is what retires the six different
  * `#project-title` boxes the legacy site carried.

@@ -42,7 +42,7 @@ npm run media -- rpi-doorbell                 # compresses IN PLACE: images -> .
 
 npm run validate                              # schema gate. Fix everything it prints.
 npm run dev                                   # read the URL Next prints — a busy port 3000
-                                              # silently becomes 3001. /work/rpi-doorbell 404s
+                                              # silently becomes 3001. /projects/rpi-doorbell 404s
                                               # while published is false; §9 has the three-line
                                               # recipe for looking at a draft.
 npm run build                                 # must pass before you open the PR
@@ -89,7 +89,7 @@ content/
 
 **There is no projects index, no registry, no `projects.json` list, no route file per project.**
 The site discovers projects by reading the directory `content/projects/*/`. `src/lib/content.ts`
-does that once; everything else imports from it. `/work/<slug>` is one dynamic route that calls
+does that once; everything else imports from it. `/projects/<slug>` is one dynamic route that calls
 `getProjectSlugs()`.
 
 This is the architectural reason parallel agents are safe here:
@@ -224,7 +224,7 @@ thing in English, and `npm run validate` quotes it back at you when you get it w
 | `tagline` | string | **yes** | One line, max 140 chars, aim under 90. It is the whole card. Say what it *does*: `"A backtracking program that cracks cryptogram puzzles word by word"`. |
 | `summary` | string | **yes** | 2–4 sentences, shown at the top of the detail page. What it is, how it works, what's on this page. |
 | `published` | boolean | no — defaults `false` | `false` hides it from the site entirely without deleting it. **Leave it `false`.** |
-| `featured` | boolean | no — defaults `false` | Promotes to the top of `/work` and onto the homepage. **Not yours to set.** Leave `false`. |
+| `featured` | boolean | no — defaults `false` | Puts the project in "Selected work" on the homepage. **Not yours to set.** Leave `false`. |
 | `date` | string \| null | no — defaults `null` | `"YYYY"` or `"YYYY-MM"` only. `"2022"`, `"2024-03"`. `"March 2024"` fails. Drives ordering. `null` sorts last — use `null` if you genuinely can't date it. |
 | `status` | string \| null | no — defaults `null` | Free text badge, e.g. `"In progress"`, `"Archived"`. `null` if the project doesn't say. |
 | `development` | `"human-led"` \| `"ai-assisted"` \| `"ai-generated"` \| null | no — defaults `null` | A quiet disclosure of how the implementation was produced. It describes the development process, not whether the product contains an AI feature. Do not infer it; leave `null` until Michael classifies the project. |
@@ -638,7 +638,7 @@ re-run `npm run media -- <slug>`.
 **Draft project 404s, or its images are broken, in `npm run dev`** — one root cause: nothing about
 an unpublished project is served.
 
-- *The page.* `/work/<slug>` 404s while `published` is `false` — under `npm run dev` **and** under
+- *The page.* `/projects/<slug>` 404s while `published` is `false` — under `npm run dev` **and** under
   `npm run build && npm start`. `getProject()` returns null for an unpublished slug, and
   `generateStaticParams()` only emits published ones. Building and starting does not help.
 - *The images.* `public/media/` is generated and gitignored, so on a fresh clone it does not exist
@@ -651,7 +651,7 @@ The only way to look at a draft is to flip it locally, and put it back:
 # 1. set "published": true in content/projects/<slug>/project.json
 node scripts/sync-media.mjs          # now public/media/<slug>/ exists
 ls public/media/<slug>/              # confirm the files landed
-npm run dev                          # look at /work/<slug>
+npm run dev                          # look at /projects/<slug>
 # 2. set "published" back to false before you stage anything
 ```
 

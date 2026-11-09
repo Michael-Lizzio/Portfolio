@@ -1,8 +1,8 @@
 {
   "slug": "warm-cold-square",
   "title": "Warm Cold Square",
-  "tagline": "A two-day Pygame challenge about finding a hidden square without hitting a bomb",
-  "summary": "I made this with my cousin Justin in June 2022 as a small two-day, hackathon-style challenge. A green square is hidden somewhere on the screen, and the only guidance is a changing temperature clue based on how close the mouse is to it. The challenge is to reach the target quickly while threading through a field of red bombs that can end the round immediately.",
+  "tagline": "A two-day Pygame game: find the hidden square without hitting a bomb",
+  "summary": "I made this with my cousin Justin in June 2022 as a quick two-day challenge. A green square is hidden somewhere on the screen, and the only hint is a word like Warm or Cold that changes as your mouse gets closer. You have to find it fast without touching any of the red bombs.",
   "published": true,
   "featured": false,
   "date": "2022-06",
@@ -20,71 +20,63 @@
     "kind": "image",
     "poster": null,
     "alt": "Warm Cold Square game in progress with a Warm clue above a field of small red bombs",
-    "caption": "An easy round in progress. The hidden target is not drawn until the player reaches it or touches a bomb."
+    "caption": "An easy round. The target stays hidden until you find it or hit a bomb."
   },
   "sections": [
     {
       "heading": "A two-day challenge",
       "body": [
-        "My cousin Justin and I treated this as a quick build challenge: take a simple hot-and-cold search idea, turn it into a playable game, and finish it in two days. The result is deliberately spare—one menu, one screen of hazards, and a rule that can be understood as soon as the temperature word starts changing.",
-        "The menu has Play, difficulty, and Quit controls. Clicking the middle button cycles through easy, medium, and hard, then Play generates a new target and a completely new field of bombs for that round."
+        "Justin and I treated it like a mini hackathon: take a simple hot-and-cold idea, make it playable, and finish in two days. So it's pretty simple: one menu, one screen of bombs, and a rule you get as soon as the word starts changing.",
+        "The middle button on the menu switches between easy, medium and hard, and every round makes a new target and a new field of bombs."
       ],
-      "codeBlocks": [],
-      "layout": "media-right",
       "media": [
         {
           "src": "media/warm_cold_menu.webp",
           "kind": "image",
           "poster": null,
           "alt": "Warm Cold Square fullscreen menu with Play, Easy, and Quit buttons on a black background",
-          "caption": "The fullscreen menu keeps the challenge immediate: play, select a difficulty, or quit."
+          "caption": "The menu: play, pick a difficulty, or quit."
         }
-      ]
+      ],
+      "layout": "media-right"
     },
     {
       "heading": "Turning distance into temperature",
       "body": [
-        "Each frame, the game calculates Manhattan distance: the horizontal difference between the cursor and target plus the vertical difference. That number is converted into six bands—Burning, Hot, Warm, Cold, Very Cold, and Fridge—and each label has its own color. It gives direction indirectly, so the player has to move, watch the clue change, and narrow down the target's location.",
-        "The target remains invisible during the search. Reaching it reveals the square in green and displays a time and score based on the starting distance and how quickly it was found. Touching any red bomb also reveals the target, but ends the round as a loss."
+        "Every frame, the game works out how far the mouse is from the target, counting across and up and down separately. That distance turns into one of six words, from Burning down to Fridge, each in its own color. Find the square and it shows up green with your time and score. Touch a bomb and you lose."
       ],
-      "codeBlocks": [],
-      "layout": "media-left",
       "media": [
         {
           "src": "media/warm_cold_won.webp",
           "kind": "image",
           "poster": null,
           "alt": "Warm Cold Square win screen showing Burning, a green hidden target, the word Won, time, and score",
-          "caption": "Reaching the hidden square reveals it in green and produces the round's time and score."
+          "caption": "Found it. The target turns green and you get a time and score."
         }
-      ]
+      ],
+      "layout": "media-left"
     },
     {
-      "heading": "Difficulty through density",
+      "heading": "Harder means more bombs",
       "body": [
-        "Difficulty changes two variables at once. Easy hides a 50-by-50-pixel target among 100 bombs; medium reduces it to 25 by 25 and places 450 bombs; hard leaves only a 10-by-10 target among 750 bombs. Every bomb is also 10 by 10 pixels, so hard mode makes the goal no larger than one hazard.",
-        "Bombs are placed randomly with rejection checks intended to keep them away from the target, the cursor's starting position, and each other. That makes every round a different navigation problem instead of a fixed maze."
+        "Easy hides a big target among 100 bombs. Hard shrinks the target to the same size as a single bomb and puts 750 of them on screen. The bombs are placed randomly but kept away from the target and from where your mouse starts, so every round is a different maze."
       ],
-      "codeBlocks": [],
-      "layout": "media-right",
       "media": [
         {
           "src": "media/warm_cold_lost.webp",
           "kind": "image",
           "poster": null,
           "alt": "Warm Cold Square hard-mode loss with hundreds of red bombs, the revealed green target, and a large Lost message",
-          "caption": "A hard round ends after the cursor touches one of 750 hazards; the hidden target is revealed in green."
+          "caption": "A hard round, lost on one of 750 bombs."
         }
-      ]
+      ],
+      "layout": "media-right"
     },
     {
-      "heading": "Built for the screen it runs on",
+      "heading": "Built for any screen",
       "body": [
-        "The desktop version opens at the display's native resolution and derives its margins, button sizes, font sizes, and spacing from the screen dimensions. The visuals are made entirely from Pygame rectangles and text rather than image assets.",
-        "I later made a browser-oriented copy using an asynchronous menu loop and packaged it with Pygbag. The preserved web build identifies itself as Pygbag 0.6.6, while the version tested for this page is the original desktop project."
+        "Everything is drawn with plain Pygame rectangles and text, sized from the screen's resolution, so it fills whatever display it runs on. Later I made a version that runs in the browser too."
       ],
-      "codeBlocks": [],
-      "layout": "stack",
       "media": []
     }
   ],

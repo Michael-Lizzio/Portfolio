@@ -21,7 +21,7 @@ content/
 ```
 
 One directory per project. **There is no index, manifest, or registry**, and there is no route file
-per project — `/work/<slug>` is a single dynamic route fed by `getProjectSlugs()`. Adding a project
+per project — `/projects/<slug>` is a single dynamic route fed by `getProjectSlugs()`. Adding a project
 means adding a directory; removing one means deleting a directory. Nothing else in the repo has to
 know.
 
@@ -47,7 +47,7 @@ Two consequences worth stating plainly:
 | `summary` | `string` | yes | — |
 
 **`slug`** — matched against `/^[a-z0-9]+(-[a-z0-9]+)*$/` and **must equal the directory name**.
-It is the URL (`/work/cryptogram`), the media namespace (`/media/cryptogram/…`), and the identity
+It is the URL (`/projects/cryptogram`), the media namespace (`/media/cryptogram/…`), and the identity
 this project carries into Supabase later, so it should never change once published. Good:
 `wordle-solver`, `cyber-ttm`, `la2028`. Bad: `Wordle_Solver`, `wordle solver`, `-foo`, `foo--bar`.
 
@@ -55,7 +55,7 @@ this project carries into Supabase later, so it should never change once publish
 `"LA28 Olympic Itinerary Planner"`.
 
 **`tagline`** — one line, `min 1`, **`max 140`**, and realistically you want under 90 because it is
-the entire body of the card on `/work`. It should say what the thing *does*, not what category it is
+the entire body of the card on `/projects`. It should say what the thing *does*, not what category it is
 in. Real example: `"A backtracking program that cracks cryptogram puzzles word by word"` — you know
 what it is and roughly how it works before you click.
 
@@ -80,7 +80,15 @@ only, so an unpublished project has no page, no card, and no entry in `generateS
 URL 404s. `getAllProjects()` is the one function that includes unpublished projects; it exists for
 the owner's own review surfaces.
 
-**`featured`** selects a project for the homepage. It does not override chronological ordering.
+**`featured`** selects a project for "Selected work" on the homepage. Since November 2026 that is
+the three apps (Engine Miles, Burrow, RelayReply).
+
+**Ranking and "Load more".** `/projects` sorts by `RELEVANCE_ORDER` in `src/lib/project-order.ts`
+("Best first"), shows the first `INITIAL_VISIBLE` projects (12), and keeps the rest behind a
+"Load more" button. The hidden cards are still in the HTML. Sorting by date shows everything. A slug
+missing from `RELEVANCE_ORDER` falls to the end, behind "Load more". The homepage's second row
+("A few more I like") is the first three non-featured projects in that order, and previous/next
+links on a project page follow it too.
 
 **`date`** is `"YYYY"` or `"YYYY-MM"` (`/^\d{4}(-\d{2})?$/`) — a sortable string, not a `Date`,
 because half of these projects are only datable to the year. `"2022"` and `"2024-03"` are valid;
@@ -93,8 +101,8 @@ last — that is better than a guess.
 2. `date: null` last;
 3. title ascending as a stable tie-breaker.
 
-Homepage selection still uses `featured`; every ordered project list and previous/next project link
-stays chronological.
+That is the order the content API returns and what the "Date" sort on `/projects` uses. The default
+"Best first" view, the homepage rows and previous/next links use the ranking described above.
 
 **`status`** is a free-text badge — `"In progress"`, `"Archived"`, `"Shipped 2024"`. `null` when the
 project doesn't declare one; don't invent a status to fill the field.
@@ -166,7 +174,8 @@ a divider. Keep ordinary paragraphs in `body`.
 
 **`layout`** — controls the desktop pairing when a section has body copy and exactly one media item.
 `media-left` and `media-right` create a two-column row that stacks on smaller screens. Sections with
-other shapes fall back to `stack`.
+other shapes fall back to `stack`. `wide` puts a single media item in the full 72rem page column
+instead of the 45rem reading column (the cryptogram demo video uses it).
 
 A section may be prose-only, media-only, or both. Sections are the only structure available — there
 are no nested subsections and no rich text. If a project seems to need more, that's a signal to
@@ -208,6 +217,10 @@ from its surroundings, but **every image should have it**, and it should describ
 frame rather than the medium. Compare the legacy site's `"Image 1"` / `"Main Image"` with the real
 entry `"Photo of the cryptogram handout from computer science class, solved twice by hand — the
 author's dad's solution alongside the author's own"`.
+
+**`autoplay`** — videos only, default `false`. When `true` the video plays muted and looped while
+at least half of it is on screen and pauses when it scrolls away. Controls stay on. Visitors who ask
+for reduced motion get a normal click-to-play video.
 
 **`caption`** — visible text rendered under the media. Optional, and genuinely optional: most media
 in the repo has `null`.
@@ -252,12 +265,27 @@ Exactly one of these, for the whole site.
 
 ---
 
+## `Work` — `content/work.json`
+
+The Work page (`/work`): an `intro` line, a list of `jobs` (`role`, `company`, `location`, `dates`
+as free text like `"Summer 2026"`, a first-person `summary`, `highlights`, and `projects`, the slugs
+of published projects that came out of that job), and `education`. `npm run validate` checks it
+against `WorkSchema` and warns about a linked slug that is not published.
+
+## Writing rules (November 2026)
+
+First person, plain words, short. 300 to 600 words per project page; the foosball page is the
+ceiling. No em dashes anywhere in content (`npm run validate` fails on one). No "this page", "the
+author" or "portfolio" in public copy. The cryptogram and foosball body text, headings and captions
+are Michael's own words and are never edited.
+
 ## The data access API
 
 `src/lib/content.ts` is the **only** module in the repo that reads the filesystem for content.
 
 ```ts
 getProfile():            Promise<Profile>
+getWork():               Promise<Work>
 getProjects():           Promise<ResolvedProject[]>          // published only, ordered
 getAllProjects():        Promise<ResolvedProject[]>          // includes unpublished, same order
 getProject(slug):        Promise<ResolvedProject | null>     // published only

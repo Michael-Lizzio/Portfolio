@@ -6,7 +6,7 @@
  *   - `npm run validate`, to check every project  (scripts/validate-content.ts)
  *   - `npm run new:project`, to scaffold one      (scripts/new-project.mjs)
  *
- * If you are an agent adding a project, you do not need to read this file —
+ * If you are an agent adding a project, you do not need to read this file  - 
  * read AGENTS.md, then run `npm run validate` and fix what it tells you.
  */
 import { z } from "zod";
@@ -16,7 +16,7 @@ const MediaPath = z
   .string()
   .regex(
     /^media\/[A-Za-z0-9._-]+\.(webp|jpg|jpeg|png|mp4|webm)$/,
-    'must look like "media/name.webp" — relative to the project folder, no subfolders',
+    'must look like "media/name.webp", relative to the project folder, no subfolders',
   );
 
 export const MediaSchema = z.object({
@@ -27,16 +27,25 @@ export const MediaSchema = z.object({
   /** Required on images for accessibility. Describe what is shown, not "screenshot of app". */
   alt: z.string().min(1).nullable().default(null),
   caption: z.string().nullable().default(null),
+  /**
+   * Videos only. Plays muted and looped while it is on screen and pauses when it
+   * scrolls away. Controls stay available, and reduced-motion users get a
+   * normal click-to-play video instead.
+   */
+  autoplay: z.boolean().default(false),
 });
 
 export const SectionSchema = z.object({
   heading: z.string().min(1).nullable().default(null),
-  /** One string per paragraph. Plain text — no HTML, no markdown. */
+  /** One string per paragraph. Plain text: no HTML, no markdown. */
   body: z.array(z.string().min(1)).default([]),
   /** Optional fixed-width blocks for output, code, and alignment-sensitive text. */
   codeBlocks: z.array(z.string().min(1)).default([]),
-  /** Desktop relationship between a section's prose and its single media item. */
-  layout: z.enum(["stack", "media-left", "media-right"]).default("stack"),
+  /**
+   * Desktop relationship between a section's prose and its media. "wide" puts
+   * the media in the full page column instead of the reading column.
+   */
+  layout: z.enum(["stack", "media-left", "media-right", "wide"]).default("stack"),
   media: z.array(MediaSchema).default([]),
 });
 
@@ -60,7 +69,7 @@ export const ProjectSchema = z.object({
 
   /** false hides the project from the site entirely, without deleting it. */
   published: z.boolean().default(false),
-  /** Promotes the project to the top of the work page and onto the homepage. */
+  /** Puts the project in "Selected work" on the homepage. Ordering lives in src/lib/project-order.ts. */
   featured: z.boolean().default(false),
 
   /** Start date. "YYYY" or "YYYY-MM". null sorts after dated work. */
@@ -74,7 +83,7 @@ export const ProjectSchema = z.object({
 
   /**
    * What it is actually built with. Not file formats it happens to read.
-   * Each entry renders as a pill, so it is a label, not a sentence — put the
+   * Each entry renders as a pill, so it is a label, not a sentence. Put the
    * explanation in a section instead.
    */
   tech: z.array(z.string().min(1).max(40, "a tech entry is a pill label, not a sentence")).default([]),
@@ -121,11 +130,41 @@ export const ProfileSchema = z.object({
   about: z.array(z.string().min(1)).default([]),
 });
 
+/** One job on the Work page. Dates are free text as they read on the resume ("Summer 2026"). */
+export const JobSchema = z.object({
+  role: z.string().min(1),
+  company: z.string().min(1),
+  location: z.string().nullable().default(null),
+  dates: z.string().min(1),
+  /** One or two plain sentences in first person. */
+  summary: z.string().min(1),
+  /** Short points, one string each. */
+  highlights: z.array(z.string().min(1)).default([]),
+  /** Slugs of published projects that came out of this job. */
+  projects: z.array(z.string().min(1)).default([]),
+});
+
+export const EducationSchema = z.object({
+  school: z.string().min(1),
+  degree: z.string().min(1),
+  dates: z.string().min(1),
+  details: z.array(z.string().min(1)).default([]),
+});
+
+/** content/work.json: the work-experience half of the resume. */
+export const WorkSchema = z.object({
+  intro: z.string().min(1),
+  jobs: z.array(JobSchema).default([]),
+  education: z.array(EducationSchema).default([]),
+});
+
 export type Media = z.infer<typeof MediaSchema>;
 export type Section = z.infer<typeof SectionSchema>;
 export type Link = z.infer<typeof LinkSchema>;
 export type Project = z.infer<typeof ProjectSchema>;
 export type Profile = z.infer<typeof ProfileSchema>;
+export type Job = z.infer<typeof JobSchema>;
+export type Work = z.infer<typeof WorkSchema>;
 
 /** Intrinsic image dimensions are read from the media file during content loading. */
 export type ResolvedMedia = Media & {

@@ -1,0 +1,125 @@
+{
+  "slug": "burrow",
+  "title": "Burrow",
+  "tagline": "An iPhone habit time tracker: tap an activity and your time starts",
+  "summary": "Burrow is an iPhone app for making steady time for the things you care about, like reading, studying or side projects. You tap an activity's name to start a timer, answer a few questions you wrote yourself when you finish, and Marko the marmot cheers you on. It's been on the App Store since October 2026.",
+  "published": true,
+  "featured": true,
+  "date": "2026-09",
+  "endDate": "present",
+  "status": "On the App Store",
+  "development": null,
+  "tech": [
+    "Swift",
+    "SwiftUI",
+    "SQLite (GRDB)",
+    "WidgetKit",
+    "Live Activities",
+    "RevenueCat"
+  ],
+  "links": [
+    {
+      "label": "App Store",
+      "href": "https://apps.apple.com/us/app/id6820322494"
+    },
+    {
+      "label": "helloburrow.com",
+      "href": "https://helloburrow.com"
+    }
+  ],
+  "hero": {
+    "src": "media/burrow_cover.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "Burrow banner with Marko the marmot waving in a mountain meadow beside an iPhone running a Deep work timer at 42:18, under the line Make time for what matters.",
+    "caption": null,
+    "autoplay": false
+  },
+  "sections": [
+    {
+      "heading": "Why I built it",
+      "body": [
+        "At college I wanted real time for my projects and for reading every week, and I kept losing track of it. I'd feel like I was putting in the hours and then not actually know. A checkbox that says \"read today\" doesn't tell you if it was five minutes or two hours.",
+        "So I wanted something where starting a timer is one tap, and where I could look back and see where my time really went."
+      ],
+      "media": [
+        {
+          "src": "media/burrow_timer.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Burrow home screen with a Deep work timer at 42:18, weekly progress toward a goal, and Reading and Guitar below it, while Marko explains that one tap starts the timer",
+          "caption": "Tap a name and your time starts.",
+          "autoplay": false
+        }
+      ],
+      "layout": "media-right"
+    },
+    {
+      "heading": "How it works",
+      "body": [
+        "You tap an activity's name and the timer starts. It also shows up on the Lock Screen and in the Dynamic Island, so you can pause or finish without opening the app. Each activity can have a goal for the day, week or month.",
+        "When you finish, Burrow asks a few questions you wrote yourself, like how focused you were or how many pages you read. You can skip them, but they're what turns a pile of minutes into something useful later, like seeing which sessions actually go well."
+      ],
+      "media": [
+        {
+          "src": "media/burrow_reflect.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Burrow reflection screen asking How focused were you? with a 1 to 5 scale, plus cards for pages read and mood",
+          "caption": "Questions you write yourself, after each session.",
+          "autoplay": false
+        },
+        {
+          "src": "media/burrow_lock_screen.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Burrow timer running on the iPhone Lock Screen and in the Dynamic Island",
+          "caption": "The timer on the Lock Screen.",
+          "autoplay": false
+        }
+      ]
+    },
+    {
+      "heading": "Nudges, but only if you forget",
+      "body": [
+        "Burrow learns when you usually start each activity. If you usually read around 9 and it's 9:10 and you haven't started, you get one nudge. If you already started, it stays quiet. I didn't want another app that buzzes at you all day."
+      ],
+      "media": [
+        {
+          "src": "media/burrow_nudge.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Burrow notification saying You usually read about now on weekdays, above a list of the start times Burrow has learned for each activity",
+          "caption": "Forgot to start? Marko noticed.",
+          "autoplay": false
+        }
+      ],
+      "layout": "media-left"
+    },
+    {
+      "heading": "Marko",
+      "body": [
+        "Marko is an alpine marmot, and he's a big part of why the app doesn't feel like a spreadsheet. Sessions earn gems, and gems buy him outfits. Streaks have forgiving freezes too, because missing one day shouldn't wipe out a whole month."
+      ],
+      "media": []
+    },
+    {
+      "heading": "How I built it",
+      "body": [
+        "Burrow is written in Swift and SwiftUI. Your data is stored on your phone in a SQLite database, with an optional backup to your own iCloud Drive, and there's no account. It used to be called DayMarko, and the code still says that everywhere.",
+        "The free version covers three activities, and Burrow Pro unlocks everything else for $4.99 a month or $29.49 a year. It went live in October 2026, and now the hard part is getting people to find it."
+      ],
+      "media": [
+        {
+          "src": "media/burrow_insights.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Burrow session detail with times, reflection answers and photos, next to Insights cards and a Focus over time chart",
+          "caption": "Your answers turn into insights over time.",
+          "autoplay": false
+        }
+      ]
+    }
+  ],
+  "notes": "Added in the November 2026 refresh. Facts from Business/SocialDiffusion/config/facts/burrow.yaml (2026-11-04/05) and startups/DayMarko-v2-rc/HANDOFF.md (2026-10-28): live since 2026-10-19, App Store id 6820322494, Pro $4.99/month or $29.49/year, free for 3 active activities, no account, no free trial. Origin (college: real time for projects and reading every week) is from HANDOFF section 1. The TooAvid site still says TestFlight; stale. Never say: automatic tracking, a free trial, a task manager. Media from TooAvid/public/assets/burrow. development is null until Michael classifies it. Date 2026-09 is the DayMarko repo's first commit; confirm with Michael."
+}

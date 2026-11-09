@@ -9,23 +9,35 @@
   "endDate": "2024-07",
   "status": "Archived",
   "development": null,
-  "tech": ["Python", "Selenium", "Beautiful Soup", "Virtual audio cable", "PyAudio"],
+  "tech": [
+    "Python",
+    "Selenium",
+    "Beautiful Soup",
+    "Virtual audio cable",
+    "PyAudio"
+  ],
   "links": [],
   "hero": null,
   "sections": [
     {
       "heading": "The first version",
-      "body": ["My first approach used Duolingo stories. I ran several browser sessions at once, completing multiple stories every thirty seconds and stacking up XP until Duolingo stopped awarding it."],
+      "body": [
+        "My first approach used Duolingo stories. I ran several browser sessions at once, completing multiple stories every thirty seconds and stacking up XP until Duolingo stopped awarding it."
+      ],
       "media": []
     },
     {
       "heading": "The audio trick",
-      "body": ["For speaking practice, Duolingo first played the phrase it wanted me to repeat. My bot recorded that audio, trimmed the silence, and sent the exact same phrase back through a virtual microphone. That version helped me rack up thousands of XP and win the Diamond League."],
+      "body": [
+        "For speaking practice, Duolingo first played the phrase it wanted me to repeat. My bot recorded that audio, trimmed the silence, and sent the exact same phrase back through a virtual microphone. That version helped me rack up thousands of XP and win the Diamond League."
+      ],
       "media": []
     },
     {
       "heading": "What happened next",
-      "body": ["I retired the bot because I actually use Duolingo to learn now, but I am still keeping the streak alive. This page will be much funnier once the old screen recordings, leaderboard screenshots, and current streak screenshot are added."],
+      "body": [
+        "I retired the bot because I actually use Duolingo to learn now, but I'm still keeping the streak alive."
+      ],
       "media": []
     }
   ],

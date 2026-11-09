@@ -43,7 +43,7 @@ Media paths inside `project.json` are relative (`"media/cover.webp"`) and get re
 - `published` defaults to `false`. Agents leave it `false`. **You** flip it to `true` when a page is
   good enough to be on the live site. Everything else is staged in the repo, invisible, costing
   nothing.
-- `featured` promotes a project to the top of `/work` and onto the homepage. Also yours.
+- `featured` puts a project in "Selected work" on the homepage. Also yours. The order on `/projects`, and where "Load more" starts, live in `src/lib/project-order.ts`.
 
 Flipping either is a one-line edit — `content/projects/<slug>/project.json` — and can go straight to
 `main`.

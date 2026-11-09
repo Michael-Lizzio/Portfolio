@@ -1,0 +1,109 @@
+{
+  "slug": "engine-miles",
+  "title": "Engine Miles",
+  "tagline": "An iPhone app that estimates how far a hybrid's gas engine has actually gone",
+  "summary": "Engine Miles is an iPhone app for hybrid and plug-in hybrid owners. You log your fill-ups, and it estimates how many miles the gas engine has run, so you can track oil changes by engine miles instead of the odometer. It's been on the App Store since October 2026.",
+  "published": true,
+  "featured": true,
+  "date": "2026-09",
+  "endDate": "present",
+  "status": "On the App Store",
+  "development": null,
+  "tech": [
+    "Swift",
+    "SwiftUI",
+    "SwiftData",
+    "WidgetKit",
+    "Swift Charts",
+    "RevenueCat"
+  ],
+  "links": [
+    {
+      "label": "App Store",
+      "href": "https://apps.apple.com/us/app/id6819898617"
+    },
+    {
+      "label": "enginemiles.com",
+      "href": "https://enginemiles.com"
+    }
+  ],
+  "hero": {
+    "src": "media/engine_miles_cover.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "Engine Miles banner with the app icon, the line Your hybrid journey. A clearer story., and an iPhone showing an estimated 5,925 engine miles and an oil change countdown",
+    "caption": null,
+    "autoplay": false
+  },
+  "sections": [
+    {
+      "heading": "Why I built it",
+      "body": [
+        "My dad bought a 2022 RAV4 Prime, which is a plug-in hybrid. Since the day he got it, he's kept a paper logbook to work out how many of his miles were electric and how many were on the gas engine, because the car doesn't really tell you. The odometer counts every mile, but a lot of those miles never touch the engine, and that matters for things like oil changes.",
+        "So I wanted to turn his notebook into an app. Something quick enough to use at the pump, that does the math for you."
+      ],
+      "media": [
+        {
+          "src": "media/engine_miles_home.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Engine Miles home screen showing an estimated 5,925 engine miles, an oil change due in about 1,901 engine miles, the last fill-up and the odometer",
+          "caption": "The home screen, with example data.",
+          "autoplay": false
+        }
+      ],
+      "layout": "media-right"
+    },
+    {
+      "heading": "How it works",
+      "body": [
+        "Every time you fill up, you type in the gallons, and the app multiplies them by your car's gas-only MPG. That's an estimate of how far the engine went on that tank, and adding up the tanks gives you engine miles. It's an estimate, not a reading from the car. There's no car connection at all, and your owner's manual still has the final say on maintenance.",
+        "The oil change tracker counts down on those engine miles instead of the odometer. Once a month the app also asks you for an odometer check-in, which keeps the estimate on track."
+      ],
+      "media": [
+        {
+          "src": "media/engine_miles_oil.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Engine Miles oil change screen with 1,901 estimated engine miles to go, a goal of 5,000 miles or 12 months, and a history of past oil changes",
+          "caption": "The oil change countdown.",
+          "autoplay": false
+        }
+      ],
+      "layout": "media-left"
+    },
+    {
+      "heading": "Building it with my dad",
+      "body": [
+        "I built it in Swift and SwiftUI, and everything stays on your phone. There's no account and no server, so your log never leaves your iPhone. The free version covers one car, unlimited fill-ups, the estimate, the oil countdown and the monthly check-in. Pro adds insights, reminders and more cars for $1.99 a month, $9.99 a year or $29.99 once.",
+        "My dad tested every build on TestFlight before it went out, and he's a great tester because he says exactly what he thinks. One screen used to say \"whole car\", and he asked what that was even supposed to mean, so now it says \"car's lifetime\"."
+      ],
+      "media": [
+        {
+          "src": "media/engine_miles_log.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Engine Miles log screen listing fill-ups by month, each with gallons and the estimated engine miles it added",
+          "caption": "Every fill-up, by month.",
+          "autoplay": false
+        },
+        {
+          "src": "media/engine_miles_insights.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Engine Miles Insights screen with a year recap, fuel bought by month and an estimated electric share by tank",
+          "caption": "Insights, part of Pro.",
+          "autoplay": false
+        }
+      ]
+    },
+    {
+      "heading": "Where it's at",
+      "body": [
+        "Engine Miles went live on the App Store in October 2026. It's still early, so right now I'm mostly working on getting it in front of more hybrid owners. There's a lot more I want to add, and my dad keeps finding things for the list."
+      ],
+      "media": []
+    }
+  ],
+  "notes": "Added in the November 2026 refresh. Facts from Business/SocialDiffusion/config/facts/engine_miles.yaml (checked 2026-11-04/05) and EngineMiles/HANDOFF.md (2026-10-31): live since Oct 2026 (1.2 since 2026-10-25), App Store id 6819898617, Pro $1.99/$9.99/$29.99. The TooAvid site still says private beta and $2.99/$19.99/$59.99; that site is stale. Origin story (dad's 2022 RAV4 Prime paper logbook) is from the EngineMiles press drafts in docs/marketing. 'Whole car' anecdote is D-136 in docs/DECISIONS.md. Never say: connects to the car, exact measurement, safe to stretch oil changes. Hero is the TooAvid og.png with its 'Android coming soon' line painted out (not in the checked facts). development is null until Michael classifies it. Date 2026-09 is the repo's first commit."
+}

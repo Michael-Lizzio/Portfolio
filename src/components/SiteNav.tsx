@@ -12,11 +12,12 @@ import { NavLinks, type NavItem } from "./NavLinks";
  * generated from the content, so a new project folder is reachable the moment
  * it is published.
  *
- * Rendered on the server as part of the layout — never fetched at runtime,
+ * Rendered on the server as part of the layout - never fetched at runtime,
  * so it cannot flash unstyled the way the injected navbar did.
  */
 const ITEMS: NavItem[] = [
   { href: "/", label: "Home" },
+  { href: "/projects", label: "Projects" },
   { href: "/work", label: "Work" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },

@@ -1,100 +1,63 @@
 {
   "slug": "agentic-report-generator",
   "title": "Agentic Report Generator",
-  "tagline": "An experiment in letting a local AI research data and build its own reports",
-  "summary": "I experimented with a local AI system that could take a question, research a complex operational database, create charts and maps, and write a report from what it found. I built the research tools, agent workflow, visualizations, streaming interface, and safeguards around database access. The prototype proved that the workflow was possible, but the available local models forced a tradeoff between useful reasoning and acceptable response time, so it never became reliable enough for production.",
+  "tagline": "An experiment in letting a local AI research a database and write its own reports",
+  "summary": "At my 2026 internship I tried building an AI that could take a question, dig through a big database on its own, make charts and maps, and write up a report. It worked, but the small models we could run locally weren't smart enough to do it reliably, so it stayed an experiment.",
   "published": true,
   "featured": false,
   "date": "2026-06",
   "endDate": "2026-07",
-  "status": "Experimental internship prototype",
+  "status": "Internship experiment",
   "development": null,
   "tech": [
     "Python",
     "FastAPI",
     "TypeScript",
-    "Fastify",
     "PostgreSQL",
     "Ollama",
-    "Local language models",
     "Matplotlib",
     "Mapbox GL JS",
-    "Server-Sent Events",
-    "Text embeddings"
+    "Server-Sent Events"
   ],
   "links": [],
   "hero": null,
   "sections": [
     {
-      "heading": "The experiment",
+      "heading": "The idea",
       "body": [
-        "The idea was to give users a ChatGPT-style interface connected to the same operational data they already worked with. Instead of choosing tables, writing SQL, exporting results, and assembling a report by hand, someone could ask a question in plain English and let the system work through those steps.",
-        "Users could choose from the local models installed on the workstation. Simple questions could return a short answer, while an explicit report request started a longer workflow that planned the research, gathered evidence, created visualizations, and composed a document."
+        "Instead of picking tables, writing SQL, exporting results and building a report by hand, you'd just ask a question in plain English. Simple questions got a short answer, and asking for a report started a longer process."
       ],
-      "codeBlocks": [],
       "media": []
     },
     {
-      "heading": "A report built in stages",
+      "heading": "How it worked",
       "body": [
-        "I split the work into stages because asking one model call to understand the question, research the database, calculate results, and write a polished report was too much. The planning stage produced a title, research questions, and section outline. A research loop then chose tools and kept working until it had enough findings. Finally, the writing stage composed each section from the saved evidence rather than relying on the model's memory of earlier tool calls."
+        "I split it into steps, because one AI call couldn't do everything at once. First it planned the report and the questions to answer. Then it researched: it looked up the tables it needed, ran read-only queries, and saved each result as a finding. Last, it wrote each section from those saved findings, so the report was based on real numbers instead of whatever the model remembered."
       ],
+      "media": [],
       "codeBlocks": [
         "QUESTION\n   ↓\nUNDERSTAND  →  research plan + report outline\n   ↓\nRESEARCH    →  schema search → read-only SQL → saved findings\n   ↓                              ↘ charts + maps\nCOMPOSE     →  one grounded section at a time\n   ↓\nREPORT"
+      ]
+    },
+    {
+      "heading": "Charts and maps",
+      "body": [
+        "The AI could ask for charts and maps, but it never wrote plotting code. It just described what it wanted and the server drew it. Maps could show heat maps, points or clusters of signals."
       ],
       "media": []
     },
     {
-      "heading": "Letting the model research",
+      "heading": "Keeping it safe",
       "body": [
-        "The model could inspect relevant schema descriptions, sample rows, check distinct values, and run its own SELECT queries. I added embedding-based schema retrieval so it received the tables related to the question instead of the entire database definition. This helped preserve the limited context window for the actual research and writing.",
-        "Every successful query became a saved finding with its purpose, SQL, and result. The final report was grounded in that finding log, and large query results could be handed directly to visualization tools on the server without filling the model's context with thousands of values."
+        "The AI could write its own queries, but only ones that read data, with a row limit and a timeout, on a read-only database connection. So even a bad query couldn't change anything."
       ],
-      "codeBlocks": [],
       "media": []
     },
     {
-      "heading": "Charts and maps as tools",
+      "heading": "Why it stayed an experiment",
       "body": [
-        "I created chart tools for bar, line, pie, scatter, grouped, stacked, and histogram views. The model supplied a constrained data specification, and the server rendered the image with Matplotlib. The model never generated or executed plotting code, which made the feature more predictable and much safer.",
-        "For geographic questions, the model could run a read-only query and turn the result into GeoJSON for an interactive map. The tool supported heat maps, points, clusters, and categories, automatically connected signal identifiers with coordinates when needed, and created a static snapshot that could be embedded in a report."
+        "Small models were fast but stopped researching too early or wrote shallow reports. Bigger ones did better but were way too slow on the computer I had. I added retries, better prompts and tests, but that can't make a model smarter than it is. It was still worth doing, because it taught me how to tell when the problem is my code and when it's the model."
       ],
-      "codeBlocks": [],
-      "media": []
-    },
-    {
-      "heading": "Making long runs survivable",
-      "body": [
-        "Report generation could take several minutes, so I made each run an independent background task rather than tying it to one browser request. Progress, model output, tool calls, and errors streamed through Server-Sent Events. If the browser disconnected, the work continued and the interface could reconnect and replay what it missed.",
-        "Conversations, reports, charts, maps, and research findings were saved to disk. I also experimented with conversation compaction so longer chats could be summarized before they overflowed the model's context window."
-      ],
-      "codeBlocks": [],
-      "media": []
-    },
-    {
-      "heading": "Keeping database access contained",
-      "body": [
-        "The research agent was allowed to write flexible SQL, but it was not allowed to write to the database. Queries were checked to allow only a single SELECT or WITH statement, capped to a reasonable number of rows, and executed through PostgreSQL sessions configured as read-only with statement timeouts. The database itself was the final enforcement layer.",
-        "Chart and map tools reused the same protected query path. Their inputs were validated specifications rather than arbitrary code, so adding a visual did not create a second route around the database or execution safeguards."
-      ],
-      "codeBlocks": [],
-      "media": []
-    },
-    {
-      "heading": "Where the prototype fell short",
-      "body": [
-        "The limiting factor was the local model. Smaller models fit the available hardware and responded quickly, but they often stopped their research too early, wrote shallow analysis, or mishandled a complicated sequence of tool calls. Larger models were noticeably better, but took too long for an interactive application on the workstation I had.",
-        "I added routing, retries, context controls, SQL repair, automated tests, and evaluation scripts, but those systems could not create reasoning ability that the model did not have. The final prototype demonstrated the architecture and produced working reports, charts, and maps, but it never reached the consistency I would require before giving it to users."
-      ],
-      "codeBlocks": [],
-      "media": []
-    },
-    {
-      "heading": "What I learned",
-      "body": [
-        "This was useful precisely because it did not turn into a polished production feature. I learned how to break an open-ended task into agents and tools, preserve state across a long-running workflow, ground writing in recorded evidence, and design execution boundaries around generated SQL. I also learned to recognize when better orchestration could help and when the underlying model was simply the bottleneck."
-      ],
-      "codeBlocks": [],
       "media": []
     }
   ],

@@ -12,7 +12,7 @@ const MAX_PILLS = 4;
 const HERO_SIZES = "(min-width: 64rem) 22rem, (min-width: 48rem) 45vw, 100vw";
 
 /**
- * The one card. Every project on every page uses it — which is the structural
+ * The one card. Every project on every page uses it - which is the structural
  * answer to the legacy site's three different card styles for the same idea,
  * and to the homepage rule (`.project-card p { display: none }`) that made the
  * tagline unrenderable.
@@ -36,7 +36,7 @@ export function ProjectCard({ project }: { project: ResolvedProject }) {
   return (
     <article className="h-full">
       <Link
-        href={`/work/${project.slug}`}
+        href={`/projects/${project.slug}`}
         className="group flex h-full flex-col overflow-hidden rounded-md border border-border-default bg-surface shadow-card hover:border-border-strong hover:shadow-raised motion-safe:transition motion-safe:hover:-translate-y-0.5"
       >
         {cover ? (
@@ -54,7 +54,7 @@ export function ProjectCard({ project }: { project: ResolvedProject }) {
              image or a stock placeholder, the card states the route it leads to. */
           <div className="flex aspect-video w-full flex-col items-center justify-center gap-3 border-b border-border-default bg-bg-subtle">
             <span aria-hidden="true" className="h-px w-10 bg-border-strong" />
-            <span className="font-mono text-xs text-fg-faint">/work/{project.slug}</span>
+            <span className="font-mono text-xs text-fg-faint">/projects/{project.slug}</span>
           </div>
         )}
 

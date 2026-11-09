@@ -1,8 +1,8 @@
 {
   "slug": "rit-dining-notifications",
   "title": "RIT Dining Notifications",
-  "tagline": "A Telegram budget assistant built around my real RIT dining balance",
-  "summary": "I built this project to turn RIT's transaction history into a budget I could actually use every day. A Python host opened TigerSpend through Selenium, parsed new Dining Dollars purchases with Beautiful Soup, kept a local JSON ledger, and used a Telegram bot as the interface. Along with purchase alerts, it calculated daily and weekly spending targets from the remaining balance and time left in the semester.",
+  "tagline": "A Telegram bot that told me how much I could spend on food each day at RIT",
+  "summary": "RIT gives you Dining Dollars for the whole semester, but the balance doesn't tell you how much you can actually spend today. So I built a Telegram bot that logged into my account, grabbed my new purchases, and told me my daily and weekly budget.",
   "published": true,
   "featured": false,
   "date": "2024-08",
@@ -27,89 +27,63 @@
     "kind": "image",
     "poster": null,
     "alt": "RIT Dining Notifications cover showing a TigerSpend transaction panel flowing through scrape, save, budget and notify steps to phone alerts",
-    "caption": "The project turned TigerSpend purchases into a saved ledger, a recalculated spending budget, and Telegram updates."
+    "caption": "New purchases go in, a daily budget comes out on my phone."
   },
   "sections": [
     {
       "heading": "Why I built it",
       "body": [
-        "Dining Dollars are loaded for a whole semester, but a balance by itself does not answer the question I cared about: how much can I safely spend today? I wanted the answer to update as I used the account, without repeatedly copying purchases into a spreadsheet.",
-        "The assistant turned the latest balance and the semester end date into daily and weekly allowances. Spending less than the target left more money available for later; spending more reduced the next recommendation. That made the budget respond to real purchases instead of relying on a fixed estimate from the first week of class."
+        "I wanted a number that changed as I spent. If I spent less than my target one day, I'd have a little more for the rest of the week, and if I went over, the next day's budget would go down. I didn't want to copy every purchase into a spreadsheet to get that."
       ],
       "media": []
     },
     {
-      "heading": "One command, the complete pipeline",
+      "heading": "How it worked",
       "body": [
-        "Telegram was both the remote control and the output. After a one-time connection-code handshake, /refresh asked the Python host for fresh data. The host opened a new Selenium browser, passed through the RIT and Duo sign-in flow, selected the dining account, loaded its statement, and handed the resulting HTML to Beautiful Soup.",
-        "The parser normalized each row into a timestamp, merchant description, amount, and remaining balance. It compared those rows with the local ledger, saved only transactions it had not seen before, and returned the additions to the bot. The bot then sent one purchase message per new row, followed by the recalculated budget; when there was nothing new, it said so instead of repeating old alerts."
+        "I'd send /refresh to the bot. My Python program then opened a browser with Selenium, logged into RIT (I still had to approve the Duo prompt on my phone), opened my dining statement, and read the new purchases with Beautiful Soup.",
+        "It saved them to a small JSON file so it never sent the same alert twice, then messaged me each new purchase and my updated budget. /checkfunds just did the math from the saved file without logging in again."
       ],
-      "codeBlocks": [
-        "Telegram /refresh\n        ↓\nPython host → Selenium → RIT + Duo → TigerSpend statement\n                                      ↓\nTelegram alerts ← budget math ← JSON ledger ← Beautiful Soup"
-      ],
-      "layout": "stack",
-      "media": []
-    },
-    {
-      "heading": "Scraping the statement",
-      "body": [
-        "The scraper used browser automation for the parts that needed a real session, then parsed the completed statement page rather than driving every table cell through Selenium. This split kept authentication and navigation in the browser while making transaction extraction easier to reason about in Python.",
-        "I revisited the live site in September 2026 and ran the statement workflow again. TigerSpend now labels the account as Dining Dollars (Rollover), uses a different account identifier, and formats some dates differently from the version the project expected. The recording shows the real request completing and returning current transaction descriptions; personal details, balances, and amounts have been removed from the public capture."
-      ],
-      "layout": "media-right",
-      "media": [
-        {
-          "src": "media/tigerspend_refresh.mp4",
-          "kind": "video",
-          "poster": "media/tigerspend_refresh.poster.webp",
-          "alt": "Screen recording of TigerSpend loading a six-month Dining Dollars statement and displaying transaction descriptions",
-          "caption": "A live, privacy-safe rerun of the core statement-loading step. The pause is TigerSpend fetching the six-month transaction history."
-        }
-      ]
-    },
-    {
-      "heading": "A small local ledger",
-      "body": [
-        "I stored the known transaction rows in rit_statements.json, keyed by their timestamps. That file was deliberately simple: it gave the scraper something persistent to compare against, prevented duplicate Telegram messages between refreshes, and let /checkfunds calculate a budget without logging into TigerSpend again.",
-        "The budget routine read the most recent balance, counted the days and weeks remaining, and then subtracted spending already recorded for the current day and week. This was a lightweight solution for one user on one computer, not a general database, but it was enough to connect a live account history to a useful day-to-day decision."
-      ],
-      "layout": "media-left",
-      "media": [
-        {
-          "src": "media/tigerspend_transactions.webp",
-          "kind": "image",
-          "poster": null,
-          "alt": "TigerSpend statement showing transaction dates and dining-location descriptions with financial details excluded",
-          "caption": "The transaction table that the parser turned into JSON records. Identifying information, balances, and purchase amounts are intentionally outside the capture or redacted."
-        }
-      ]
-    },
-    {
-      "heading": "Telegram was the interface",
-      "body": [
-        "Instead of building another dashboard, I used a Telegram bot so the system was already available on my phone. /checkfunds reported the current daily and weekly amounts from the saved ledger, while /refresh performed the slower live scrape after a purchase. The bot also implemented /start, /status, /disconnect, and /help around a small in-memory connection state.",
-        "The integration was intentionally direct: the program called Telegram's getUpdates and sendMessage endpoints itself with the Requests library. Building that loop made the full path visible, from a command arriving, to Python calling the scraper, to a formatted notification returning to the same chat.",
-        "This original phone recording shows the bot in use in August 2024. I connect to it, open the command list, check the saved budget, and run /refresh. The bot asks me to approve the RIT Duo login, reports each step while the scraper works, and finishes by saying that it found no new transactions."
-      ],
-      "layout": "media-right",
       "media": [
         {
           "src": "media/telegram_bot_demo_password_blurred_loop.webp",
           "kind": "image",
           "poster": null,
           "alt": "Looping animation of the RIT Notifications Telegram bot showing my name, dining balance, help, budget-check, refresh and Duo-login steps",
-          "caption": "The Telegram side of the project, recorded in August 2024. My name and historical fund amounts remain visible; only the old four-digit connection password is blurred."
+          "caption": "The bot in August 2024. Only the old connection password is blurred."
         }
-      ]
+      ],
+      "layout": "media-right"
     },
     {
-      "heading": "What the 2026 rerun revealed",
+      "heading": "Talking to Telegram",
       "body": [
-        "The project captured the workflow well, but it also showed why web scrapers need maintenance. The original code depended on a hard-coded account option, specific links and date formats, a fixed semester end date, and credentials stored in source configuration. Changes to the live site were enough to break those assumptions even though the overall journey still existed.",
-        "For the rerun, I tested compatibility changes in an isolated copy: account selection now follows the live statement link, configuration can come from environment variables, and the date parser accepts both the older and current formats. The Python files compile and the revised date cases pass, but I did not treat that test copy as a production rewrite or send messages from the bot.",
-        "If I rebuilt it today, I would keep credentials and semester settings outside the code, persist bot authorization instead of keeping it only in memory, reuse a browser session, and add focused parser tests around saved HTML. The original version was still valuable because it joined browser automation, HTML parsing, state, budgeting logic, and a real messaging API into one system built for a problem I actually had."
+        "I talked to Telegram's API directly instead of using a library, which made it really clear how a message gets from my phone to my code and back."
       ],
-      "media": []
+      "media": [
+        {
+          "src": "media/tigerspend_transactions.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "TigerSpend statement showing transaction dates and dining-location descriptions with financial details excluded",
+          "caption": "The statement the bot read from, with personal details and amounts cut out."
+        }
+      ],
+      "layout": "media-left"
+    },
+    {
+      "heading": "Scrapers break",
+      "body": [
+        "The RIT site has changed since 2024, enough to break a few of the things my code expected, like how dates are written. That's the problem with scrapers: the website changes and your code doesn't. If I rebuilt it, I'd keep my login settings out of the code and add tests with saved pages, so I'd know right away when something breaks."
+      ],
+      "media": [
+        {
+          "src": "media/tigerspend_refresh.mp4",
+          "kind": "video",
+          "poster": "media/tigerspend_refresh.poster.webp",
+          "alt": "Screen recording of TigerSpend loading a six-month Dining Dollars statement and displaying transaction descriptions",
+          "caption": "Loading the dining statement, with personal details removed."
+        }
+      ]
     }
   ],
   "notes": "DATE: 2024-08 is inferred from the first project's Git history (August 24-25, 2024). The currently linked replacement repository begins September 17, 2024; its commit history explains that it replaced an earlier repository after credentials were accidentally committed. SOURCE: inspected the replacement repository and an isolated local worktree. Verified the Selenium/Beautiful Soup statement scraper, JSON transaction storage, Telegram getUpdates/sendMessage calls, connection-code flow, /start, /disconnect, /help, /status, /checkfunds and /refresh commands, plus daily and weekly budget calculations. LIVE VERIFICATION: on September 16, 2026, authenticated to the current TigerSpend site in the user's normal browser, selected Dining Dollars (Rollover), requested a six-month statement, and observed 22 transaction rows. The included TigerSpend recording is that real workflow, cropped and redacted to exclude the user's name, account identifier, balances, amounts, session URL, browser chrome and unrelated desktop content. The original program was not run end-to-end because its separate Selenium session could not reuse the authenticated session and the historical stored login no longer authenticated; no Telegram messages were sent. A compatibility test copy accepted current account links and date formats; Python compilation and focused date parsing tests passed, but those source changes are not represented as shipped project code. TELEGRAM MEDIA: RPReplay_Final1724599957.MP4 was recorded on August 25, 2024 and supplied by the user from Downloads. Reviewed the full 76.7-second recording and retained a concise 14-second sequence showing /start, /help, /checkfunds, /refresh, the Duo prompt, scraper progress, and statement navigation. Audio was removed because it did not convey project information. The page uses that sequence as a silent looping animated WebP, so it starts without requiring the visitor to press play. At the user's direction, his displayed name, historical dining balance, and daily and weekly figures remain visible; only the old four-digit connection password is blurred. SECURITY: secret.py and token values were never copied into this portfolio. The configured bot identity was verified through Telegram getMe without sending a message. DEVELOPMENT: left null pending the user's classification."

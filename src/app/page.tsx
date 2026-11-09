@@ -3,50 +3,30 @@ import Link from "next/link";
 
 import { Container } from "@/components/Container";
 import { ProjectCard } from "@/components/ProjectCard";
-import { getProfile, getProjects } from "@/lib/content";
+import { getProfile, getProjects, getWork } from "@/lib/content";
 import { compareProjectsByRelevance } from "@/lib/project-order";
-import type { Profile } from "@/lib/schema";
 
 /**
  * Home.
  *
- * The legacy homepage was the whole site: a hero whose bio vanished on hover,
- * a landscape-mode warning, and a "My Top Projects" grid fed by a JSON file
- * that listed two of the nine projects. Two of nine was the site's real bug —
- * there was no route to the other seven from anywhere.
- *
- * So this page does one job: say who he is in a screen, then hand you off to
- * the work. Every project lives at /work, which is generated from the content
- * rather than hand-listed, so nothing can fall out of it again.
+ * Says who I am in one screen, shows the three apps, a few more projects, and
+ * where I've worked, then hands off to /projects and /work. Which projects show
+ * up here is decided by `featured` (Selected work) and by the ranking in
+ * src/lib/project-order.ts (the row after it).
  */
 
-/** How many projects the grid falls back to when nothing is flagged featured. */
-const FALLBACK_COUNT = 3;
-
-/**
- * `profile.bio` is currently the string "Michael Lizzio" — the name again,
- * which is the legacy `projects.json` habit of leaving a field filled but
- * empty of content. Printing the name twice under itself would look like a
- * bug, so when the bio says nothing the first `about` paragraph stands in.
- * Fix the field in content/profile.json and this page picks it up untouched.
- */
-function heroBlurb(profile: Profile): string | null {
-  const bio = profile.bio.trim();
-  if (bio.length > 0 && bio.toLowerCase() !== profile.name.trim().toLowerCase()) {
-    return bio;
-  }
-  return profile.about[0] ?? null;
-}
+/** How many projects the second row shows. */
+const MORE_COUNT = 3;
 
 export default async function HomePage() {
-  const [profile, projects] = await Promise.all([getProfile(), getProjects()]);
+  const [profile, projects, work] = await Promise.all([getProfile(), getProjects(), getWork()]);
 
   const relevantProjects = [...projects].sort(compareProjectsByRelevance);
   const featured = relevantProjects.filter((project) => project.featured);
-  const highlights = (featured.length > 0 ? featured : relevantProjects).slice(0, FALLBACK_COUNT);
+  const more = relevantProjects.filter((project) => !project.featured).slice(0, MORE_COUNT);
 
   const github = profile.links.find((link) => link.label.toLowerCase() === "github") ?? null;
-  const blurb = heroBlurb(profile);
+  const blurb = profile.bio.trim();
 
   return (
     <>
@@ -113,32 +93,76 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      <section className="py-16 md:py-24">
-        <Container>
-          <h2 className="text-3xl font-semibold tracking-tight text-fg">Selected work</h2>
-          <p className="mt-4 max-w-prose text-lg text-fg-muted">
-            The ones I’d show you first, with the story and artifacts behind each build.
-          </p>
+      {featured.length > 0 ? (
+        <section className="pt-16 md:pt-24">
+          <Container>
+            <h2 className="text-3xl font-semibold tracking-tight text-fg">Selected work</h2>
+            <p className="mt-4 max-w-prose text-lg text-fg-muted">
+              The three apps I&apos;m building right now. Two are on the App Store and one is in a
+              private beta.
+            </p>
 
-          {highlights.length > 0 ? (
             <ul className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {highlights.map((project) => (
+              {featured.map((project) => (
                 <li key={project.slug}>
                   <ProjectCard project={project} />
                 </li>
               ))}
             </ul>
-          ) : null}
+          </Container>
+        </section>
+      ) : null}
 
-          {projects.length > 0 ? (
+      {more.length > 0 ? (
+        <section className="pt-16 md:pt-24">
+          <Container>
+            <h2 className="text-2xl font-semibold tracking-tight text-fg">A few more I like</h2>
+
+            <ul className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {more.map((project) => (
+                <li key={project.slug}>
+                  <ProjectCard project={project} />
+                </li>
+              ))}
+            </ul>
+
             <div className="mt-10">
-              <Link className="btn btn-outline" href="/work">
+              <Link className="btn btn-outline" href="/projects">
                 All {projects.length} {projects.length === 1 ? "project" : "projects"}
               </Link>
             </div>
-          ) : null}
-        </Container>
-      </section>
+          </Container>
+        </section>
+      ) : null}
+
+      {work.jobs.length > 0 ? (
+        <section className="py-16 md:py-24">
+          <Container>
+            <h2 className="text-2xl font-semibold tracking-tight text-fg">Where I&apos;ve worked</h2>
+
+            <ul className="mt-8 border-t border-border-default">
+              {work.jobs.map((job) => (
+                <li
+                  key={`${job.company}-${job.dates}`}
+                  className="flex flex-col gap-1 border-b border-border-default py-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
+                >
+                  <span className="text-fg">
+                    {job.role}
+                    <span className="text-fg-muted">, {job.company}</span>
+                  </span>
+                  <span className="shrink-0 font-mono text-xs text-fg-faint">{job.dates}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-10">
+              <Link className="btn btn-outline" href="/work">
+                More about my work
+              </Link>
+            </div>
+          </Container>
+        </section>
+      ) : null}
     </>
   );
 }

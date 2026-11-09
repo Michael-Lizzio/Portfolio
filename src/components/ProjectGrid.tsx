@@ -1,9 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import type { ResolvedProject } from "@/lib/schema";
-import { compareProjectsByDate, compareProjectsByRelevance } from "@/lib/project-order";
+import {
+  INITIAL_VISIBLE,
+  compareProjectsByDate,
+  compareProjectsByRelevance,
+} from "@/lib/project-order";
 import { ProjectCard } from "./ProjectCard";
 
 type SortMode = "relevance" | "date-desc" | "date-asc";
@@ -14,8 +18,17 @@ function sortStatus(mode: SortMode): string {
   return "Projects sorted by relevance.";
 }
 
-export function WorkProjectGrid({ projects }: { projects: ResolvedProject[] }) {
+/**
+ * The /projects grid. "Relevant" shows the ranked list from project-order.ts and
+ * keeps everything past INITIAL_VISIBLE behind "Load more". The hidden cards are
+ * still in the HTML (with `hidden`), so every project page stays linked for
+ * crawlers and for anyone without JavaScript. Sorting by date shows everything,
+ * because a timeline with gaps in it would be misleading.
+ */
+export function ProjectGrid({ projects }: { projects: ResolvedProject[] }) {
   const [sortMode, setSortMode] = useState<SortMode>("relevance");
+  const [expanded, setExpanded] = useState(false);
+  const listRef = useRef<HTMLUListElement>(null);
 
   const orderedProjects = useMemo(() => {
     const ordered = [...projects];
@@ -30,6 +43,19 @@ export function WorkProjectGrid({ projects }: { projects: ResolvedProject[] }) {
   }, [projects, sortMode]);
 
   const dateAscending = sortMode === "date-asc";
+  const limited = sortMode === "relevance" && !expanded;
+  const hiddenCount = limited ? Math.max(orderedProjects.length - INITIAL_VISIBLE, 0) : 0;
+
+  function loadMore() {
+    setExpanded(true);
+    // Keyboard and screen-reader users land on the first card that just appeared,
+    // instead of on a button that no longer exists.
+    requestAnimationFrame(() => {
+      listRef.current
+        ?.querySelectorAll<HTMLAnchorElement>("li > article > a")
+        [INITIAL_VISIBLE]?.focus();
+    });
+  }
 
   function toggleDateSort() {
     setSortMode((current) => (current === "date-desc" ? "date-asc" : "date-desc"));
@@ -60,7 +86,7 @@ export function WorkProjectGrid({ projects }: { projects: ResolvedProject[] }) {
             className={controlClass(sortMode === "relevance")}
             onClick={() => setSortMode("relevance")}
           >
-            Relevant
+            Best first
           </button>
           <button
             type="button"
@@ -81,13 +107,21 @@ export function WorkProjectGrid({ projects }: { projects: ResolvedProject[] }) {
         {sortStatus(sortMode)}
       </p>
 
-      <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {orderedProjects.map((project) => (
-          <li key={project.slug}>
+      <ul ref={listRef} className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {orderedProjects.map((project, index) => (
+          <li key={project.slug} hidden={limited && index >= INITIAL_VISIBLE}>
             <ProjectCard project={project} />
           </li>
         ))}
       </ul>
+
+      {hiddenCount > 0 ? (
+        <div className="mt-10 flex justify-center">
+          <button type="button" className="btn btn-outline" onClick={loadMore}>
+            Load {hiddenCount} more
+          </button>
+        </div>
+      ) : null}
     </>
   );
 }

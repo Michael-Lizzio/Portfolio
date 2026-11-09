@@ -34,20 +34,20 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(siteUrl),
     title: {
-      default: `${profile.name} — ${profile.headline}`,
+      default: `${profile.name} · ${profile.headline}`,
       template: `%s · ${profile.name}`,
     },
-    description: profile.headline,
+    description: profile.bio,
     openGraph: {
       type: "website",
       siteName: profile.name,
-      title: `${profile.name} — ${profile.headline}`,
-      description: profile.headline,
+      title: `${profile.name} · ${profile.headline}`,
+      description: profile.bio,
     },
     twitter: {
       card: "summary_large_image",
-      title: `${profile.name} — ${profile.headline}`,
-      description: profile.headline,
+      title: `${profile.name} · ${profile.headline}`,
+      description: profile.bio,
     },
   };
 }

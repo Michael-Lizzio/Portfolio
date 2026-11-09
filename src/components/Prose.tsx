@@ -1,5 +1,5 @@
 /**
- * Body copy: 18px / 1.7 in the 45rem reading column — the old site's own
+ * Body copy: 18px / 1.7 in the 45rem reading column - the old site's own
  * measure, minus the four different line-heights it used to reach it.
  *
  * Content is plain text by contract (no HTML, no markdown), one string per

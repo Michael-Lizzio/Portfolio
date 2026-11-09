@@ -1,8 +1,8 @@
 {
   "slug": "symposium",
   "title": "Symposium Notes",
-  "tagline": "An AI-powered assistant that records, transcribes, and summarizes lectures",
-  "summary": "Imagine never having to take notes again. Symposium Notes is an AI-powered assistant that records, transcribes, and summarizes lectures and meetings, allowing you to pay full attention. I created the listener logic and the AI interfaces that populated the display during BrickHack 11.",
+  "tagline": "A hackathon app that records lectures and turns them into notes",
+  "summary": "Symposium Notes was my BrickHack 11 project in February 2025. It records a lecture, transcribes it, and turns it into bullet-point notes, so you can actually listen instead of scrambling to write everything down. I built the listening logic and hooked up the AI that fills in the notes and transcript.",
   "published": true,
   "featured": false,
   "date": "2025-02",
@@ -46,24 +46,24 @@
     {
       "heading": "Inspiration",
       "body": [
-        "I've wanted to create this project since before coming to RIT. Back in high school, I would’ve loved to have a tool like this, especially for English and social studies, where lectures were a big part of learning. I always struggled with juggling note-taking and actively listening, often missing key points because I was too busy writing.",
-        "Originally, I planned to use Glean, a software with similar functionality. However, I discovered that it doesn’t allow data exports. Even after emailing their support team back in October, I never received a response. So, I figured why not build it myself?"
+        "I've wanted to create this project since before coming to RIT. Back in high school, I would've loved to have a tool like this, especially for English and social studies, where lectures were a big part of learning. I always struggled with juggling note-taking and actively listening, often missing key points because I was too busy writing.",
+        "Originally, I planned to use Glean, a software with similar functionality. However, I discovered that it doesn't allow data exports. Even after emailing their support team back in October, I never received a response. So, I figured why not build it myself?"
       ],
       "media": []
     },
     {
       "heading": "What it does",
       "body": [
-        "Users can start and stop recording at any time. The system automatically detects speech, breaks recordings into segments based on pauses, and converts the audio to text using OpenAI’s Whisper API.",
-        "It generates AI-powered summaries in bullet points, and users can choose how many bullet points they want. Notes and transcripts are stored locally, with separate views where they can be edited, imported, exported, or cleared.",
-        "A floating chat assistant answers follow-up questions using the transcript as context. Users can also adjust calibration time, silence detection, and segment length in the settings."
+        "You can start and stop recording at any time. It detects speech on its own, breaks the recording into pieces wherever there's a pause, and turns the audio into text using OpenAI's Whisper API.",
+        "Then it writes a summary in bullet points, and you choose how many bullet points you want. Notes and transcripts are saved in the browser, and you can edit, import, export or clear them.",
+        "There's also a little chat assistant, Bricky, that answers questions about the lecture using the transcript. In settings you can adjust how long it calibrates, how much silence counts as a pause, and how long each piece is."
       ],
       "media": []
     },
     {
       "heading": "Challenges and accomplishments",
       "body": [
-        "Limited experience with JavaScript and CSS made certain features tricky. The biggest challenge was dividing tasks efficiently. We had to figure out how to integrate our individual work without stepping on each other’s toes.",
+        "Limited experience with JavaScript and CSS made certain features tricky. The biggest challenge was dividing tasks efficiently. We had to figure out how to integrate our individual work without stepping on each other's toes.",
         "The system was fully functional, and we completed it in time for the hackathon. We built a working AI-powered tool in a short time, and working as a team was a fun and rewarding experience."
       ],
       "media": [
@@ -80,12 +80,12 @@
     {
       "heading": "What we learned",
       "body": [
-        "Don’t leave the Devpost submission for the last minute. Collaborating on a team project can be challenging, but it’s also incredibly rewarding. Helping and teaching each other made the experience even more valuable."
+        "Don't leave the Devpost submission for the last minute. Collaborating on a team project can be challenging, but it's also incredibly rewarding. Helping and teaching each other made the experience even more valuable."
       ],
       "media": []
     },
     {
-      "heading": "What’s next",
+      "heading": "What's next",
       "body": [
         "The next steps were hosting it so people could use their own OpenAI API key, adding folders to organize notes by subject, and letting users upload PDFs and presentations so the AI could follow along and provide more detailed notes."
       ],

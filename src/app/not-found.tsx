@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   title: "Page not found",
   // Without this the page inherits the layout's description (the profile
   // headline), which describes the person rather than the 404.
-  description: "That address does not exist. Every project is listed on the work page.",
+  description: "That address does not exist. Every project is listed on the projects page.",
 };
 
 /**
- * 404. Reached by an unknown URL, and by notFound() from /work/[slug] for a
+ * 404. Reached by an unknown URL, and by notFound() from /projects/[slug] for a
  * slug that does not exist or is not published.
  *
  * The legacy site was hosted from .html files; those paths are redirected in
@@ -29,14 +29,14 @@ export default function NotFound() {
         </h1>
 
         <p className="mt-5 text-lg text-fg-muted">
-          The link may be from the old site — projects now live at{" "}
-          <span className="font-mono text-base text-fg-faint">/work/&lt;project&gt;</span>. The
-          work page lists every one of them.
+          The link might be from an older version of this site. Projects live at{" "}
+          <span className="font-mono text-base text-fg-faint">/projects/&lt;project&gt;</span> now,
+          and the projects page lists every one of them.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link className="btn btn-primary" href="/work">
-            See all work
+          <Link className="btn btn-primary" href="/projects">
+            See all projects
           </Link>
           <Link className="btn btn-outline" href="/">
             Home

@@ -7,7 +7,7 @@
    Two fonts, three radii, two shadows, two breakpoints.
 
    Every value here either already existed in the legacy stylesheets or is
-   derived from one that did — the accent ramp is generated from #13294B,
+   derived from one that did - the accent ramp is generated from #13294B,
    the navbar/Resume-button colour that was the site's real brand colour.
 
    Rules that keep it uniform:
@@ -57,20 +57,20 @@
   --spacing: 0.25rem;
 
   /* ── Layout ── */
-  --container-page: 72rem;    /* 1152px — replaces the old 1200px    */
-  --container-prose: 45rem;   /*  720px — replaces the old 800px     */
+  --container-page: 72rem;    /* 1152px - replaces the old 1200px    */
+  --container-prose: 45rem;   /*  720px - replaces the old 800px     */
   /* max-w-prose resolves from --max-width-prose, not --container-prose,
      so it has to be set here too or it falls back to Tailwind's 65ch. */
   --max-width-prose: 45rem;
 
-  /* ── Radii: 12 values down to 3. 10px is kept verbatim — it was 71 of 116. */
-  --radius-sm: 0.375rem;      /*  6px — inputs, small chips          */
-  --radius-md: 0.625rem;      /* 10px — cards, media, panels (house) */
-  --radius-lg: 0.875rem;      /* 14px — hero / detail header         */
+  /* ── Radii: 12 values down to 3. 10px is kept verbatim - it was 71 of 116. */
+  --radius-sm: 0.375rem;      /*  6px - inputs, small chips          */
+  --radius-md: 0.625rem;      /* 10px - cards, media, panels (house) */
+  --radius-lg: 0.875rem;      /* 14px - hero / detail header         */
 
   /* ── Breakpoints: 10 down to the 2 that are actually designed against. ── */
   --breakpoint-sm: 40rem;     /*  640px */
-  --breakpoint-md: 48rem;     /*  768px — the old de-facto breakpoint, kept */
+  --breakpoint-md: 48rem;     /*  768px - the old de-facto breakpoint, kept */
   --breakpoint-lg: 64rem;     /* 1024px */
 
   /* ── Motion: one duration, one easing. No pulsate, no typing, no fades. ── */
@@ -141,7 +141,7 @@
   --accent-contrast: var(--color-n-0);
   --accent-surface: var(--color-ink-50);
   --accent-border: var(--color-ink-100);
-  --ring: var(--color-ink-400);      /*  3.6:1 on --bg — 1.4.11 focus ring */
+  --ring: var(--color-ink-400);      /*  3.6:1 on --bg - 1.4.11 focus ring */
 
   /* The only thing marking .btn-outline as a control: its text is --text, the
      same as body copy, and it has no fill. --border-strong (1.52:1) is a
@@ -293,7 +293,7 @@
 
 /* ==========================================================================
    Two shared recipes. These are the only class names on the site that are not
-   utilities — they exist so a link and a button look the same everywhere,
+   utilities - they exist so a link and a button look the same everywhere,
    which is the thing the old site never managed.
    ========================================================================== */
 

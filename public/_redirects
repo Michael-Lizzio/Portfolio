@@ -1,32 +1,35 @@
 # Cloudflare Pages redirects.
 #
-# These keep inbound links to the old michael-lizzio.github.io site working if
-# that domain is ever pointed here. next.config.ts cannot do this job because
+# These keep inbound links working. next.config.ts cannot do this job because
 # `redirects()` needs a server and this site is a static export.
 #
 # Format: <from>  <to>  <status>.  :placeholder matches one segment, * matches
 # the rest of the path. First match wins, so order matters.
 
+# November 2026: project pages moved from /work/<slug>/ to /projects/<slug>/,
+# and /work/ became the work-experience page. A placeholder needs a non-empty
+# segment, so these never catch /work/ itself.
+/work/:slug/                   /projects/:slug/       301
+/work/:slug                    /projects/:slug/       301
+
+# The old michael-lizzio.github.io site, if that domain is ever pointed here.
 /index.html                    /                      301
 
 /pages/about.html              /about/                301
 /pages/connect.html            /contact/              301
-/pages/archive.html            /work/                 301
+/pages/archive.html            /projects/             301
 
 # Project pages that exist today. The legacy folders used underscores and the
 # new slugs use hyphens, so these cannot be done with one placeholder rule.
-/project_pages/foosball/*      /work/foosball/        301
-/project_pages/cryptogram/*    /work/cryptogram/      301
-/project_pages/alarm_system/*  /work/alarm-system/    301
-
-# Projects still unpublished — sending these to their own page would 301 a
-# visitor onto a 404. Move each one down to the block above as it goes live.
-/project_pages/blackjack/*     /work/                 302
-/project_pages/wordle_solver/* /work/                 302
-/project_pages/cyber_TTM/*     /work/                 302
+/project_pages/foosball/*      /projects/foosball/       301
+/project_pages/cryptogram/*    /projects/cryptogram/     301
+/project_pages/alarm_system/*  /projects/alarm-system/   301
+/project_pages/blackjack/*     /projects/blackjack/      301
+/project_pages/wordle_solver/* /projects/wordle-solver/  301
+/project_pages/cyber_TTM/*     /projects/cyber-ttm/      301
 
 # Anything else under the old project tree.
-/project_pages/*               /work/                 301
+/project_pages/*               /projects/             301
 
 # The legacy site hand-promoted one project into its navbar.
-/live_projects/symposium/*     /work/symposium/       301
+/live_projects/symposium/*     /projects/symposium/   301

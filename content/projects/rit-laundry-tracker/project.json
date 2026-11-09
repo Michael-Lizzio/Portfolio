@@ -2,7 +2,7 @@
   "slug": "rit-laundry-tracker",
   "title": "RIT Dorm Laundry Tracker",
   "tagline": "My first team prototype for checking dorm washers and dryers before walking downstairs",
-  "summary": "This was one of my first team software projects at RIT. We made a prototype where students could choose their residence hall, see which washers and dryers were available, and start a 55-minute laundry timer. It was also where I met my friend Jimmy, who I am still friends with today, and it gave me my first real experience building software with other people.",
+  "summary": "This was one of my first team software projects at RIT. We made a prototype where students could pick their dorm, see which washers and dryers were free, and start a 55-minute laundry timer. It's also where I met my friend Jimmy, who I'm still friends with today.",
   "published": true,
   "featured": false,
   "date": "2024-10",
