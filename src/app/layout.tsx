@@ -25,13 +25,16 @@ const jetbrainsMono = JetBrains_Mono({
 
 /**
  * Caveat, for the few handwritten notes (HandNote). Bundled in the repo (Latin
- * subset, OFL) so the build never needs to fetch it.
+ * subset, OFL) so the build never needs to fetch it. Not preloaded: only the
+ * home page uses it, so other pages shouldn't download its 73 KB. The browser
+ * fetches it when a note is on the page.
  */
 const caveat = localFont({
   src: "./fonts/caveat.woff2",
   variable: "--font-caveat",
   weight: "500 700",
   display: "swap",
+  preload: false,
 });
 
 /**

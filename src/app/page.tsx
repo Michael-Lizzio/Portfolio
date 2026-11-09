@@ -6,7 +6,7 @@ import { Container } from "@/components/Container";
 import { Circled, HandNote } from "@/components/HandNote";
 import { HeroCarousel, type HeroSlide } from "@/components/HeroCarousel";
 import { ProjectGrid } from "@/components/ProjectGrid";
-import { APP_SHOWCASE } from "@/lib/apps";
+import { APP_SHOWCASE, APP_SLIDE_ART, EXTRA_SLIDES } from "@/lib/apps";
 import { getProfile, getProjects, getWork } from "@/lib/content";
 import { toProjectCardData } from "@/lib/project-card";
 import { compareProjectsByRelevance } from "@/lib/project-order";
@@ -15,9 +15,9 @@ import { jobAnchor } from "@/lib/work-anchor";
 /**
  * Home.
  *
- * Says who I am in one screen with the apps sliding by beside it, then the
- * three apps, the rest of the projects (best first, the small ones behind
- * "Load more"), and where I've worked. The apps are the `featured` projects;
+ * Says who I am in one screen with the apps (and CalCardo and KURT) sliding by
+ * beside it, then the three apps, the rest of the projects (best first, the
+ * small ones behind "Load more"), where I've worked, and school. The apps are the `featured` projects;
  * the order everywhere comes from src/lib/project-order.ts.
  */
 
@@ -33,7 +33,7 @@ export default async function HomePage() {
 
   const github = profile.links.find((link) => link.label.toLowerCase() === "github") ?? null;
 
-  const slides: HeroSlide[] = apps.flatMap((project) =>
+  const appSlides: HeroSlide[] = apps.flatMap((project) =>
     project.hero && project.hero.kind === "image" && project.hero.width && project.hero.height
       ? [
           {
@@ -44,16 +44,35 @@ export default async function HomePage() {
             width: project.hero.width,
             height: project.hero.height,
             alt: project.hero.alt ?? "",
+            ...APP_SLIDE_ART[project.slug],
           },
         ]
       : [],
   );
+  const extraSlides: HeroSlide[] = EXTRA_SLIDES.flatMap((extra) => {
+    const project = projects.find((candidate) => candidate.slug === extra.slug);
+    if (!project) return [];
+    return [
+      {
+        slug: extra.slug,
+        title: extra.title ?? project.title,
+        status: extra.label,
+        src: extra.src,
+        width: extra.width,
+        height: extra.height,
+        alt: project.hero?.alt ?? "",
+        position: extra.position,
+        phonePosition: extra.phonePosition,
+      },
+    ];
+  });
+  const slides = [...appSlides, ...extraSlides];
 
   return (
     <>
       <section className="border-b border-border-default bg-bg-subtle">
         <Container className="py-14 md:py-20">
-          <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,34rem)] lg:gap-16">
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,34rem)] lg:gap-16">
             <div className="max-w-xl">
               <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
                 <Image
@@ -65,9 +84,6 @@ export default async function HomePage() {
                   priority
                 />
                 <p className="font-mono text-sm text-fg-muted">Software Engineering at RIT</p>
-                <HandNote marker="blue" tilt={-4} className="ml-1">
-                  2018 to now
-                </HandNote>
               </div>
 
               <h1 className="mt-7 text-5xl font-semibold tracking-[-0.025em] text-fg md:text-[3.5rem] md:leading-[1.05]">
@@ -98,7 +114,7 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {slides.length > 0 ? <HeroCarousel slides={slides} label="My apps" /> : null}
+            {slides.length > 0 ? <HeroCarousel slides={slides} label="My apps and projects" /> : null}
           </div>
         </Container>
       </section>
@@ -106,12 +122,16 @@ export default async function HomePage() {
       {apps.length > 0 ? (
         <section className="pt-16 md:pt-24" aria-labelledby="apps-title">
           <Container>
-            <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
-              <h2 id="apps-title" className="text-3xl font-semibold tracking-tight text-fg">
-                Apps I&apos;ve <Circled>shipped</Circled>
-              </h2>
-              <HandNote marker="red" tilt={-2} className="pb-1">
-                designed, coded and shipped by me
+            <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
+              <div>
+                <h2 id="apps-title" className="text-3xl font-semibold tracking-tight text-fg">
+                  My apps
+                </h2>
+                <p className="mt-2 text-fg-muted">Three products I designed, built and shipped myself.</p>
+              </div>
+              {/* A marker aside, so it stays out of the heading's accessible name. */}
+              <HandNote marker="red" tilt={-3} className="pb-1 pr-2 text-[1.75rem] md:text-[2rem]">
+                Apps I&apos;ve <Circled className="ml-2">shipped</Circled>
               </HandNote>
             </div>
 
@@ -158,7 +178,10 @@ export default async function HomePage() {
       ) : null}
 
       {work.jobs.length > 0 ? (
-        <section className="py-16 md:py-24" aria-labelledby="work-title">
+        <section
+          className={work.education.length > 0 ? "pt-16 md:pt-24" : "py-16 md:py-24"}
+          aria-labelledby="work-title"
+        >
           <Container>
             <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-2">
               <div>
@@ -199,6 +222,44 @@ export default async function HomePage() {
                       →
                     </span>
                   </Link>
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </section>
+      ) : null}
+
+      {work.education.length > 0 ? (
+        <section className="py-16 md:py-24" aria-labelledby="education-title">
+          <Container>
+            <h2 id="education-title" className="text-3xl font-semibold tracking-tight text-fg">
+              Education
+            </h2>
+
+            <ul className="mt-8 border-t border-border-default">
+              {work.education.map((school) => (
+                <li
+                  key={school.school}
+                  className="grid gap-1 border-b border-border-default py-6 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-6"
+                >
+                  <span className="font-mono text-xs leading-7 text-fg-faint">{school.dates}</span>
+                  <div>
+                    <p className="text-lg font-semibold tracking-tight text-fg">{school.school}</p>
+                    <p className="text-sm text-fg-muted">{school.degree}</p>
+                    {school.details.length > 0 ? (
+                      <ul className="mt-3 flex max-w-prose flex-col gap-1.5 text-fg">
+                        {school.details.map((detail) => (
+                          <li key={detail} className="relative pl-5">
+                            <span
+                              aria-hidden="true"
+                              className="absolute left-0 top-[0.7em] size-1.5 rounded-full bg-[var(--border-control)]"
+                            />
+                            {detail}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </div>
                 </li>
               ))}
             </ul>

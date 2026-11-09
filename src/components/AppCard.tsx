@@ -7,7 +7,7 @@ import { DevelopmentBadge } from "./DevelopmentBadge";
 
 /** Each card is a third of the page column from lg up, full width below md. */
 const PHONE_SIZES = "(min-width: 64rem) 9rem, (min-width: 48rem) 20vw, 40vw";
-const CALL_SIZES = "(min-width: 64rem) 20rem, (min-width: 48rem) 40vw, 90vw";
+const SHOT_SIZES = "(min-width: 64rem) 22rem, (min-width: 48rem) 40vw, 90vw";
 
 /**
  * One app in "Apps I've shipped": white on top with the name, status and what
@@ -87,28 +87,14 @@ export function AppCard({
                 ))}
               </div>
             ) : (
-              <div className="absolute inset-x-6 top-6 flex flex-col items-center">
-                {showcase.pictures[0] ? (
-                  <Image
-                    className="w-[88%] max-w-80 self-start rounded-xl shadow-card ring-1 ring-black/5"
-                    src={showcase.pictures[0].src}
-                    alt=""
-                    width={showcase.pictures[0].width}
-                    height={showcase.pictures[0].height}
-                    sizes={CALL_SIZES}
-                  />
-                ) : null}
-                {showcase.pictures[1] ? (
-                  <Image
-                    className="mt-2.5 w-[88%] max-w-80 self-end rounded-[1.1rem] shadow-raised"
-                    src={showcase.pictures[1].src}
-                    alt=""
-                    width={showcase.pictures[1].width}
-                    height={showcase.pictures[1].height}
-                    sizes={CALL_SIZES}
-                  />
-                ) : null}
-              </div>
+              <Image
+                className="absolute inset-x-0 top-6 mx-auto w-[88%] max-w-[22rem] rounded-t-xl shadow-raised ring-1 ring-black/5"
+                src={showcase.pictures[0].src}
+                alt=""
+                width={showcase.pictures[0].width}
+                height={showcase.pictures[0].height}
+                sizes={SHOT_SIZES}
+              />
             )}
           </div>
         ) : null}

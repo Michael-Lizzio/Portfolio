@@ -27,7 +27,7 @@
   ],
   "links": [
     {
-      "label": "relayreply.com",
+      "label": "relayreply.com (public beta)",
       "href": "https://relayreply.com"
     }
   ],
@@ -35,8 +35,8 @@
     "src": "media/relayreply_cover.webp",
     "kind": "image",
     "poster": null,
-    "alt": "A RelayReply call on relayreply.com: captions of a call to Rivera Plumbing on the left, and on the right a card asking Approve the $100 visit fee?, with Yes, book Thursday 8-10 selected and an Approve $100 button",
-    "caption": "An example call from relayreply.com. The names and numbers are made up.",
+    "alt": "The relayreply.com home page: RelayReply and Sign in at the top, the heading You stay in control., a line on how it works, and the typing box addressed to Main Street Pharmacy, filled in with Ask if my allergy prescription is ready and how late they're open today., above a Get started button",
+    "caption": "The home page of relayreply.com, the public beta.",
     "autoplay": false
   },
   "sections": [
@@ -89,5 +89,5 @@
       "media": []
     }
   ],
-  "notes": "Words pass 2026-11-09 (Michael's decisions, Nov 9): RelayReply is a PUBLIC beta, AI-assisted, and the page stays light and brief because he is publishing his own site and guides soon. Wording follows relayreply.com's current homepage source (startups/RelayReply, branch v3.3, web/src/features/onboarding/home: the lead 'Type what you need. RelayReply makes the call, speaks for you, and shows every word as a caption. When there's a decision to make, it asks you first.', his short phone lead, 'Free to start, with free practice calls.', and the not-a-relay-service notice). The old 'Phone calls, without the phone' line and 'private beta' are gone. Left out on purpose: prices, model names, how the AI introduces itself on a call, recordings, and the deep architecture. The hero and card image are the look agent's job (real product screenshots from a local build of the site). Date 2026-04 is the repo's first commit (older iOS app); the v3 web restart was late September 2026. Look pass 2026-11-09: the hero (relayreply_cover.webp) is a screenshot of the example call on relayreply.com's home page (the CallShot section, 'What a call looks like'), rendered from origin/v3.3 site/build.mjs with SITE_PUBLIC_BETA=1 on localhost; the home page app card uses crops of the same render (public/images/apps/relayreply_caption.webp and relayreply_card.webp). The site itself labels it 'An example call. Names and numbers are made up.'"
+  "notes": "Words pass 2026-11-09 (Michael's decisions, Nov 9): RelayReply is a PUBLIC beta, AI-assisted, and the page stays light and brief because he is publishing his own site and guides soon. Wording follows relayreply.com's current homepage source (startups/RelayReply, branch v3.3, web/src/features/onboarding/home: the lead 'Type what you need. RelayReply makes the call, speaks for you, and shows every word as a caption. When there's a decision to make, it asks you first.', his short phone lead, 'Free to start, with free practice calls.', and the not-a-relay-service notice). The old 'Phone calls, without the phone' line and 'private beta' are gone. Left out on purpose: prices, model names, how the AI introduces itself on a call, recordings, and the deep architecture. The hero and card image are the look agent's job (real product screenshots from a local build of the site). Date 2026-04 is the repo's first commit (older iOS app); the v3 web restart was late September 2026. Look pass 2026-11-09 (Michael's final notes): the hero (relayreply_cover.webp) is relayreply.com's home page as first seen, a 1200x630 window at 2x, captured the moment the typing box holds the whole first sentence (Main Street Pharmacy) before it clears. Rendered from origin/v3.3 (20435635c) with SITE_PUBLIC_BETA=1 node site/build.mjs and site/serve.mjs on 127.0.0.1 only, with the page clock frozen for the shot. The home page app card uses one crop of the same picture (public/images/apps/relayreply_home.webp). Michael asked to keep RelayReply light: no other screenshots."
 }

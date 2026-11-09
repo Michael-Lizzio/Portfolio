@@ -50,7 +50,9 @@ export function MediaFigure({
             aria-label={media.alt ?? undefined}
             controls
             playsInline
-            preload="metadata"
+            // With a poster there is nothing to show before play, so fetch nothing:
+            // foosball has seven of these. Without one, metadata gives the first frame.
+            preload={media.poster ? "none" : "metadata"}
           />
         ) : (
           <LightboxImage

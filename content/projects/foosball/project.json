@@ -2,7 +2,7 @@
   "slug": "foosball",
   "title": "Automated Foosball Goalie",
   "tagline": "Finally, I was able to combine the ball tracking software with the motor controller to create a functional foosball goalie.",
-  "summary": "Below are some videos and descriptions detailing the process of constructing my automated foosball goalie KURT (Killer.Ultimate.Robot.Teammate). I started the project after being inspired by a similar project that I saw on a college tour.",
+  "summary": "Below are some videos and descriptions detailing the process of constructing my automated foosball goalie, KURT (Killer.Ultimate.Robot.Teammate). I started the project after being inspired by a similar project that I saw on a college tour.",
   "ownWords": true,
   "published": true,
   "featured": false,
@@ -28,7 +28,7 @@
     {
       "heading": "Making an Automated Foosball Goalie!",
       "body": [
-        "Below are some videos and descriptions detailing the process of constructing my automated foosball goalie KURT (Killer.Ultimate.Robot.Teammate). I started the project after being inspired by a similar project that I saw on a college tour. It was a long journey from obtaining the foosball table in October to me creating a working version towards the end of December. So please feel free to jump around and check out the project below."
+        "Below are some videos and descriptions detailing the process of constructing my automated foosball goalie, KURT (Killer.Ultimate.Robot.Teammate). I started the project after being inspired by a similar project that I saw on a college tour. It was a long journey from obtaining the foosball table in October to me creating a working version towards the end of December. So please feel free to jump around and check out the project below."
       ],
       "media": []
     },
@@ -36,7 +36,7 @@
       "heading": "October 18, 2022",
       "level": 3,
       "body": [
-        "So this was the day where we picked up the foosball table from Facebook market place for $50. After that we had the fun time of hauling it all the way up the stairs so I could start putting it back together."
+        "So this was the day where we picked up the foosball table from Facebook Marketplace for $50. After that, we had the fun time of hauling it all the way up the stairs so I could start putting it back together."
       ],
       "media": [
         {
@@ -68,7 +68,7 @@
       "heading": "December 9, 2022",
       "level": 3,
       "body": [
-        "I did plenty of research on all sorts of object tracking software, even testing out some AI object recognition software. I ended up settling on a simple color tracker (OpenCV) mainly because it could quickly display the ball's coordinates (red circle, and red text), which were derived from the live camera feed. Finally, I used the Kalman Filter to predict the future estimated position of the ball (the white circle in the video that's leading the ball)."
+        "I did plenty of research on all sorts of object tracking software, even testing out some AI object recognition software. I ended up settling on a simple color tracker (OpenCV) mainly because it could quickly display the ball's coordinates (red circle and red text), which were derived from the live camera feed. Finally, I used the Kalman Filter to predict the future estimated position of the ball (the white circle in the video that's leading the ball)."
       ],
       "media": [
         {
@@ -84,7 +84,7 @@
       "heading": "December 19, 2022",
       "level": 3,
       "body": [
-        "Happy with the state of the object tracking software, I started to play around with the stepper motor and motor driver. It was a complex system, but utilizing resources found on the internet and with some guidance from my dad, an electrical engineer, I was able to construct the circuit that made the motor function. Having this isn't everything though, I need to write the software that would control the motor which includes direction, activation, and the speed. I would go on to make a few versions of the motor controller software, and finally got one to work well enough for testing. Throughout this I was fascinated by the sound it made as I increased the speed. It sounded just like a musical scale, which makes sense because to change the speed you set it to a different frequency, or in musical terms a different note. Knowing this I was able to create the jingle bells melody. In the video you are able to hear the melody and also see the frequencies used, which are displayed on the monitor."
+        "Happy with the state of the object tracking software, I started to play around with the stepper motor and motor driver. It was a complex system, but utilizing resources found on the internet and with some guidance from my dad, an electrical engineer, I was able to construct the circuit that made the motor function. Having this isn't everything, though; I need to write the software that would control the motor which includes direction, activation, and the speed. I would go on to make a few versions of the motor controller software, and finally got one to work well enough for testing. Throughout this, I was fascinated by the sound it made as I increased the speed. It sounded just like a musical scale, which makes sense because to change the speed you set it to a different frequency, or, in musical terms, a different note. Knowing this, I was able to create the Jingle Bells melody. In the video you are able to hear the melody and also see the frequencies used, which are displayed on the monitor."
       ],
       "media": [
         {
@@ -100,7 +100,7 @@
       "heading": "December 22, 2022",
       "level": 3,
       "body": [
-        "As a part of the planing process, I designed multiple prototypes of the contraption that would attach to the side of the table and move the goalie back and forth. Some were made out of Legos, and some cardboard. Once I was happy with the design, I added the parts to my Amazon cart and placed the order, praying that they would all work together. On receiving the parts I was thrilled to start putting the contraption (or KURT) together. After assembling and disassembling KURT many times, and a few runs to Home Depot, I was able to mount it and get almost everything setup and ready for the goalie to be moving!"
+        "As a part of the planning process, I designed multiple prototypes of the contraption that would attach to the side of the table and move the goalie back and forth. Some were made out of Legos, and some cardboard. Once I was happy with the design, I added the parts to my Amazon cart and placed the order, praying that they would all work together. On receiving the parts I was thrilled to start putting the contraption (or KURT) together. After assembling and disassembling KURT many times, and a few runs to Home Depot, I was able to mount it and get almost everything set up and ready for the goalie to be moving!"
       ],
       "media": [
         {
@@ -154,7 +154,7 @@
     {
       "heading": null,
       "body": [
-        "Click on The Image to View Them Fullscreen!"
+        "Click on the Image to View Them Fullscreen!"
       ],
       "media": [
         {
@@ -265,5 +265,5 @@
       ]
     }
   ],
-  "notes": "RESTORED 2026-11-09: every visible word on this page is Michael's original text from the old site (Michael-Lizzio.github.io commit 081ec8c, project_pages/foosball/foosball.html), character for character: his two titled text boxes, the dates above each video (now the small headings), every video description with his spelling ('Facebook market place', 'planing'), the gallery line 'Click on The Image to View Them Fullscreen!' and the date under every gallery photo, in his original photo order. Do not edit, fix typos, add section titles, add captions or add a summary to this page. ownWords hides the tagline and summary on the page; both are his own sentences, used only on the card and in search results. There is no status line and the tech pills use only words from his text. Alt text is neutral description, not his words, since the old page had placeholder alts. The word diff proving this is in docs/REFRESH-NOV-2026.md."
+  "notes": "RESTORED 2026-11-09: every visible word on this page is Michael's original text from the old site (Michael-Lizzio.github.io commit 081ec8c, project_pages/foosball/foosball.html), character for character: his two titled text boxes, the dates above each video (now the small headings), every video description with his spelling ('Facebook market place', 'planing'), the gallery line 'Click on The Image to View Them Fullscreen!' and the date under every gallery photo, in his original photo order. Do not edit, fix typos, add section titles, add captions or add a summary to this page. ownWords hides the tagline and summary on the page; both are his own sentences, used only on the card and in search results. There is no status line and the tech pills use only words from his text. Alt text is neutral description, not his words, since the old page had placeholder alts. The word diff proving this is in docs/REFRESH-NOV-2026.md.\n\nSPELLING PASS 2026-11-09: at Michael's request, his spelling and punctuation were fixed with no word changed (apostrophes, commas, obvious typos); every fix is listed before and after in docs/REFRESH-NOV-2026.md and the validator's word lock was updated to match. Apart from that, the rule stands: do not change his words. The page also hides the tech tags and date line, which his originals did not have."
 }

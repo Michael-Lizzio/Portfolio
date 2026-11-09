@@ -44,7 +44,7 @@
       "heading": "Inspiration",
       "body": [
         "I've wanted to create this project since before coming to RIT. Back in high school, I would’ve loved to have a tool like this, especially for English and social studies, where lectures were a big part of learning. I always struggled with juggling note-taking and actively listening, often missing key points because I was too busy writing.",
-        "Originally, I planned to use Glean, a software with similar functionality. However, I discovered that it doesn’t allow data exports. Even after emailing their support team back in October, I never received a response. So, I figured why not build it myself?"
+        "Originally, I planned to use Glean, a software with similar functionality. However, I discovered that it doesn’t allow data exports. Even after emailing their support team back in October, I never received a response. So, I figured, why not build it myself?"
       ],
       "media": []
     },
@@ -107,7 +107,7 @@
       "media": [],
       "level": 3,
       "bullets": [
-        "Users can fine-tune audio processing settings, including: Calibration time, silence detection, and segment length.",
+        "Users can fine-tune audio processing settings, including calibration time, silence detection, and segment length.",
         "OpenAI API key is stored securely in local storage."
       ]
     },
@@ -180,5 +180,5 @@
       "media": []
     }
   ],
-  "notes": "RESTORED 2026-11-09: every visible word on this page is Michael's own README for the project (github.com/Michael-Lizzio/SynapsisNotes, README.md at e947210, Feb 24 2025), word for word, with his headings, bullets and curly apostrophes. Only formatting changed: the markdown bold and backticks are dropped, the one sub-bullet under Customizable Settings is joined to its bullet, and the README's two em dashes became a period (\"exports. Even after\", \"efficiently. We had to\") because the site allows no em dashes. The README's last line, a P.S. pointing to the original SymposiumNotes repo (which only holds a filler README), is left off. Do not edit or reword this page. ownWords hides the tagline and summary on the page; both are his own sentences from the README. Captions are off because the README has none; alt text is neutral description. Facts for reference (not shown): BrickHack 11, February 2025; Devpost title Symposium Notes; the repo name is misspelled SynapsisNotes. The original browser-only build stores the user's API key in localStorage, which his README calls secure; that is his wording and is flagged for him in docs/REFRESH-NOV-2026.md. The word diff proving this is in docs/REFRESH-NOV-2026.md."
+  "notes": "RESTORED 2026-11-09: every visible word on this page is Michael's own README for the project (github.com/Michael-Lizzio/SynapsisNotes, README.md at e947210, Feb 24 2025), word for word, with his headings, bullets and curly apostrophes. Only formatting changed: the markdown bold and backticks are dropped, the one sub-bullet under Customizable Settings is joined to its bullet, and the README's two em dashes became a period (\"exports. Even after\", \"efficiently. We had to\") because the site allows no em dashes. The README's last line, a P.S. pointing to the original SymposiumNotes repo (which only holds a filler README), is left off. Do not edit or reword this page. ownWords hides the tagline and summary on the page; both are his own sentences from the README. Captions are off because the README has none; alt text is neutral description. Facts for reference (not shown): BrickHack 11, February 2025; Devpost title Symposium Notes; the repo name is misspelled SynapsisNotes. The original browser-only build stores the user's API key in localStorage, which his README calls secure; that is his wording and is flagged for him in docs/REFRESH-NOV-2026.md. The word diff proving this is in docs/REFRESH-NOV-2026.md.\n\nSPELLING PASS 2026-11-09: at Michael's request, his spelling and punctuation were fixed with no word changed (apostrophes, commas, obvious typos); every fix is listed before and after in docs/REFRESH-NOV-2026.md and the validator's word lock was updated to match. Apart from that, the rule stands: do not change his words. The page also hides the tech tags and date line, which his originals did not have."
 }

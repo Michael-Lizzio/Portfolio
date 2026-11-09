@@ -1,3 +1,6 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
+
 import { APP_SHOWCASE } from "./apps";
 import type { ResolvedProject } from "./schema";
 
@@ -20,10 +23,22 @@ export type ProjectCardData = {
   coverPosition: string | null;
 };
 
+/**
+ * The card-size copy of a cover made by `npm run cards` (scripts/card-images.mjs),
+ * or the full cover when there is none yet. Server only.
+ */
+function cardImage(slug: string, coverSrc: string): string {
+  const name = `${slug}--${path.basename(coverSrc, path.extname(coverSrc))}.webp`;
+  return existsSync(path.join(process.cwd(), "public", "images", "cards", name))
+    ? `/images/cards/${name}`
+    : coverSrc;
+}
+
 export function toProjectCardData(project: ResolvedProject): ProjectCardData {
   // A hero may be a video; its poster frame is the still we want on the card.
   const hero = project.hero;
-  const coverSrc = hero?.kind === "image" ? hero.src : (hero?.poster ?? null);
+  const heroSrc = hero?.kind === "image" ? hero.src : (hero?.poster ?? null);
+  const coverSrc = heroSrc ? cardImage(project.slug, heroSrc) : null;
 
   return {
     slug: project.slug,

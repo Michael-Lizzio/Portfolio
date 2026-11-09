@@ -44,9 +44,9 @@ export function HandNote({
  * A word with a hand-drawn marker loop around it ("Apps I've (shipped)").
  * The loop is decoration only, so it is hidden from assistive tech.
  */
-export function Circled({ children }: { children: ReactNode }) {
+export function Circled({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <span className="relative inline-block px-1">
+    <span className={["relative inline-block px-1", className].filter(Boolean).join(" ")}>
       {children}
       <svg
         aria-hidden="true"

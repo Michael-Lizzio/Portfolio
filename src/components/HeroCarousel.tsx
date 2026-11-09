@@ -2,7 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+  type PointerEvent,
+} from "react";
 
 export type HeroSlide = {
   slug: string;
@@ -12,6 +20,10 @@ export type HeroSlide = {
   width: number;
   height: number;
   alt: string;
+  /** Which part of the picture the wide crop keeps (CSS object-position). Default center. */
+  position?: string;
+  /** Which part the phone's 4:3 crop keeps. Default: same as `position`. */
+  phonePosition?: string;
 };
 
 /** Slow on purpose: long enough to read the name and look at the picture. */
@@ -32,7 +44,7 @@ function usePrefersReducedMotion(): boolean {
 }
 
 /**
- * The home page hero's slideshow of the apps: the name on top, the picture, and
+ * The home page hero's slideshow (the apps, then CalCardo and KURT): the name on top, the picture, and
  * a "View project" link under it.
  *
  * It moves on by itself every few seconds, and stops while the pointer is over
@@ -50,12 +62,41 @@ export function HeroCarousel({ slides, label }: { slides: HeroSlide[]; label: st
   const [hidden, setHidden] = useState(false);
   const reduced = usePrefersReducedMotion();
   const swipeStart = useRef<{ x: number; y: number } | null>(null);
+  // Only the first picture loads with the page. The others start once the page
+  // has finished loading and the browser is idle, or as soon as someone moves
+  // the carousel, so they never compete with the first screen.
+  const [loadRest, setLoadRest] = useState(false);
+
+  useEffect(() => {
+    let idle = 0;
+    const start = () => {
+      idle = window.setTimeout(() => setLoadRest(true), 1500);
+    };
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+    return () => {
+      window.removeEventListener("load", start);
+      window.clearTimeout(idle);
+    };
+  }, []);
 
   const count = slides.length;
   const wrap = useCallback((i: number) => ((i % count) + count) % count, [count]);
-  const go = useCallback((next: number) => setIndex(wrap(next)), [wrap]);
+  const go = useCallback(
+    (next: number) => {
+      setLoadRest(true);
+      setIndex(wrap(next));
+    },
+    [wrap],
+  );
   /** Relative moves read the latest index, so two quick clicks move two slides. */
-  const step = useCallback((delta: number) => setIndex((current) => wrap(current + delta)), [wrap]);
+  const step = useCallback(
+    (delta: number) => {
+      setLoadRest(true);
+      setIndex((current) => wrap(current + delta));
+    },
+    [wrap],
+  );
 
   useEffect(() => {
     const update = () => setHidden(document.visibilityState === "hidden");
@@ -145,14 +186,20 @@ export function HeroCarousel({ slides, label }: { slides: HeroSlide[]; label: st
                   draggable={false}
                 >
                   <Image
-                    className="aspect-[1200/630] w-full object-cover"
+                    className="aspect-[4/3] w-full object-cover object-[var(--pos-phone)] sm:aspect-[1200/630] sm:object-[var(--pos)]"
+                    style={
+                      {
+                        "--pos": slide.position ?? "center",
+                        "--pos-phone": slide.phonePosition ?? slide.position ?? "center",
+                      } as CSSProperties
+                    }
                     src={slide.src}
                     alt={slide.alt}
                     width={slide.width}
                     height={slide.height}
                     sizes="(min-width: 64rem) 36rem, 100vw"
-                    loading="eager"
                     priority={i === 0}
+                    loading={i === 0 ? undefined : loadRest ? "eager" : "lazy"}
                     draggable={false}
                   />
                 </Link>
@@ -172,14 +219,16 @@ export function HeroCarousel({ slides, label }: { slides: HeroSlide[]; label: st
       {count > 1 ? (
         <>
           {/* The arrows sit over the picture's left and right edges. The box below is
-              exactly the picture: the 2rem title row, the 0.75rem gap, then 1200:630. */}
-          <div className="pointer-events-none absolute inset-x-0 top-11 flex aspect-[1200/630] items-center justify-between px-2 lg:-mx-5 lg:px-0">
-            <button type="button" className={arrowClass} onClick={() => step(-1)} aria-label="Previous app">
+              exactly the picture: the 2rem title row, the 0.75rem gap, then 4:3 on a
+              phone and 1200:630 from sm up. On a phone they would cover the banner's
+              headline, so they are hidden there: swipe or the dots move the slides. */}
+          <div className="pointer-events-none absolute inset-x-0 top-11 hidden aspect-[4/3] items-center justify-between px-2 sm:flex sm:aspect-[1200/630] lg:-mx-5 lg:px-0">
+            <button type="button" className={arrowClass} onClick={() => step(-1)} aria-label="Previous slide">
               <svg aria-hidden="true" viewBox="0 0 16 16" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M10 3.5 5.5 8l4.5 4.5" />
               </svg>
             </button>
-            <button type="button" className={arrowClass} onClick={() => step(1)} aria-label="Next app">
+            <button type="button" className={arrowClass} onClick={() => step(1)} aria-label="Next slide">
               <svg aria-hidden="true" viewBox="0 0 16 16" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M6 3.5 10.5 8 6 12.5" />
               </svg>
@@ -187,7 +236,7 @@ export function HeroCarousel({ slides, label }: { slides: HeroSlide[]; label: st
           </div>
 
           <div className="absolute bottom-0 right-0 flex h-10 items-center gap-1">
-            <div className="flex items-center" role="group" aria-label="Choose an app">
+            <div className="flex items-center" role="group" aria-label="Choose a slide">
               {slides.map((slide, i) => (
                 <button
                   key={slide.slug}

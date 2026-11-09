@@ -9,6 +9,10 @@ after, so you can check the wording line by line. The new look (November 9) is d
 
 ## Quick summary
 
+**Final notes, November 9:** spelling and punctuation fixed on your three pages, CalCardo and KURT in
+the carousel, the RelayReply picture is now relayreply.com's home page, an Education section on the
+home page, and a speed pass. See "November 9: your final notes" near the end (before the appendix).
+
 **Update, November 9:** your cryptogram, foosball and Symposium Notes pages are back to your own words,
 every other project has a 30-second top block, RelayReply is a public beta, and some pages got real
 diagrams and bigger screenshots. See "November 9: words and project pages" below. Where an older line
@@ -509,6 +513,169 @@ the same two columns.
   the same as before: heading, picture, text. This touches every project with `media-left` or
   `media-right` sections (cryptogram, alarm system, Burrow, Engine Miles, Parcel Web Analyzer and
   others). No words changed.
+
+## November 9: your final notes
+
+This section follows your last notes from November 9. Where anything above disagrees with it, this
+section is current.
+
+### 1. Spelling and punctuation on your three pages
+
+Only spelling and punctuation changed. Every word and sentence is otherwise the same, in the same
+order. `npm run validate` still locks these pages; the lock now matches the corrected text
+(`OWN_WORDS` in `scripts/validate-content.ts`). These pages also no longer show the tech tags or the
+date line, since your originals had neither (`ownWords` hides them in `src/app/projects/[slug]/page.tsx`).
+
+**Cryptogram Solver**
+
+| Where | Before | After |
+|---|---|---|
+| The Backstory (and the card's search summary) | in front of my white board creating | in front of my whiteboard creating |
+| The Backstory | but, as class ended I grabbed | but as class ended, I grabbed |
+| The Backstory | I was so happy, it was already late at night but I was willing | I was so happy; it was already late at night, but I was willing |
+| Heading | Teachers Original Handout | Teacher's Original Handout |
+| Teacher's Original Handout | is my dads work | is my dad's work |
+| Teacher's Original Handout | on my white board. After school break when I went back to school I was excited | on my whiteboard. After school break, when I went back to school, I was excited |
+| Solved Quote | rather than a human(my dad). | rather than a human (my dad). |
+| Solved Quote | on how this works check out the epilogue at the bottom of this page which goes | on how this works, check out the epilogue at the bottom of this page, which goes |
+| My Whiteboard | part of my planning process, I often write | part of my planning process; I often write |
+| Epilogue | For example the beginning | For example, the beginning |
+| Epilogue | starts with a encrypted word | starts with an encrypted word |
+| Epilogue | tries every 8 letter word | tries every 8-letter word |
+| Epilogue | move onto the next word | move on to the next word |
+| Epilogue | For example right now we have | For example, right now we have |
+| Epilogue | Q=S, G=E W=U in both words | Q=S, G=E, W=U in both words |
+| Epilogue | have to back track to | have to backtrack to |
+| Epilogue | where In some cases | where in some cases |
+
+**Automated Foosball Goalie**
+
+| Where | Before | After |
+|---|---|---|
+| Making an Automated Foosball Goalie! (and the card's search summary) | my automated foosball goalie KURT (Killer.Ultimate.Robot.Teammate). | my automated foosball goalie, KURT (Killer.Ultimate.Robot.Teammate). |
+| October 18, 2022 | from Facebook market place for $50. After that we had | from Facebook Marketplace for $50. After that, we had |
+| December 9, 2022 | (red circle, and red text) | (red circle and red text) |
+| December 19, 2022 | Having this isn't everything though, I need to write | Having this isn't everything, though; I need to write |
+| December 19, 2022 | Throughout this I was fascinated | Throughout this, I was fascinated |
+| December 19, 2022 | or in musical terms a different note. Knowing this I was able to create the jingle bells melody. | or, in musical terms, a different note. Knowing this, I was able to create the Jingle Bells melody. |
+| December 22, 2022 | As a part of the planing process | As a part of the planning process |
+| December 22, 2022 | get almost everything setup and ready | get almost everything set up and ready |
+| Gallery line | Click on The Image to View Them Fullscreen! | Click on the Image to View Them Fullscreen! |
+
+**Symposium Notes**
+
+| Where | Before | After |
+|---|---|---|
+| Inspiration | So, I figured why not build it myself? | So, I figured, why not build it myself? |
+| Customizable Settings | settings, including: Calibration time, silence detection, and segment length. | settings, including calibration time, silence detection, and segment length. |
+
+**Left alone, because fixing them would change a word:** "I need to write" in the December 19 story
+reads like "I needed to write"; "Them" in "Click on the Image to View Them Fullscreen!" refers to one
+image; "for the last minute" in Symposium (usually "until the last minute"); "stored securely in local
+storage" (see above). Say which, if any, you want changed.
+
+### 2. Carousel: CalCardo and KURT
+
+The carousel now has five slides: Engine Miles, Burrow, RelayReply, then CalCardo ("AI calendar
+assistant", its Talk. Review. Sync. cover) and KURT ("My automated foosball goalie", the photo of the
+finished build in your room, made 1200 x 900 for the carousel at `public/images/slides/kurt.webp`).
+They are listed in `EXTRA_SLIDES` in `src/lib/apps.ts`.
+
+**Banner text on phones (earlier tester's note):** on a phone the pictures are now cropped to 4:3
+instead of the wide 1200:630, keeping the side with the words, so the banners' headlines are almost half
+as big again. The arrow buttons are hidden on phones, because they covered the headline; swipe and the
+dots still move the slides. From 640 px up nothing changed.
+
+### 3. Handwritten notes
+
+"2018 to now" is gone. The home page keeps "Apps I've shipped" (now on the right, see 4) and "the small
+stuff lives here".
+
+### 4. "My apps" heading
+
+Direction A's heading and line are back on the left: **My apps** and "Three products I designed, built
+and shipped myself." The handwritten "Apps I've shipped", with "shipped" circled in red, moved to the
+right, where "designed, coded and shipped by me" was (that note is gone).
+
+### 5. RelayReply picture
+
+The RelayReply picture (project page, carousel and Projects card) is now relayreply.com's home page as a
+visitor first sees it: a 1200 x 630 window, taken the moment the typing box shows the whole first
+sentence ("Ask if my allergy prescription is ready and how late they're open today.", to Main Street
+Pharmacy) and before it starts clearing. I pulled the RelayReply repo, built the current `origin/v3.3`
+(20435635c) with `SITE_PUBLIC_BETA=1 node site/build.mjs`, served it with `site/serve.mjs` on
+127.0.0.1 only and froze the page's clock for the shot. No public website was opened, and the page made
+no requests to other hosts.
+
+The "Apps I've shipped" card shows one crop of the same picture (`public/images/apps/relayreply_home.webp`).
+The two crops of the old example call (`relayreply_caption.webp`, `relayreply_card.webp`) are deleted, so
+RelayReply has just this one screenshot. The picture is the whole first screen, so it is no longer cut
+off at the bottom (earlier tester's note). Caption: "The home page of relayreply.com, the public beta."
+
+### 6. RelayReply link
+
+The button on the RelayReply page reads "relayreply.com (public beta)" and opens https://relayreply.com.
+
+### 7. Education on the home page
+
+A new Education section sits right under Work: Rochester Institute of Technology, B.S. in Software
+Engineering, 2024 to 2029, with the GIS immersion, GPA 3.8, and the coursework line from your resume
+(Software Development and Problem Solving I and II, Personal Software Engineering, Engineering Software
+Systems, Engineering Web-based Software Systems, Discrete Math, Calculus I and II, Statistics). It reads
+from `content/work.json`, so the Work page's Education got the coursework line too.
+
+### 8. Speed
+
+**The slow first click was the dev server.** `npm run dev` compiles each page the first time you open
+it, which takes a few seconds. The live site is a static export, so nothing compiles there. I built the
+site and loaded it from localhost in headless Chrome, once on a desktop and once as a phone on a
+throttled 4G connection (cache off):
+
+| Page | Before | After |
+|---|---|---|
+| Home, desktop: pictures downloaded | 1,071 KB | 465 KB |
+| Home, desktop: everything | 2,162 KB | 1,566 KB |
+| Home, phone on 4G: fully loaded | 1.39 s | 1.30 s |
+| Projects, phone on 4G: everything | 1,546 KB | 1,064 KB |
+| Projects, phone on 4G: fully loaded | 1.63 s | 1.18 s |
+| Foosball, phone on 4G: fully loaded | 3.80 s | 1.74 s |
+| Any page but home: fonts | 160 KB | 87 KB |
+
+The largest picture on screen showed in about 0.5 to 0.7 s on the phone and 0.1 to 0.3 s on desktop,
+both before and after. The sizes are before compression; Cloudflare compresses the scripts and pages
+to roughly a quarter.
+
+What I fixed:
+
+- **Project cards used the full cover.** A card shows its picture about 280 px wide, but it loaded the
+  full cover (KURT's was 272 KB at 1,800 px). Cards now use 720 px copies in `public/images/cards/`
+  (4 to 55 KB each). Run `npm run cards` after changing a cover (it needs ffmpeg, like `npm run media`).
+  Until then the card just uses the full cover, so it never shows the wrong picture.
+- **Carousel pictures.** Only the first slide loads with the page. The rest load once the page has
+  finished and the browser is idle, or as soon as someone moves the carousel.
+- **The handwriting font loaded on every page.** It is only used on the home page, so it is no longer
+  preloaded everywhere (73 KB saved on every other page).
+- **Videos with a poster** (foosball has seven) no longer fetch anything until you press play.
+
+Left as is: Next fetches the pages behind the links you can see ahead of time (about 200 to 460 KB
+before compression). That is what makes the second click instant. The script bundle (about 390 KB
+before compression) is the usual size for Next and React.
+
+### Files changed in this part
+
+| What | Where |
+|---|---|
+| Spelling and punctuation, notes | `content/projects/{cryptogram,foosball,symposium}/project.json` |
+| Word lock | `scripts/validate-content.ts` |
+| No tags or date line on your pages | `src/app/projects/[slug]/page.tsx` |
+| Home: heading, notes, Education, carousel slides | `src/app/page.tsx` |
+| Carousel crops, phone arrows, lazy slides | `src/components/HeroCarousel.tsx` |
+| Extra slides, RelayReply card picture | `src/lib/apps.ts`, `src/components/AppCard.tsx`, `src/components/HandNote.tsx` |
+| RelayReply picture, caption, link | `content/projects/relayreply/` , `public/images/apps/relayreply_home.webp` |
+| KURT slide | `public/images/slides/kurt.webp` |
+| Card pictures | `scripts/card-images.mjs`, `npm run cards`, `public/images/cards/`, `src/lib/project-card.ts` |
+| Font and video loading | `src/app/layout.tsx`, `src/components/MediaFigure.tsx` |
+| Coursework line | `content/work.json` |
 
 ---
 

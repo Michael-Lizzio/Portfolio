@@ -122,10 +122,13 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
         // An ownWords page is Michael's text only; its tagline is for cards.
         tagline={project.ownWords ? undefined : project.tagline}
         meta={
+          // Michael's own pages show no tags or date, so they may have no meta row at all.
+          project.ownWords && project.links.length === 0 && !project.development ? undefined : (
           <>
             {/* The card caps the pill list at four; here the full stack is the
-                point, so all of it shows - la2028 has twelve. */}
-            {project.tech.length > 0 ? (
+                point, so all of it shows - la2028 has twelve. Michael's own pages
+                had no tags or date line, so they show neither. */}
+            {!project.ownWords && project.tech.length > 0 ? (
               <ul className="flex flex-wrap gap-2">
                 {project.tech.map((tech) => (
                   <li key={tech}>
@@ -135,7 +138,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
               </ul>
             ) : null}
 
-            {date || project.status ? (
+            {!project.ownWords && (date || project.status) ? (
               <p className="font-mono text-xs text-fg-faint">
                 {date}
                 {date && project.status ? <span aria-hidden="true"> · </span> : null}
@@ -166,6 +169,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
               </ul>
             ) : null}
           </>
+          )
         }
       />
 

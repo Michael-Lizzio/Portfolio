@@ -25,8 +25,8 @@ export type AppShowcase = {
   icon: string;
   /** "iPhone", "Web app"... shown before the status. */
   platform: string;
-  /** "phones" shows two screenshots side by side; "call" stacks a caption over a question card. */
-  panel: "phones" | "call";
+  /** "phones" shows two screenshots side by side; "shot" shows one wide screenshot rising from the bottom. */
+  panel: "phones" | "shot";
   pictures: AppPicture[];
   /**
    * Where the project grid crops this app's wide banner (CSS object-position).
@@ -75,18 +75,67 @@ export const APP_SHOWCASE: Record<string, AppShowcase> = {
   relayreply: {
     icon: "/images/apps/relayreply-icon.svg",
     platform: "Web app",
-    panel: "call",
+    panel: "shot",
     pictures: [
       {
-        src: "/images/apps/relayreply_caption.webp",
-        width: 720,
-        height: 90,
-      },
-      {
-        src: "/images/apps/relayreply_card.webp",
-        width: 720,
-        height: 441,
+        // A crop of the project's hero: relayreply.com's home page with the typing box filled in.
+        src: "/images/apps/relayreply_home.webp",
+        width: 960,
+        height: 600,
       },
     ],
   },
 };
+
+/**
+ * The hero carousel: the three apps' hero pictures, then these two projects.
+ * Michael asked for CalCardo and KURT next to the apps (November 9, 2026).
+ *
+ * On a phone the carousel is narrow, so its pictures are cropped to 4:3 instead
+ * of the banners' 1200:630. That makes a banner's headline almost half as big
+ * again. `phonePosition` says which part of the picture that crop keeps
+ * (CSS object-position); `position` does the same for the wide crop.
+ */
+export type SlideArt = {
+  phonePosition?: string;
+  position?: string;
+};
+
+/** Crops for the apps' own hero pictures. Their banners put the words on the left. */
+export const APP_SLIDE_ART: Record<string, SlideArt> = {
+  burrow: { phonePosition: "left center" },
+  "engine-miles": { phonePosition: "left center" },
+  relayreply: { phonePosition: "center top" },
+};
+
+export type ExtraSlide = SlideArt & {
+  slug: string;
+  /** Shown instead of the project's title ("KURT" rather than "Automated Foosball Goalie"). */
+  title?: string;
+  /** The small line next to the title. */
+  label: string;
+  /** Public URL. */
+  src: string;
+  width: number;
+  height: number;
+};
+
+export const EXTRA_SLIDES: ExtraSlide[] = [
+  {
+    slug: "calcardo",
+    label: "AI calendar assistant",
+    src: "/media/calcardo/calcardo_cover.webp",
+    width: 1600,
+    height: 900,
+  },
+  {
+    slug: "foosball",
+    title: "KURT",
+    label: "My automated foosball goalie",
+    // The project's cover photo, made 1200 x 900 for the carousel.
+    src: "/images/slides/kurt.webp",
+    width: 1200,
+    height: 900,
+    position: "50% 55%",
+  },
+];

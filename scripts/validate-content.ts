@@ -57,12 +57,13 @@ const EM_DASH = "\u2014";
  * site shows from the file: tagline, summary, headings, paragraphs, bullets,
  * code blocks and captions. Alt text is not pinned. If this check fails,
  * someone changed his words: put them back. Only update a hash when Michael
- * himself asked for that exact change.
+ * himself asked for that exact change. Last update: November 9, 2026, his
+ * spelling and punctuation pass (every fix is listed in docs/REFRESH-NOV-2026.md).
  */
 const OWN_WORDS: Record<string, string> = {
-  cryptogram: "45f0cfc87cd202b3",
-  foosball: "dfa62883de276be1",
-  symposium: "87b282fe2cd4a63c",
+  cryptogram: "e5dbb1a049e1c3e7",
+  foosball: "395367c79bba5e87",
+  symposium: "b3162c80bfb382cf",
 };
 
 function ownWordsHash(project: Project): string {
