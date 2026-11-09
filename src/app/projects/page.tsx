@@ -4,6 +4,7 @@ import { Container } from "@/components/Container";
 import { PageHeader } from "@/components/PageHeader";
 import { ProjectGrid } from "@/components/ProjectGrid";
 import { getProjects } from "@/lib/content";
+import { toProjectCardData } from "@/lib/project-card";
 
 /**
  * The project index. It is generated from the content directory itself, so a
@@ -37,7 +38,7 @@ export default async function ProjectsPage() {
             <>
               {/* The cards carry <h3>; without this the page would jump h1 to h3. */}
               <h2 className="sr-only">All projects</h2>
-              <ProjectGrid projects={projects} />
+              <ProjectGrid projects={projects.map(toProjectCardData)} />
             </>
           ) : (
             /* Reachable only if every project is unpublished. Say so plainly

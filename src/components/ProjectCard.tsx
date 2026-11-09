@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { ResolvedProject } from "@/lib/schema";
-import { APP_SHOWCASE } from "@/lib/apps";
+import type { ProjectCardData } from "@/lib/project-card";
 import { DevelopmentBadge } from "./DevelopmentBadge";
 
 /** A small thumbnail below sm, then two, three and four columns. */
@@ -11,7 +10,7 @@ const HERO_SIZES = "(min-width: 64rem) 17rem, (min-width: 48rem) 30vw, (min-widt
  * Years only, so every card's meta line is short and lines up: "2022",
  * "2025 to 2026", "2026 to now". The project page has the full dates.
  */
-function cardYears(project: ResolvedProject): string | null {
+function cardYears(project: ProjectCardData): string | null {
   if (!project.date) return null;
   const start = project.date.slice(0, 4);
   if (!project.endDate) return start;
@@ -28,17 +27,9 @@ function cardYears(project: ResolvedProject): string | null {
  * The whole card is a single link, so there is exactly one tab stop and one
  * focus ring per project.
  */
-export function ProjectCard({ project }: { project: ResolvedProject }) {
+export function ProjectCard({ project }: { project: ProjectCardData }) {
   const years = cardYears(project);
-  const coverPosition = APP_SHOWCASE[project.slug]?.cardPosition;
-
-  // A hero may be a video; its poster frame is the still we want on the card.
-  const cover =
-    project.hero?.kind === "image"
-      ? { src: project.hero.src, alt: project.hero.alt }
-      : project.hero?.poster
-        ? { src: project.hero.poster, alt: project.hero.alt }
-        : null;
+  const { cover, coverPosition } = project;
 
   return (
     <article className="h-full">
@@ -51,7 +42,7 @@ export function ProjectCard({ project }: { project: ResolvedProject }) {
             <Image
               className="object-cover object-top motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-[1.02]"
               src={cover.src}
-              alt={cover.alt ?? ""}
+              alt={cover.alt}
               fill
               sizes={HERO_SIZES}
               style={coverPosition ? { objectPosition: coverPosition } : undefined}

@@ -8,6 +8,7 @@ import { HeroCarousel, type HeroSlide } from "@/components/HeroCarousel";
 import { ProjectGrid } from "@/components/ProjectGrid";
 import { APP_SHOWCASE } from "@/lib/apps";
 import { getProfile, getProjects, getWork } from "@/lib/content";
+import { toProjectCardData } from "@/lib/project-card";
 import { compareProjectsByRelevance } from "@/lib/project-order";
 import { jobAnchor } from "@/lib/work-anchor";
 
@@ -142,7 +143,7 @@ export default async function HomePage() {
 
             <div className="mt-8">
               <ProjectGrid
-                projects={others}
+                projects={others.map(toProjectCardData)}
                 initialVisible={HOME_VISIBLE}
                 sortable={false}
                 moreNote={

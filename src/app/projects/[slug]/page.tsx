@@ -272,15 +272,29 @@ function ProjectSection({
 
   if (split) {
     const mediaFirst = section.layout === "media-left";
+    // On wide screens the heading sits at the top of the text column, so it
+    // lines up with the text it introduces instead of floating over the
+    // picture. The picture spans both rows; heading and text meet in the middle
+    // of it. On phones it is one column: heading, picture, text.
+    const textColumn = mediaFirst ? "md:col-start-2" : "md:col-start-1";
+    const mediaColumn = mediaFirst ? "md:col-start-1" : "md:col-start-2";
     return (
       <section className={sectionClass}>
         <Container>
-          {section.heading ? <Heading className={headingClass}>{section.heading}</Heading> : null}
-          <div className="mt-6 grid items-center gap-8 md:grid-cols-2 md:gap-12">
-            <div className={mediaFirst ? "md:order-1" : "md:order-2"}>
+          <div className="grid gap-6 md:grid-cols-2 md:gap-x-12 md:gap-y-0">
+            {section.heading ? (
+              <Heading className={`${headingClass} ${textColumn} md:row-start-1 md:self-end`}>
+                {section.heading}
+              </Heading>
+            ) : null}
+            <div className={`${mediaColumn} md:row-span-2 md:row-start-1 md:self-center`}>
               <MediaFigure media={section.media[0]} gallery={gallery} />
             </div>
-            <div className={mediaFirst ? "md:order-2" : "md:order-1"}>
+            <div
+              className={`${textColumn} ${
+                section.heading ? "md:row-start-2 md:mt-5 md:self-start" : "md:row-span-2 md:row-start-1 md:self-center"
+              }`}
+            >
               <Prose paragraphs={section.body} />
             </div>
           </div>

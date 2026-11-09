@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState, type ReactNode } from "react";
 
-import type { ResolvedProject } from "@/lib/schema";
+import type { ProjectCardData } from "@/lib/project-card";
 import {
   INITIAL_VISIBLE,
   compareProjectsByDate,
@@ -32,7 +32,8 @@ export function ProjectGrid({
   sortable = true,
   moreNote,
 }: {
-  projects: ResolvedProject[];
+  /** Card data only (toProjectCardData). Whole projects would leak into the page source. */
+  projects: ProjectCardData[];
   initialVisible?: number;
   sortable?: boolean;
   /** Something small beside the "Load more" button (the home page's marker note). */

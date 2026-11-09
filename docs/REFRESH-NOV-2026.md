@@ -475,7 +475,7 @@ the same two columns.
 | Hero carousel | `src/components/HeroCarousel.tsx` |
 | App cards and their pictures, icons and crop | `src/components/AppCard.tsx`, `src/lib/apps.ts`, `public/images/apps/` |
 | Handwritten notes and the circled word | `src/components/HandNote.tsx`, `src/app/fonts/caveat.woff2`, `src/app/layout.tsx` |
-| Project card and grid (Load more, optional sort) | `src/components/ProjectCard.tsx`, `src/components/ProjectGrid.tsx` |
+| Project card and grid (Load more, optional sort) | `src/components/ProjectCard.tsx`, `src/components/ProjectGrid.tsx`, `src/lib/project-card.ts` |
 | Work page and its anchors | `src/app/work/page.tsx`, `src/lib/work-anchor.ts` |
 | App colours and marker colours, light and dark | `src/app/globals.css` |
 | RelayReply hero picture | `content/projects/relayreply/media/relayreply_cover.webp` |
@@ -491,6 +491,24 @@ the same two columns.
    collage image is no longer used on the home page (it is still on the About page).
 3. **Handwritten notes:** "2018 to now", "designed, coded and shipped by me" and "the small stuff
    lives here" are my placeholders in your style. Change or drop any of them.
+
+## November 9: QA fixes (notes leak, split rows)
+
+- **Internal notes no longer reach the browser.** The project grid on the home page and on
+  /projects is a client component, and it was being handed whole projects. That put every
+  project's internal `notes` field (local file paths, agent hand-off references, the old
+  RelayReply wording) and every section's text into the page source of `/` and `/projects`. The
+  grid now gets only what a card shows (slug, title, tagline, years, the AI badge, the cover image
+  and its crop), built on the server by `toProjectCardData` in `src/lib/project-card.ts`. Nothing
+  visible changed. "Phone calls, without the phone" and "private beta" are now gone from the built
+  site entirely. The `notes` text itself is unchanged in the content files.
+- **Headings on picture-and-text rows line up with their text.** On wide screens a row with a
+  picture on one side and text on the other used to put its heading above the whole row, so on
+  rows with the picture on the left it sat over the picture. The heading now sits at the top of
+  the text column (`ProjectSection` in `src/app/projects/[slug]/page.tsx`). On phones the order is
+  the same as before: heading, picture, text. This touches every project with `media-left` or
+  `media-right` sections (cryptogram, alarm system, Burrow, Engine Miles, Parcel Web Analyzer and
+  others). No words changed.
 
 ---
 
