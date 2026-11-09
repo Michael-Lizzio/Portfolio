@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { getProfile } from "@/lib/content";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
@@ -19,6 +20,17 @@ const inter = Inter({
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
+  display: "swap",
+});
+
+/**
+ * Caveat, for the few handwritten notes (HandNote). Bundled in the repo (Latin
+ * subset, OFL) so the build never needs to fetch it.
+ */
+const caveat = localFont({
+  src: "./fonts/caveat.woff2",
+  variable: "--font-caveat",
+  weight: "500 700",
   display: "swap",
 });
 
@@ -54,7 +66,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} h-full`}>
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} ${caveat.variable} h-full`}>
       <body className="flex min-h-full flex-col bg-bg text-fg">
         <a
           href="#main"

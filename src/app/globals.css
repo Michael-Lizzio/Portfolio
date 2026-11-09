@@ -30,6 +30,8 @@
     "Segoe UI", Helvetica, Arial, sans-serif;
   --font-mono: var(--font-jetbrains-mono, "JetBrains Mono"), ui-monospace, SFMono-Regular,
     Menlo, monospace;
+  /* The handwritten notes (HandNote). Only for a few short asides, never body text. */
+  --font-hand: var(--font-caveat, "Caveat"), "Marker Felt", "Bradley Hand", cursive;
 
   /* 16 ad-hoc sizes collapsed to 9; six of them are sizes the old site used. */
   --text-xs: 0.75rem;         /* 12px  captions, dates            */
@@ -151,6 +153,22 @@
 
   --shadow-sm: 0 1px 2px rgb(19 41 75 / 0.06);
   --shadow-md: 0 4px 12px rgb(19 41 75 / 0.08);
+
+  /* ── The three apps' own colours, from each app's palette on the TooAvid
+     site. Used only for the bottom half of the app cards and the marker notes;
+     everything else stays on the one-accent rule. ── */
+  --app-burrow: #4a56d0;
+  --app-burrow-tint: #eceefc;
+  --app-engine-miles: #a3470b;
+  --app-engine-miles-tint: #e6efec;
+  --app-relayreply: #2347dc;
+  --app-relayreply-tint: #eef2fe;
+
+  /* Marker colours for the handwritten notes: blue, red, green. Each one is
+     at least 4.5:1 on --bg and --bg-subtle. */
+  --marker-blue: #1d5fd1;
+  --marker-red: #c63a28;
+  --marker-green: #13784f;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -180,6 +198,17 @@
 
     --shadow-sm: none;                 /* dark UI separates by border, not shadow */
     --shadow-md: 0 8px 24px rgb(0 0 0 / 0.4);
+
+    --app-burrow: #9aa3f5;
+    --app-burrow-tint: #1b2036;
+    --app-engine-miles: #ffb03b;
+    --app-engine-miles-tint: #14261f;
+    --app-relayreply: #7e98ff;
+    --app-relayreply-tint: #171d36;
+
+    --marker-blue: #7fa8f0;
+    --marker-red: #f08a7a;
+    --marker-green: #5fcf9c;
   }
 }
 
@@ -207,6 +236,17 @@
 
   --shadow-sm: none;
   --shadow-md: 0 8px 24px rgb(0 0 0 / 0.4);
+
+  --app-burrow: #9aa3f5;
+  --app-burrow-tint: #1b2036;
+  --app-engine-miles: #ffb03b;
+  --app-engine-miles-tint: #14261f;
+  --app-relayreply: #7e98ff;
+  --app-relayreply-tint: #171d36;
+
+  --marker-blue: #7fa8f0;
+  --marker-red: #f08a7a;
+  --marker-green: #5fcf9c;
 }
 
 @theme inline {
@@ -230,6 +270,10 @@
 
   --shadow-card: var(--shadow-sm);
   --shadow-raised: var(--shadow-md);
+
+  --color-marker-blue: var(--marker-blue);
+  --color-marker-red: var(--marker-red);
+  --color-marker-green: var(--marker-green);
 }
 
 /* ========================================================================== */
@@ -345,5 +389,27 @@
 
   .btn-outline:hover {
     background-color: var(--surface-hover);
+  }
+}
+
+/* ==========================================================================
+   App cards. Each card sets --app and --app-tint from its slug, so the one
+   component can wear Burrow, Engine Miles or RelayReply colours.
+   ========================================================================== */
+
+@layer components {
+  .app-burrow {
+    --app: var(--app-burrow);
+    --app-tint: var(--app-burrow-tint);
+  }
+
+  .app-engine-miles {
+    --app: var(--app-engine-miles);
+    --app-tint: var(--app-engine-miles-tint);
+  }
+
+  .app-relayreply {
+    --app: var(--app-relayreply);
+    --app-tint: var(--app-relayreply-tint);
   }
 }

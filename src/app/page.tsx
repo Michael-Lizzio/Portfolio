@@ -1,111 +1,123 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { AppCard } from "@/components/AppCard";
 import { Container } from "@/components/Container";
-import { ProjectCard } from "@/components/ProjectCard";
+import { Circled, HandNote } from "@/components/HandNote";
+import { HeroCarousel, type HeroSlide } from "@/components/HeroCarousel";
+import { ProjectGrid } from "@/components/ProjectGrid";
+import { APP_SHOWCASE } from "@/lib/apps";
 import { getProfile, getProjects, getWork } from "@/lib/content";
 import { compareProjectsByRelevance } from "@/lib/project-order";
+import { jobAnchor } from "@/lib/work-anchor";
 
 /**
  * Home.
  *
- * Says who I am in one screen, shows the three apps, a few more projects, and
- * where I've worked, then hands off to /projects and /work. Which projects show
- * up here is decided by `featured` (Selected work) and by the ranking in
- * src/lib/project-order.ts (the row after it).
+ * Says who I am in one screen with the apps sliding by beside it, then the
+ * three apps, the rest of the projects (best first, the small ones behind
+ * "Load more"), and where I've worked. The apps are the `featured` projects;
+ * the order everywhere comes from src/lib/project-order.ts.
  */
 
-/** How many projects the second row shows. */
-const MORE_COUNT = 3;
+/** How many non-app projects the home grid shows before "Load more". Two rows of four. */
+const HOME_VISIBLE = 8;
 
 export default async function HomePage() {
   const [profile, projects, work] = await Promise.all([getProfile(), getProjects(), getWork()]);
 
-  const relevantProjects = [...projects].sort(compareProjectsByRelevance);
-  const featured = relevantProjects.filter((project) => project.featured);
-  const more = relevantProjects.filter((project) => !project.featured).slice(0, MORE_COUNT);
+  const ranked = [...projects].sort(compareProjectsByRelevance);
+  const apps = ranked.filter((project) => project.featured);
+  const others = ranked.filter((project) => !project.featured);
 
   const github = profile.links.find((link) => link.label.toLowerCase() === "github") ?? null;
-  const blurb = profile.bio.trim();
+
+  const slides: HeroSlide[] = apps.flatMap((project) =>
+    project.hero && project.hero.kind === "image" && project.hero.width && project.hero.height
+      ? [
+          {
+            slug: project.slug,
+            title: project.title,
+            status: project.status,
+            src: project.hero.src,
+            width: project.hero.width,
+            height: project.hero.height,
+            alt: project.hero.alt ?? "",
+          },
+        ]
+      : [],
+  );
 
   return (
     <>
-      {/* The same subtle band + hairline every other page opens with (PageHeader),
-          so the top of the site is one shape rather than six. */}
       <section className="border-b border-border-default bg-bg-subtle">
-        <Container className="py-16 md:py-24">
-          {/* Two columns from lg up: the bio never exceeds its measure, and the
-              collage fills the half of the band it would otherwise leave empty. */}
-          <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,34rem)_minmax(0,1fr)]">
-            <div className="max-w-prose">
-              <Image
-                className="h-24 w-24 rounded-full border border-border-default object-cover"
-                src="/images/profile.webp"
-                alt={profile.name}
-                width={96}
-                height={96}
-                priority
-              />
+        <Container className="py-14 md:py-20">
+          <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,34rem)] lg:gap-16">
+            <div className="max-w-xl">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <Image
+                  className="size-11 rounded-full border border-border-default object-cover"
+                  src="/images/profile.webp"
+                  alt=""
+                  width={88}
+                  height={88}
+                  priority
+                />
+                <p className="font-mono text-sm text-fg-muted">Software Engineering at RIT</p>
+                <HandNote marker="blue" tilt={-4} className="ml-1">
+                  2018 to now
+                </HandNote>
+              </div>
 
-            <h1 className="mt-8 text-4xl font-semibold tracking-tight text-fg md:text-5xl">
-              {profile.name}
-            </h1>
+              <h1 className="mt-7 text-5xl font-semibold tracking-[-0.025em] text-fg md:text-[3.5rem] md:leading-[1.05]">
+                Hi, I&apos;m Michael.
+                <br />I build things <span className="text-accent">people use.</span>
+              </h1>
 
-            <p className="mt-4 text-lg text-fg-muted">{profile.headline}</p>
+              <p className="mt-6 text-lg text-fg-muted">
+                It started with a Raspberry Pi I got for Christmas in 2018. Since then I&apos;ve built a
+                robot foosball goalie, AI tools at my internships, and now my own apps. Two are on the App
+                Store and the third is in public beta.
+              </p>
 
-            {blurb ? <p className="mt-6 text-lg text-fg">{blurb}</p> : null}
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              {profile.resume ? (
-                <a
-                  className="btn btn-primary"
-                  href={profile.resume}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Resume
-                </a>
-              ) : null}
-
-              {github ? (
-                <a
-                  className="btn btn-outline"
-                  href={github.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  GitHub
-                </a>
-              ) : null}
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link className="btn btn-primary" href="/projects">
+                  See my projects
+                </Link>
+                {profile.resume ? (
+                  <a className="btn btn-outline" href={profile.resume} target="_blank" rel="noopener noreferrer">
+                    Resume
+                  </a>
+                ) : null}
+                {github ? (
+                  <a className="btn btn-outline" href={github.href} target="_blank" rel="noopener noreferrer">
+                    GitHub
+                  </a>
+                ) : null}
               </div>
             </div>
 
-            <Image
-              className="hidden rounded-lg border border-border-default object-cover lg:block"
-              src="/images/collage.webp"
-              alt="A six-photo collage: skiing through falling snow, two swimmers standing in the surf, a beach at dusk, family and a dog beside a lighthouse, skis held overhead on a foggy slope, and a foosball table at home rigged with an overhead camera mount."
-              width={1800}
-              height={1170}
-              sizes="(min-width: 64rem) 34rem, 0px"
-              priority
-            />
+            {slides.length > 0 ? <HeroCarousel slides={slides} label="My apps" /> : null}
           </div>
         </Container>
       </section>
 
-      {featured.length > 0 ? (
-        <section className="pt-16 md:pt-24">
+      {apps.length > 0 ? (
+        <section className="pt-16 md:pt-24" aria-labelledby="apps-title">
           <Container>
-            <h2 className="text-3xl font-semibold tracking-tight text-fg">Selected work</h2>
-            <p className="mt-4 max-w-prose text-lg text-fg-muted">
-              The three apps I&apos;m building right now. Two are on the App Store and one is in a
-              private beta.
-            </p>
+            <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
+              <h2 id="apps-title" className="text-3xl font-semibold tracking-tight text-fg">
+                Apps I&apos;ve <Circled>shipped</Circled>
+              </h2>
+              <HandNote marker="red" tilt={-2} className="pb-1">
+                designed, coded and shipped by me
+              </HandNote>
+            </div>
 
             <ul className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {featured.map((project) => (
+              {apps.map((project) => (
                 <li key={project.slug}>
-                  <ProjectCard project={project} />
+                  <AppCard project={project} showcase={APP_SHOWCASE[project.slug]} />
                 </li>
               ))}
             </ul>
@@ -113,53 +125,82 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      {more.length > 0 ? (
-        <section className="pt-16 md:pt-24">
+      {others.length > 0 ? (
+        <section id="projects" className="scroll-mt-20 pt-16 md:pt-24" aria-labelledby="projects-title">
           <Container>
-            <h2 className="text-2xl font-semibold tracking-tight text-fg">A few more I like</h2>
-
-            <ul className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {more.map((project) => (
-                <li key={project.slug}>
-                  <ProjectCard project={project} />
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-10">
-              <Link className="btn btn-outline" href="/projects">
-                All {projects.length} {projects.length === 1 ? "project" : "projects"}
+            <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-2">
+              <div>
+                <h2 id="projects-title" className="text-3xl font-semibold tracking-tight text-fg">
+                  Projects
+                </h2>
+                <p className="mt-2 text-fg-muted">My favorites first. The smaller ones are one click away.</p>
+              </div>
+              <Link className="link text-sm font-medium" href="/projects">
+                All {projects.length} projects
               </Link>
+            </div>
+
+            <div className="mt-8">
+              <ProjectGrid
+                projects={others}
+                initialVisible={HOME_VISIBLE}
+                sortable={false}
+                moreNote={
+                  <HandNote marker="green" tilt={-2} className="text-[1.375rem]">
+                    the small stuff lives here
+                  </HandNote>
+                }
+              />
             </div>
           </Container>
         </section>
       ) : null}
 
       {work.jobs.length > 0 ? (
-        <section className="py-16 md:py-24">
+        <section className="py-16 md:py-24" aria-labelledby="work-title">
           <Container>
-            <h2 className="text-2xl font-semibold tracking-tight text-fg">Where I&apos;ve worked</h2>
+            <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-2">
+              <div>
+                <h2 id="work-title" className="text-3xl font-semibold tracking-tight text-fg">
+                  Work
+                </h2>
+                <p className="mt-2 text-fg-muted">
+                  {work.jobs.length === 3 ? "Three summers of internships." : "Where I've worked."}
+                </p>
+              </div>
+              <Link className="link text-sm font-medium" href="/work">
+                Full work history
+              </Link>
+            </div>
 
             <ul className="mt-8 border-t border-border-default">
               {work.jobs.map((job) => (
-                <li
-                  key={`${job.company}-${job.dates}`}
-                  className="flex flex-col gap-1 border-b border-border-default py-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
-                >
-                  <span className="text-fg">
-                    {job.role}
-                    <span className="text-fg-muted">, {job.company}</span>
-                  </span>
-                  <span className="shrink-0 font-mono text-xs text-fg-faint">{job.dates}</span>
+                <li key={`${job.company}-${job.dates}`} className="border-b border-border-default">
+                  <Link
+                    href={`/work#${jobAnchor(job)}`}
+                    className="group grid gap-1 py-6 sm:grid-cols-[9rem_minmax(0,1fr)_auto] sm:gap-6"
+                  >
+                    <span className="font-mono text-xs leading-7 text-fg-faint">{job.dates}</span>
+                    <span>
+                      <span className="block text-lg font-semibold tracking-tight text-fg group-hover:text-accent motion-safe:transition">
+                        {job.role}
+                      </span>
+                      <span className="block text-sm text-fg-muted">
+                        {job.company}
+                        {job.location ? ` · ${job.location}` : null}
+                      </span>
+                      <span className="mt-2 block max-w-prose text-fg">{job.summary}</span>
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      className="hidden text-fg-faint group-hover:text-accent motion-safe:transition motion-safe:group-hover:translate-x-0.5 sm:block sm:leading-7"
+                    >
+                      →
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>
-
-            <div className="mt-10">
-              <Link className="btn btn-outline" href="/work">
-                More about my work
-              </Link>
-            </div>
           </Container>
         </section>
       ) : null}

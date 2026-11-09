@@ -4,8 +4,8 @@ Branch `refresh-nov-2026`, cut from `main` at 22e5517. Nothing is merged. Cloudf
 from `main`, so this only goes live when you merge it.
 
 This file lists every change on the branch and, in the appendix, every project's copy before and
-after, so you can check the wording line by line. The look of the site (colors, type, layout
-directions) is a separate step and is not part of this branch.
+after, so you can check the wording line by line. The new look (November 9) is described in
+"November 9: the new look" below.
 
 ## Quick summary
 
@@ -397,6 +397,100 @@ and top to bottom on a phone, and a screen reader reads it as a list.
 | Content | every published `content/projects/*/project.json` (no media files changed) |
 
 `public/resume.pdf` and all media files are untouched.
+
+## November 9: the new look
+
+This follows your look decisions from November 9: Direction A's structure, with a few of B's touches
+and nothing from C. It covers the home page, the Projects page and the Work page, in light and dark,
+plus RelayReply's pictures. I checked every page at 1440 px and 390 px.
+
+### Home page, top to bottom
+
+- **Hero:** your copy as you liked it: "Hi, I'm Michael. I build things people use.", "Software
+  Engineering at RIT", the Raspberry Pi for Christmas 2018 line (now ending "the third is in public
+  beta"), and See my projects, Resume and GitHub. A small handwritten "2018 to now" sits next to the
+  RIT line.
+- **The photo collage is replaced by a carousel of the apps.** Each slide is the app's name and status
+  on top, its banner picture, and "View project" below. It moves on every 6.5 seconds, and stops while
+  the mouse is over it, while anything in it has keyboard focus, while the tab is hidden, or after
+  the pause button. People who turn on "reduce motion" get no auto-advance and no slide animation.
+  Arrow buttons sit on both sides of the picture, the left and right arrow keys work, and on a phone
+  you can swipe. Slides that aren't showing are inert, so tabbing only reaches the visible one. The
+  slides are the three apps' hero pictures, so a new app shows up by itself.
+- **"Apps I've shipped"** with "shipped" circled in red marker and "designed, coded and shipped by
+  me" in handwriting beside it. Three cards, B style: white on top (icon, name, platform and status,
+  the one-line tagline, the AI-assisted badge, View project), and the bottom half in the app's own
+  colour with real screens: two App Store screenshots for Burrow and Engine Miles, and for RelayReply
+  a caption and the question card from the example call on relayreply.com. The whole card is one
+  link to the app's project page. Dark mode uses each app's dark colours from the TooAvid site.
+- **Projects:** "My favorites first. The smaller ones are one click away." and a link to all of them.
+  A grid of 4 across (3 on a tablet, 2 on a small tablet, and a compact list on a phone), the 8 best
+  non-app projects first, then "Load more projects (17)" with a handwritten "the small stuff lives
+  here". Hidden cards stay in the HTML, so every project is still linked without JavaScript.
+- **Work:** "Three summers of internships.", one row per job (dates, role, company, the summary).
+  Each row opens that job on the Work page (`/work#...`), and "Full work history" opens the page.
+
+There are four handwritten notes on the home page and none anywhere else. The font is Caveat, bundled
+in the repo (`src/app/fonts/caveat.woff2`), so the build never fetches it.
+
+### Project cards (home page and Projects page)
+
+- Fixed 16:10 picture, title, tagline, then the years ("2022", "2025 to 2026", "2026 to now") and
+  the AI-assisted or Human-led badge. The tech pills are gone from the cards; the project pages still
+  list the stack.
+- Burrow's and Engine Miles' banners crop from the left, so their headline stays in the picture.
+- On a phone each card is a row: a small picture on the left, the words on the right.
+
+### Projects page
+
+Same header and Best first / Date sort as before, the new cards 4 across, 12 shown before "Load
+more projects (16)".
+
+### Work page
+
+Dates in a left column and the job on the right, on desktop. Each job has an anchor the home page
+links to. "Projects from this job" are now small chips with the project's picture. Education uses
+the same two columns.
+
+### RelayReply
+
+- Its source of truth is relayreply.com's current home page, which is the RelayReply web app's own
+  home (`startups/RelayReply`, branch `origin/v3.3`, built with `SITE_PUBLIC_BETA=1 node
+  site/build.mjs` into a scratch folder and opened only on localhost). No public website was opened.
+- **Hero picture** (`relayreply_cover.webp`, also the carousel slide and the Projects card): a
+  screenshot of that page's example call ("What a call looks like"): Rivera Plumbing captions on the
+  left and the "Approve the $100 visit fee?" card on the right. The caption under it says it is an
+  example with made-up names and numbers, as the site does.
+- **App card pictures** (`public/images/apps/relayreply_caption.webp` and `relayreply_card.webp`):
+  crops of the same screenshot.
+- The words on the RelayReply page are the words pass's (see above); I only changed the hero's
+  description and caption. "Phone calls, without the phone" and "private beta" are gone everywhere.
+- All three apps carry the AI-assisted badge.
+
+### Files
+
+| What | Where |
+|---|---|
+| Home page | `src/app/page.tsx` |
+| Hero carousel | `src/components/HeroCarousel.tsx` |
+| App cards and their pictures, icons and crop | `src/components/AppCard.tsx`, `src/lib/apps.ts`, `public/images/apps/` |
+| Handwritten notes and the circled word | `src/components/HandNote.tsx`, `src/app/fonts/caveat.woff2`, `src/app/layout.tsx` |
+| Project card and grid (Load more, optional sort) | `src/components/ProjectCard.tsx`, `src/components/ProjectGrid.tsx` |
+| Work page and its anchors | `src/app/work/page.tsx`, `src/lib/work-anchor.ts` |
+| App colours and marker colours, light and dark | `src/app/globals.css` |
+| RelayReply hero picture | `content/projects/relayreply/media/relayreply_cover.webp` |
+
+`public/resume.pdf` is untouched. `npm run validate`, `npm run lint`, `npm run typecheck` and
+`npm run build` pass.
+
+### For you to decide
+
+1. **The carousel shows only the three apps.** Adding CalCardo or KURT would make it feel less thin;
+   say if you want that.
+2. **The hero photo of you** is now a small round avatar next to "Software Engineering at RIT". The
+   collage image is no longer used on the home page (it is still on the About page).
+3. **Handwritten notes:** "2018 to now", "designed, coded and shipped by me" and "the small stuff
+   lives here" are my placeholders in your style. Change or drop any of them.
 
 ---
 

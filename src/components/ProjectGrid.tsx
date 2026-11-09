@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 
 import type { ResolvedProject } from "@/lib/schema";
 import {
@@ -19,13 +19,25 @@ function sortStatus(mode: SortMode): string {
 }
 
 /**
- * The /projects grid. "Relevant" shows the ranked list from project-order.ts and
- * keeps everything past INITIAL_VISIBLE behind "Load more". The hidden cards are
- * still in the HTML (with `hidden`), so every project page stays linked for
- * crawlers and for anyone without JavaScript. Sorting by date shows everything,
- * because a timeline with gaps in it would be misleading.
+ * The project grid, on /projects and on the home page. "Best first" shows the
+ * ranked list from project-order.ts and keeps everything past `initialVisible`
+ * behind "Load more". The hidden cards are still in the HTML (with `hidden`), so
+ * every project page stays linked for crawlers and for anyone without
+ * JavaScript. Sorting by date shows everything, because a timeline with gaps in
+ * it would be misleading. The home page turns the sort control off.
  */
-export function ProjectGrid({ projects }: { projects: ResolvedProject[] }) {
+export function ProjectGrid({
+  projects,
+  initialVisible = INITIAL_VISIBLE,
+  sortable = true,
+  moreNote,
+}: {
+  projects: ResolvedProject[];
+  initialVisible?: number;
+  sortable?: boolean;
+  /** Something small beside the "Load more" button (the home page's marker note). */
+  moreNote?: ReactNode;
+}) {
   const [sortMode, setSortMode] = useState<SortMode>("relevance");
   const [expanded, setExpanded] = useState(false);
   const listRef = useRef<HTMLUListElement>(null);
@@ -44,7 +56,7 @@ export function ProjectGrid({ projects }: { projects: ResolvedProject[] }) {
 
   const dateAscending = sortMode === "date-asc";
   const limited = sortMode === "relevance" && !expanded;
-  const hiddenCount = limited ? Math.max(orderedProjects.length - INITIAL_VISIBLE, 0) : 0;
+  const hiddenCount = limited ? Math.max(orderedProjects.length - initialVisible, 0) : 0;
 
   function loadMore() {
     setExpanded(true);
@@ -53,7 +65,7 @@ export function ProjectGrid({ projects }: { projects: ResolvedProject[] }) {
     requestAnimationFrame(() => {
       listRef.current
         ?.querySelectorAll<HTMLAnchorElement>("li > article > a")
-        [INITIAL_VISIBLE]?.focus();
+        [initialVisible]?.focus();
     });
   }
 
@@ -70,6 +82,7 @@ export function ProjectGrid({ projects }: { projects: ResolvedProject[] }) {
 
   return (
     <>
+      {sortable ? (
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-border-default pb-5">
         <span id="project-sort-label" className="text-sm font-medium text-fg-muted">
           Sort by
@@ -102,24 +115,28 @@ export function ProjectGrid({ projects }: { projects: ResolvedProject[] }) {
           </button>
         </div>
       </div>
+      ) : null}
 
-      <p className="sr-only" aria-live="polite">
-        {sortStatus(sortMode)}
-      </p>
+      {sortable ? (
+        <p className="sr-only" aria-live="polite">
+          {sortStatus(sortMode)}
+        </p>
+      ) : null}
 
-      <ul ref={listRef} className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <ul ref={listRef} className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {orderedProjects.map((project, index) => (
-          <li key={project.slug} hidden={limited && index >= INITIAL_VISIBLE}>
+          <li key={project.slug} className="min-w-0" hidden={limited && index >= initialVisible}>
             <ProjectCard project={project} />
           </li>
         ))}
       </ul>
 
       {hiddenCount > 0 ? (
-        <div className="mt-10 flex justify-center">
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
           <button type="button" className="btn btn-outline" onClick={loadMore}>
-            Load {hiddenCount} more
+            Load more projects ({hiddenCount})
           </button>
+          {moreNote}
         </div>
       ) : null}
     </>
