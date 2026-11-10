@@ -176,12 +176,14 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
       <article className="py-14 md:py-20">
         {project.overview ? (
           <>
-            {/* The 30-second version, then the details for anyone who wants them. */}
+            {/* The 30-second version, then the details for anyone who wants them.
+                On Michael's own pages the overview is a short summary added on
+                top, and everything under the divider is his original page. */}
             <ProjectOverview overview={project.overview} hero={project.hero} gallery={gallery} />
             {project.sections.length > 0 ? (
               <Container size="prose" className="mt-16 md:mt-20">
                 <p className="border-t border-border-default pt-6 font-mono text-xs uppercase tracking-wide text-fg-faint">
-                  The details
+                  {project.ownWords ? "My original write-up" : "The details"}
                 </p>
               </Container>
             ) : null}

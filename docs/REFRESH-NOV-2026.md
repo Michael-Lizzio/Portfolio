@@ -9,6 +9,11 @@ after, so you can check the wording line by line. The new look (November 9) is d
 
 ## Quick summary
 
+**November 10:** Work links fixed (a redirect rule sent every click on them to a 404), a 30-second
+overview on the cryptogram and foosball pages above your original words, the "Apps I've shipped"
+note in black or white with a bigger red loop, and Engine Miles now says plug-in hybrid. See
+"November 10: your notes" near the end (before the appendix).
+
 **Final notes, November 9:** spelling and punctuation fixed on your three pages, CalCardo and KURT in
 the carousel, the RelayReply picture is now relayreply.com's home page, an Education section on the
 home page, and a speed pass. See "November 9: your final notes" near the end (before the appendix).
@@ -676,6 +681,110 @@ before compression) is the usual size for Next and React.
 | Card pictures | `scripts/card-images.mjs`, `npm run cards`, `public/images/cards/`, `src/lib/project-card.ts` |
 | Font and video loading | `src/app/layout.tsx`, `src/components/MediaFigure.tsx` |
 | Coursework line | `content/work.json` |
+
+## November 10: your notes
+
+Branch `tweaks-nov10`, cut from `main` at 0f40e65 (what is live).
+
+### 1. Work links that went nowhere
+
+**What was wrong:** on the live site, clicking any link to the Work page (the three Work rows on
+the home page, "Full work history", the Work tab in the menu, the link on About) landed on "There is
+nothing at this address". Typing the address in worked, which is why it looked fine sometimes.
+
+**Why:** `public/_redirects` had a catch-all rule, `/work/:slug` to `/projects/:slug/`, to keep the
+old project addresses working. Cloudflare applies redirects before it serves files, and the Work
+page has its own small data files under `/work/` (`index.txt`, `__next.*.txt`) that the site fetches
+when you click a link. The rule sent those to `/projects/index.txt/` and so on, which don't exist.
+
+**Fix:** the catch-all is gone. Each project has its own two lines instead (`/work/foosball/` and
+`/work/foosball` to `/projects/foosball/`), so old links still work. `npm run validate` now fails if
+any placeholder rule in `_redirects` would catch a page or its data files. Checked with a local
+server that applies `_redirects` the way Cloudflare does: 113 clicks across Home, Work, About,
+Projects, Contact and three project pages, none broken, and the Work rows land on the right job.
+
+**Also fixed:** the collage on About was a link to an image viewer that wasn't on the page, so
+clicking it did nothing. It now opens full screen like project images. A crawl of the built site
+finds no other dead internal links or anchors, and every outside link returns a page.
+
+If the Work tab still shows the error for you after this goes live, your browser cached the old
+redirect: a hard refresh or clearing the site's data fixes it.
+
+### 2. A 30-second overview on the cryptogram and foosball pages
+
+Both pages now open with the same four-part block as the other projects (What it is, Why I made it,
+What I did, How it turned out), written from your own page text. Under it, a divider reads "My
+original write-up", and everything below is your page, word for word. The word lock still passes
+with the same hashes: the overview is outside it.
+
+**Cryptogram Solver**
+
+- What it is: A program that solves cryptograms, the puzzles where every letter in a quote is
+  swapped for a different one. You give it the scrambled quote and it works out the real words.
+- Why I made it: The day before February break in 2022, I grabbed my computer science teacher's
+  cryptogram handout for my dad. He was flying through it, and I got lost in the idea of making a
+  computer solve it instead.
+- What I did: I spent most of the break at my whiteboard building a backtracking algorithm without
+  even knowing what one was. It guesses the longest words first from 22 word lists, sorted common to
+  uncommon, and backs up when a guess stops working.
+- How it turned out: My first test was the scrambled word "BEGINNING", and it worked. By the next
+  day it could solve all sorts of puzzles, including the handout that started it, and I got to show
+  my teacher she inspired it.
+
+**Automated Foosball Goalie**
+
+- What it is: KURT (Killer.Ultimate.Robot.Teammate), a robot goalie for a real foosball table. A
+  camera watches the ball and a stepper motor slides the goalie over to block it.
+- Why I made it: I saw a similar project on a college tour and wanted to build my own, so in October
+  2022 we picked up a foosball table from Facebook Marketplace for $50.
+- What I did: I tracked the ball with OpenCV on a Raspberry Pi, using a camera on a mount made of
+  dowels and a Chinese food container, plus a Kalman filter to guess where it was headed. Then I
+  built the motor circuit and controller with some guidance from my dad, and the side mount after
+  Lego and cardboard prototypes.
+- How it turned out: By Christmas 2022 KURT was blocking shots on his own. He still has flaws, but
+  he makes more saves than I would, and I learned a ton building him.
+
+### 3. "Apps I've shipped"
+
+The words are now black in light mode and white in dark mode. The loop around "shipped" is red in
+both (a brighter red in dark mode, instead of the old salmon), and it is bigger, so it goes around
+the word instead of cutting through the "s" and the "d".
+
+### 4. Engine Miles says plug-in hybrid
+
+| Where | Before | After |
+|---|---|---|
+| Tagline (cards, project page) | An iPhone app that estimates how far a hybrid's gas engine has actually gone | An iPhone app that estimates how far your plug-in hybrid's gas engine actually got |
+| Summary (search results) | an iPhone app for hybrid and plug-in hybrid owners | an iPhone app for plug-in hybrid owners, and it works for regular hybrids too |
+| What it is | An iPhone app for hybrid and plug-in hybrid owners. ... how many miles the gas engine has actually run. | An iPhone app for plug-in hybrid owners, and it works for regular hybrids too. ... how far your gas engine actually got. |
+| How it turned out, Where it's at | more hybrid owners | more plug-in hybrid owners |
+
+The carousel uses the title and the banner, so it had no wording to change. The banner picture
+itself still says "Your hybrid journey." (that is in the image), and its alt text quotes it, because
+alt text has to say what the picture shows.
+
+### 5. Press images
+
+I looked at the Engine Miles press kit (`EngineMiles/website/public/assets/press` and
+`App Media/Brand`). The App Store screenshots you like stay. The one press image worth knowing about
+is `enginemiles-social-image.png`: "Your odometer tells you how far the car has gone. EngineMiles
+tells you how far the engine has gone", with a year's 12,892 odometer miles split into about 7,647
+electric and 5,245 gas. It explains the plug-in idea better than the current banner, but swapping
+the banner changes the look of the card, carousel and page, so I left it for you to decide. I
+didn't find a Burrow press folder under `~/cursor`, so Burrow is unchanged. No press paragraphs
+were used.
+
+### Files changed in this part
+
+| What | Where |
+|---|---|
+| Work links: redirects | `public/_redirects` |
+| Redirect check | `scripts/validate-content.ts` |
+| About collage viewer | `src/app/about/page.tsx` |
+| Overviews | `content/projects/{cryptogram,foosball}/project.json` |
+| "My original write-up" divider | `src/app/projects/[slug]/page.tsx`, `src/lib/schema.ts` (comment) |
+| Note colours and loop | `src/components/HandNote.tsx`, `src/app/globals.css`, `src/app/page.tsx` |
+| Engine Miles wording | `content/projects/engine-miles/project.json` |
 
 ---
 

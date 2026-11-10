@@ -23,6 +23,7 @@
  *   - no media file is larger than 8 MB
  *   - videos have a poster frame                                       (warn)
  *   - every file in a media folder is referenced by project.json       (warn)
+ *   - no public/_redirects placeholder rule catches a page or its data files
  *
  * This is a .ts run through Node's native type stripping, so it can import the
  * real schemas from src/lib/schema.ts instead of restating them - one source of
@@ -30,6 +31,7 @@
  * Dependencies: zod and node builtins. Nothing else.
  */
 import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
@@ -48,6 +50,7 @@ const ROOT = path.resolve(import.meta.dirname, "..");
 const PROJECTS_DIR = path.join(ROOT, "content", "projects");
 const PROFILE_FILE = path.join(ROOT, "content", "profile.json");
 const WORK_FILE = path.join(ROOT, "content", "work.json");
+const REDIRECTS_FILE = path.join(ROOT, "public", "_redirects");
 const EM_DASH = "\u2014";
 
 /**
@@ -241,6 +244,51 @@ async function validateWork(): Promise<string[]> {
     return [];
   }
   return parsed.data.jobs.flatMap((job) => job.projects);
+}
+
+/* -------------------------------------------------------------------------- */
+/* redirects                                                                  */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Cloudflare Pages applies public/_redirects BEFORE it serves files. So a
+ * placeholder rule like "/work/:slug" also catches the files the site itself
+ * needs under /work/: index.txt and the __next.*.txt data Next fetches when
+ * someone clicks a link to that page. That sent every Work link to a 404 until
+ * November 10, 2026. This checks every placeholder or splat rule against every
+ * page the site builds and the data files beside it.
+ */
+function validateRedirects(publishedSlugs: string[]): void {
+  const group = rel(REDIRECTS_FILE);
+  let text = "";
+  try {
+    text = readFileSync(REDIRECTS_FILE, "utf8");
+  } catch {
+    return;
+  }
+  const pages = ["/", "/about/", "/contact/", "/projects/", "/work/", ...publishedSlugs.map((slug) => `/projects/${slug}/`)];
+  const files = ["", "index.html", "index.txt", "__next._tree.txt", "__next._full.txt", "__next._index.txt", "__next.page.__PAGE__.txt"];
+  const lines = text.split("\n");
+  lines.forEach((line, index) => {
+    const from = line.trim().split(/\s+/)[0];
+    if (!from || from.startsWith("#") || !/[:*]/.test(from)) return;
+    const pattern = new RegExp(
+      "^" +
+        from
+          .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
+          .replace(/:[A-Za-z_]+/g, "[^/]+")
+          .replace(/\*/g, ".*") +
+        "$",
+    );
+    const caught = pages.flatMap((page) => files.map((file) => page + file)).filter((url) => pattern.test(url));
+    if (caught.length === 0) return;
+    report(group, {
+      level: "ERROR",
+      file: `${group}:${index + 1}`,
+      message: `"${from}" also catches ${caught.slice(0, 3).join(", ")}${caught.length > 3 ? ", ..." : ""}, which the site serves itself`,
+      fix: "Cloudflare redirects before it serves files: list the old addresses one by one instead of a placeholder",
+    });
+  });
 }
 
 /* -------------------------------------------------------------------------- */
@@ -509,6 +557,8 @@ async function main(): Promise<void> {
       message: `projects: "${slug}" is not a published project, so the Work page skips it`,
     });
   }
+
+  validateRedirects([...publishedSlugs]);
 
   // --- print ---------------------------------------------------------------
   let errors = 0;

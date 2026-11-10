@@ -7,10 +7,75 @@
 # the rest of the path. First match wins, so order matters.
 
 # November 2026: project pages moved from /work/<slug>/ to /projects/<slug>/,
-# and /work/ became the work-experience page. A placeholder needs a non-empty
-# segment, so these never catch /work/ itself.
-/work/:slug/                   /projects/:slug/       301
-/work/:slug                    /projects/:slug/       301
+# and /work/ became the work-experience page.
+#
+# One line per project, never a /work/:slug or /work/* placeholder. Cloudflare
+# applies redirects before it serves files, and the Work page has its own files
+# under /work/ (index.txt and the __next.*.txt data the site loads when you
+# click a link to /work/). A placeholder caught those and sent every click on a
+# Work link to a 404 (fixed November 10). npm run validate fails on a
+# placeholder rule here. A project added after November 2026 never had a
+# /work/ address, so it needs no line.
+/work/agentic-report-generator/              /projects/agentic-report-generator/          301
+/work/agentic-report-generator               /projects/agentic-report-generator/          301
+/work/ai-aboard/                             /projects/ai-aboard/                         301
+/work/ai-aboard                              /projects/ai-aboard/                         301
+/work/ai-database-filter/                    /projects/ai-database-filter/                301
+/work/ai-database-filter                     /projects/ai-database-filter/                301
+/work/alarm-system/                          /projects/alarm-system/                      301
+/work/alarm-system                           /projects/alarm-system/                      301
+/work/blackjack/                             /projects/blackjack/                         301
+/work/blackjack                              /projects/blackjack/                         301
+/work/burrow/                                /projects/burrow/                            301
+/work/burrow                                 /projects/burrow/                            301
+/work/calcardo/                              /projects/calcardo/                          301
+/work/calcardo                               /projects/calcardo/                          301
+/work/cryptogram/                            /projects/cryptogram/                        301
+/work/cryptogram                             /projects/cryptogram/                        301
+/work/cyber-ttm/                             /projects/cyber-ttm/                         301
+/work/cyber-ttm                              /projects/cyber-ttm/                         301
+/work/document-management-system/            /projects/document-management-system/        301
+/work/document-management-system             /projects/document-management-system/        301
+/work/duolingo-hack/                         /projects/duolingo-hack/                     301
+/work/duolingo-hack                          /projects/duolingo-hack/                     301
+/work/engine-miles/                          /projects/engine-miles/                      301
+/work/engine-miles                           /projects/engine-miles/                      301
+/work/foosball/                              /projects/foosball/                          301
+/work/foosball                               /projects/foosball/                          301
+/work/gameface/                              /projects/gameface/                          301
+/work/gameface                               /projects/gameface/                          301
+/work/legacy-data-cleanup/                   /projects/legacy-data-cleanup/               301
+/work/legacy-data-cleanup                    /projects/legacy-data-cleanup/               301
+/work/one-line-rock-paper-scissors/          /projects/one-line-rock-paper-scissors/      301
+/work/one-line-rock-paper-scissors           /projects/one-line-rock-paper-scissors/      301
+/work/parcel-web-analyzer/                   /projects/parcel-web-analyzer/               301
+/work/parcel-web-analyzer                    /projects/parcel-web-analyzer/               301
+/work/relayreply/                            /projects/relayreply/                        301
+/work/relayreply                             /projects/relayreply/                        301
+/work/rit-dining-notifications/              /projects/rit-dining-notifications/          301
+/work/rit-dining-notifications               /projects/rit-dining-notifications/          301
+/work/rit-laundry-tracker/                   /projects/rit-laundry-tracker/               301
+/work/rit-laundry-tracker                    /projects/rit-laundry-tracker/               301
+/work/roman-numerals/                        /projects/roman-numerals/                    301
+/work/roman-numerals                         /projects/roman-numerals/                    301
+/work/sudoku-creator/                        /projects/sudoku-creator/                    301
+/work/sudoku-creator                         /projects/sudoku-creator/                    301
+/work/symposium/                             /projects/symposium/                         301
+/work/symposium                              /projects/symposium/                         301
+/work/tic-tac-toe/                           /projects/tic-tac-toe/                       301
+/work/tic-tac-toe                            /projects/tic-tac-toe/                       301
+/work/trip-planner/                          /projects/trip-planner/                      301
+/work/trip-planner                           /projects/trip-planner/                      301
+/work/u-fund/                                /projects/u-fund/                            301
+/work/u-fund                                 /projects/u-fund/                            301
+/work/warm-cold-square/                      /projects/warm-cold-square/                  301
+/work/warm-cold-square                       /projects/warm-cold-square/                  301
+/work/wasted-asphalt/                        /projects/wasted-asphalt/                    301
+/work/wasted-asphalt                         /projects/wasted-asphalt/                    301
+/work/web-browser-mcp/                       /projects/web-browser-mcp/                   301
+/work/web-browser-mcp                        /projects/web-browser-mcp/                   301
+/work/wordle-solver/                         /projects/wordle-solver/                     301
+/work/wordle-solver                          /projects/wordle-solver/                     301
 
 # The old michael-lizzio.github.io site, if that domain is ever pointed here.
 /index.html                    /                      301

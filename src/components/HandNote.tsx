@@ -1,11 +1,13 @@
 import type { ReactNode } from "react";
 
-type Marker = "blue" | "red" | "green";
+type Marker = "blue" | "red" | "green" | "ink";
 
 const COLOR: Record<Marker, string> = {
   blue: "text-marker-blue",
   red: "text-marker-red",
   green: "text-marker-green",
+  /** The page's own text colour: black in light mode, white in dark mode. */
+  ink: "text-fg",
 };
 
 /**
@@ -41,19 +43,20 @@ export function HandNote({
 }
 
 /**
- * A word with a hand-drawn marker loop around it ("Apps I've (shipped)").
- * The loop is decoration only, so it is hidden from assistive tech.
+ * A word with a hand-drawn red marker loop around it ("Apps I've (shipped)").
+ * The loop is drawn well outside the word so it never cuts through a letter.
+ * It is decoration only, so it is hidden from assistive tech.
  */
 export function Circled({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <span className={["relative inline-block px-1", className].filter(Boolean).join(" ")}>
+    <span className={["relative inline-block px-1.5", className].filter(Boolean).join(" ")}>
       {children}
       <svg
         aria-hidden="true"
         focusable="false"
         viewBox="0 0 200 80"
         preserveAspectRatio="none"
-        className="pointer-events-none absolute -left-[8%] -top-[30%] h-[160%] w-[116%] overflow-visible text-marker-red"
+        className="pointer-events-none absolute -left-[17%] -top-[52%] h-[200%] w-[134%] overflow-visible text-marker-loop"
       >
         <path
           d="M18 40 C 16 12, 180 6, 188 36 C 196 66, 30 78, 12 50 C 6 38, 40 18, 70 14"
