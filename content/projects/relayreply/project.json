@@ -1,0 +1,93 @@
+{
+  "slug": "relayreply",
+  "title": "RelayReply",
+  "tagline": "Type what you need, and RelayReply makes the phone call, speaks for you, and asks you first when there's a decision to make.",
+  "summary": "RelayReply is a web app that makes phone calls for you. You type what you need, RelayReply makes the call and speaks for you, and you read every word as a caption. When there's a decision to make, it asks you first. It's in a public beta now.",
+  "overview": {
+    "what": "A web app that makes phone calls for you. You type what you need, RelayReply makes the call and speaks for you, and you read every word as a caption.",
+    "why": "For a lot of people the phone call is the hardest part of getting something done, like people who are Deaf or hard of hearing, or who have trouble speaking on the phone.",
+    "did": "I'm building all of it, using AI as a coding tool: the web app, the server that runs every call, and the part that turns each decision into a card for you.",
+    "result": "It's in a public beta at relayreply.com, free to start with free practice calls."
+  },
+  "published": true,
+  "featured": true,
+  "date": "2026-04",
+  "endDate": "present",
+  "status": "Public beta",
+  "development": "ai-assisted",
+  "tech": [
+    "React",
+    "TypeScript",
+    "Python",
+    "FastAPI",
+    "Twilio",
+    "OpenAI realtime voice",
+    "Supabase",
+    "Stripe"
+  ],
+  "links": [
+    {
+      "label": "relayreply.com (public beta)",
+      "href": "https://relayreply.com"
+    }
+  ],
+  "hero": {
+    "src": "media/relayreply_cover.webp",
+    "kind": "image",
+    "poster": null,
+    "alt": "The relayreply.com home page: RelayReply and Sign in at the top, the heading You stay in control., a line on how it works, and the typing box addressed to Main Street Pharmacy, filled in with Ask if my allergy prescription is ready and how late they're open today., above a Get started button",
+    "caption": "The home page of relayreply.com, the public beta.",
+    "autoplay": false
+  },
+  "sections": [
+    {
+      "heading": "How a call works",
+      "body": [
+        "You type who to call and what you need, like refilling a prescription. RelayReply places a real phone call and does the talking, and you read both sides as captions while it happens.",
+        "When there's a decision to make, like a 30-day or a 90-day supply, you get a card with the options. You tap one or type your own answer, and the AI says it for you."
+      ],
+      "media": [],
+      "diagram": {
+        "label": "How a RelayReply call works, in three steps",
+        "caption": null,
+        "steps": [
+          {
+            "arrow": null,
+            "nodes": [
+              {
+                "title": "You type what you need",
+                "detail": "Who to call and what you want done"
+              }
+            ]
+          },
+          {
+            "arrow": "calls",
+            "nodes": [
+              {
+                "title": "RelayReply makes the call",
+                "detail": "It speaks for you, and you read every word"
+              }
+            ]
+          },
+          {
+            "arrow": "asks",
+            "nodes": [
+              {
+                "title": "You decide on a card",
+                "detail": "Tap or type, and the AI says your answer"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "heading": "Where it's at",
+      "body": [
+        "RelayReply is in a public beta. It isn't a relay service (TRS or 711), and it can't call 911. More about it is on relayreply.com."
+      ],
+      "media": []
+    }
+  ],
+  "notes": "Words pass 2026-11-09 (Michael's decisions, Nov 9): RelayReply is a PUBLIC beta, AI-assisted, and the page stays light and brief because he is publishing his own site and guides soon. Wording follows relayreply.com's current homepage source (startups/RelayReply, branch v3.3, web/src/features/onboarding/home: the lead 'Type what you need. RelayReply makes the call, speaks for you, and shows every word as a caption. When there's a decision to make, it asks you first.', his short phone lead, 'Free to start, with free practice calls.', and the not-a-relay-service notice). The old 'Phone calls, without the phone' line and 'private beta' are gone. Left out on purpose: prices, model names, how the AI introduces itself on a call, recordings, and the deep architecture. The hero and card image are the look agent's job (real product screenshots from a local build of the site). Date 2026-04 is the repo's first commit (older iOS app); the v3 web restart was late September 2026. Look pass 2026-11-09 (Michael's final notes): the hero (relayreply_cover.webp) is relayreply.com's home page as first seen, a 1200x630 window at 2x, captured the moment the typing box holds the whole first sentence (Main Street Pharmacy) before it clears. Rendered from origin/v3.3 (20435635c) with SITE_PUBLIC_BETA=1 node site/build.mjs and site/serve.mjs on 127.0.0.1 only, with the page clock frozen for the shot. The home page app card uses one crop of the same picture (public/images/apps/relayreply_home.webp). Michael asked to keep RelayReply light: no other screenshots."
+}

@@ -1,13 +1,14 @@
+import { AutoplayVideo } from "@/components/AutoplayVideo";
 import { LightboxImage } from "@/components/LightboxImage";
 import type { ResolvedMedia } from "@/lib/schema";
 
 /**
  * Media inside an article. `media.src` and `media.poster` arrive already
- * rewritten to public `/media/<slug>/...` URLs — this component never does
+ * rewritten to public `/media/<slug>/...` URLs - this component never does
  * path math.
  *
  * Defaults to the 45rem reading column, which is where most figures live. A
- * route that lays figures out in a wider grid must pass its own `sizes` — a
+ * route that lays figures out in a wider grid must pass its own `sizes` - a
  * 3-up gallery in the page column is a ~22rem slot, and the default would
  * fetch roughly 4x the pixels it needs.
  */
@@ -34,7 +35,13 @@ export function MediaFigure({
   return (
     <figure>
       <div className="overflow-hidden rounded-md border border-border-default bg-bg-subtle">
-        {media.kind === "video" ? (
+        {media.kind === "video" && media.autoplay ? (
+          <AutoplayVideo
+            src={media.src}
+            poster={media.poster ?? undefined}
+            label={media.alt ?? undefined}
+          />
+        ) : media.kind === "video" ? (
           <video
             className="block h-auto w-full"
             src={media.src}
@@ -43,7 +50,9 @@ export function MediaFigure({
             aria-label={media.alt ?? undefined}
             controls
             playsInline
-            preload="metadata"
+            // With a poster there is nothing to show before play, so fetch nothing:
+            // foosball has seven of these. Without one, metadata gives the first frame.
+            preload={media.poster ? "none" : "metadata"}
           />
         ) : (
           <LightboxImage

@@ -1,39 +1,54 @@
 /**
- * The portfolio owner's deliberate presentation order.
+ * The portfolio owner's deliberate presentation order, and the one place that
+ * decides what a visitor sees first.
  *
- * This is separate from dates: "relevant" means the projects Michael wants a
- * visitor to encounter first, not newest or featured. New slugs that are not
- * yet placed here fall to the end in title order.
+ * "Relevant" means the projects Michael wants a visitor to meet first, not
+ * newest. The first INITIAL_VISIBLE slugs show on /projects straight away; the
+ * rest sit behind "Load more". New slugs that are not placed here fall to the
+ * end in title order, so they land behind "Load more" until someone ranks them.
+ *
+ * Ranking agreed November 2026: the three shipped apps first, then the strongest
+ * stories and internship work, then smaller and older projects. The last six
+ * are the ones Michael named as not worth front placement.
  */
 export const RELEVANCE_ORDER = [
+  // The three apps.
+  "engine-miles",
+  "burrow",
+  "relayreply",
+  // Shown before "Load more".
   "calcardo",
-  "parcel-web-analyzer",
-  "cyber-ttm",
-  "alarm-system",
   "ai-database-filter",
   "gameface",
-  "web-browser-mcp",
-  "symposium",
-  "document-management-system",
   "ai-aboard",
   "foosball",
   "cryptogram",
-  "wasted-asphalt",
-  "trip-planner",
-  "u-fund",
+  "document-management-system",
+  "alarm-system",
+  "parcel-web-analyzer",
+  "cyber-ttm",
   "blackjack",
-  "rit-dining-notifications",
+  // Behind "Load more".
+  "symposium",
   "wordle-solver",
+  "web-browser-mcp",
+  "wasted-asphalt",
+  "u-fund",
   "sudoku-creator",
-  "roman-numerals",
-  "rit-laundry-tracker",
-  "tic-tac-toe",
   "warm-cold-square",
-  "one-line-rock-paper-scissors",
-  "legacy-data-cleanup",
   "agentic-report-generator",
+  "legacy-data-cleanup",
   "duolingo-hack",
+  "trip-planner",
+  "rit-dining-notifications",
+  "rit-laundry-tracker",
+  "roman-numerals",
+  "one-line-rock-paper-scissors",
+  "tic-tac-toe",
 ] as const;
+
+/** How many projects /projects shows before the "Load more" button. */
+export const INITIAL_VISIBLE = 12;
 
 type OrderableProject = {
   slug: string;

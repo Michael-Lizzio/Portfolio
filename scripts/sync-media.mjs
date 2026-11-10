@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * sync-media — publish co-located project media to `public/`.
+ * sync-media - publish co-located project media to `public/`.
  *
  *   content/projects/<slug>/media/*   ->   public/media/<slug>/*
  *
@@ -9,7 +9,7 @@
  * needs those bytes under `public/`, so this copies them at build time.
  * `src/lib/content.ts` rewrites every media `src` to `/media/<slug>/…` to match.
  *
- * Runs as `prebuild`, so `next build` — and therefore Vercel — picks it up with
+ * Runs as `prebuild`, so `next build` - and therefore Vercel - picks it up with
  * no extra configuration.
  *
  * Managed directories are wiped before copying, so media deleted from `content/`
@@ -32,7 +32,7 @@ const PUBLIC_MEDIA_DIR = path.join(ROOT, "public", "media");
 
 /**
  * Directories under `public/media/` that are NOT derived from `content/` and
- * must survive the clean — site furniture (backdrops, portraits) that belongs
+ * must survive the clean - site furniture (backdrops, portraits) that belongs
  * to the layout rather than to any one project. Add to this list rather than
  * letting hand-placed assets sit somewhere this script will eat them.
  */
@@ -50,7 +50,7 @@ async function listProjectSlugs() {
 }
 
 /**
- * `published: false` hides a project from the site entirely — so its media must
+ * `published: false` hides a project from the site entirely - so its media must
  * not ship either. Without this check the drafts' bytes are deployed and served
  * at /media/<slug>/…, which is the whole unpublished write-up, one URL guess
  * away (blackjack's video walkthrough is 4.6 MB of it).
@@ -98,7 +98,7 @@ async function main() {
     if (!managed.has(entry.name)) removed += 1;
   }
 
-  // 2. Copy — published projects only. Drafts were just cleaned away above, so
+  // 2. Copy - published projects only. Drafts were just cleaned away above, so
   //    un-publishing a project also un-publishes its media on the next build.
   let files = 0;
   let bytes = 0;

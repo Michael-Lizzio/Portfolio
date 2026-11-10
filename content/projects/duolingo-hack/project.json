@@ -3,29 +3,47 @@
   "title": "Duolingo Hack",
   "tagline": "A Duolingo bot that turned speaking practice into an XP machine",
   "summary": "I got tired of doing the same Duolingo exercises every day, so I built a bot to do them for me. It started by running several story sessions in parallel, then changed tactics after that stopped earning XP. The final version recorded each speaking prompt through a virtual audio cable and played it back to Duolingo for a perfect answer.",
+  "overview": {
+    "what": "A bot that did my Duolingo lessons for me.",
+    "why": "I got tired of doing the same Duolingo exercises every day.",
+    "did": "I wrote it in Python with Selenium. The first version ran several story sessions at once, and the final one recorded each speaking prompt and played it right back through a virtual microphone.",
+    "result": "It got me thousands of XP and a win in the Diamond League. I retired it once I started actually using Duolingo to learn, but I'm still keeping the streak alive."
+  },
   "published": true,
   "featured": false,
   "date": "2023-05",
   "endDate": "2024-07",
   "status": "Archived",
   "development": null,
-  "tech": ["Python", "Selenium", "Beautiful Soup", "Virtual audio cable", "PyAudio"],
+  "tech": [
+    "Python",
+    "Selenium",
+    "Beautiful Soup",
+    "Virtual audio cable",
+    "PyAudio"
+  ],
   "links": [],
   "hero": null,
   "sections": [
     {
       "heading": "The first version",
-      "body": ["My first approach used Duolingo stories. I ran several browser sessions at once, completing multiple stories every thirty seconds and stacking up XP until Duolingo stopped awarding it."],
+      "body": [
+        "My first approach used Duolingo stories. I ran several browser sessions at once, completing multiple stories every thirty seconds and stacking up XP until Duolingo stopped awarding it."
+      ],
       "media": []
     },
     {
       "heading": "The audio trick",
-      "body": ["For speaking practice, Duolingo first played the phrase it wanted me to repeat. My bot recorded that audio, trimmed the silence, and sent the exact same phrase back through a virtual microphone. That version helped me rack up thousands of XP and win the Diamond League."],
+      "body": [
+        "For speaking practice, Duolingo first played the phrase it wanted me to repeat. My bot recorded that audio, trimmed the silence, and sent the exact same phrase back through a virtual microphone. That version helped me rack up thousands of XP and win the Diamond League."
+      ],
       "media": []
     },
     {
       "heading": "What happened next",
-      "body": ["I retired the bot because I actually use Duolingo to learn now, but I am still keeping the streak alive. This page will be much funnier once the old screen recordings, leaderboard screenshots, and current streak screenshot are added."],
+      "body": [
+        "I retired the bot because I actually use Duolingo to learn now, but I'm still keeping the streak alive."
+      ],
       "media": []
     }
   ],

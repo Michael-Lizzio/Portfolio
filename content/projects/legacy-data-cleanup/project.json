@@ -1,8 +1,14 @@
 {
   "slug": "legacy-data-cleanup",
   "title": "Legacy Data Cleanup",
-  "tagline": "An AI-assisted review pipeline for untangling decades of inconsistent records",
-  "summary": "I built a collection of tools for finding and repairing data-quality problems left by the conversion of a legacy DOS system into a modern web application. The workflow profiled the data, packaged difficult cases for AI analysis, traced every suggestion back to its original cells, and gave a person the final decision through a review interface. For mechanical corrections, I also created a deliberately conservative bulk-fix path with invariants, dry runs, backups, and transactional updates.",
+  "tagline": "Tools for finding and fixing decades of messy records, with a person approving the fixes",
+  "summary": "The county was moving from an old DOS system to a new web app, and a lot of the old data came over broken. Notes were split across rows, words were stuck together, and values ended up in the wrong place. At my 2026 internship I built tools that find these problems, suggest fixes, and let a person approve each one.",
+  "overview": {
+    "what": "Tools that find and fix messy records left over from a county's old DOS system, with a person approving each fix.",
+    "why": "When the old data moved to a new web app, notes got split across rows, words got stuck together and values landed in the wrong place.",
+    "did": "At my 2026 internship at GPI, I designed the steps and checked the work, and AI wrote most of the code: scripts that flag odd values, an AI pass in small batches, a review app and a strict spacing fixer.",
+    "result": "A dry run on all the data found 21,616 spacing fixes with zero rule breaks, and every other change goes through a person first."
+  },
   "published": true,
   "featured": false,
   "date": "2026-07",
@@ -14,78 +20,97 @@
     "Python",
     "Flask",
     "PostgreSQL",
-    "C#",
     "Local language models",
-    "Structured AI workflows",
-    "Data profiling",
-    "Transactional data repair"
+    "Data profiling"
   ],
   "links": [],
   "hero": null,
   "sections": [
     {
-      "heading": "Why the records were difficult",
+      "heading": "Why the data was messy",
       "body": [
-        "The project was replacing a DOS-era system with a web application, and the old data did not map cleanly into the new structure. Free text had been entered into narrow fixed-width fields and continued across neighboring rows or columns. When some of those records were imported, line boundaries disappeared, words were joined together, comments were split into fragments, and values ended up in places where they did not belong.",
-        "The challenge was not only finding unusual values. Some rare values were real, and some strange-looking fragments only made sense when read beside the surrounding cells. A cleanup system needed enough context to reconstruct the intended information without confidently rewriting valid historical records."
-      ],
-      "codeBlocks": [],
-      "media": []
-    },
-    {
-      "heading": "Profiling before changing anything",
-      "body": [
-        "I started with scripts that scanned columns, counted distinct values, sampled suspicious patterns, and identified likely corruption. This made the rules reflect the actual data instead of assumptions about what bad data should look like. Mostly unique fields were treated differently from categorical fields, where one rare value among thousands of repeated values was much more likely to be a typo or misplaced note.",
-        "The profiling output became structured JSON containing the original values, surrounding rows, likely issue types, and enough context for the next stage. The source database remained read-only during discovery."
-      ],
-      "codeBlocks": [],
-      "media": []
-    },
-    {
-      "heading": "Using AI in controlled batches",
-      "body": [
-        "There was too much material to review in one prompt, so I divided the findings into independent JSON batches. Each batch explained the table layout, reading order, relevant rules, original values, and the exact response format. The AI could then propose reconstructed comments, spelling corrections, values to move, or cases that still needed a person.",
-        "The output contract mattered as much as the prompt. Import scripts rejected incomplete batches, malformed JSON, unknown categories, missing record identifiers, and findings that referred to data outside the supplied batch. That turned AI output into a checked intermediate artifact rather than something that could flow directly into the database."
-      ],
-      "codeBlocks": [
-        "LEGACY RECORDS\n      ↓\nPROFILE + DETECT  →  suspicious cells and fragments\n      ↓\nJSON BATCHES      →  AI reconstruction and review\n      ↓\nHUMAN REVIEW      →  approve · edit · flag · dismiss\n      ↓\nSTAGED CHANGES    →  verify · back up · apply"
+        "In the old system, people typed long notes into narrow fixed-width fields that wrapped onto the next row. When it was imported, those line breaks disappeared, so words got glued together and comments got chopped into pieces. The tricky part is that some weird-looking values are actually correct, so you can't just fix everything that looks odd."
       ],
       "media": []
     },
     {
-      "heading": "Keeping a person in the loop",
+      "heading": "Finding the problems",
       "body": [
-        "I built a local review application that grouped every related table for one asset onto the same screen. Suggested comments appeared beside the source table, with the exact contributing cells highlighted. Reviewers could approve a suggestion, edit its wording, mark it for more review, dismiss it, or inspect the raw fragments before deciding.",
-        "Each approved comment kept its category, final text, source table, column, record identifier, and captured original value. Decisions and edits were saved as work progressed, so a long review could be paused and resumed without losing its place."
+        "First I wrote scripts that scan every column and flag what looks wrong, without changing anything. A rare value in a column full of repeats is probably a typo, while a rare value in a column of IDs is normal."
       ],
-      "codeBlocks": [],
       "media": []
     },
     {
-      "heading": "Automating only the safe cases",
+      "heading": "Using AI carefully",
       "body": [
-        "Some corruption had a consistent mechanical cause: a missing space where one fixed-width line had wrapped into the next. I created a separate deterministic fixer for those cases. It only split tokens from an explicitly reviewed list and only inserted or removed spaces or collapsed doubled punctuation. It was not allowed to add, delete, or reorder any letter or number.",
-        "The tool rechecked that invariant for every proposed change and aborted the entire run if even one row failed. It was dry-run by default, produced a complete before-and-after audit file, made a backup before applying changes, used a single transaction, and was designed to be idempotent. A full-dataset dry run identified 21,616 corrections with zero invariant violations."
+        "The flagged records went to an AI in small batches, with instructions for how to read the table and exactly what format to answer in. Anything that came back incomplete or didn't match its batch got rejected. Then a review app showed each suggestion next to the original cells, and a person approved, edited or dismissed it."
       ],
+      "media": [],
       "codeBlocks": [],
+      "diagram": {
+        "label": "The cleanup steps, from the old records to approved changes",
+        "caption": null,
+        "steps": [
+          {
+            "arrow": null,
+            "nodes": [
+              {
+                "title": "Old records",
+                "detail": "Imported from the DOS system"
+              }
+            ]
+          },
+          {
+            "arrow": null,
+            "nodes": [
+              {
+                "title": "Profile and detect",
+                "detail": "Flags suspicious cells and pieces of notes"
+              }
+            ]
+          },
+          {
+            "arrow": null,
+            "nodes": [
+              {
+                "title": "AI in small batches",
+                "detail": "Suggests how to put them back together"
+              }
+            ]
+          },
+          {
+            "arrow": null,
+            "nodes": [
+              {
+                "title": "Human review",
+                "detail": "Approve, edit, flag or dismiss"
+              }
+            ]
+          },
+          {
+            "arrow": null,
+            "nodes": [
+              {
+                "title": "Staged changes",
+                "detail": "Verify, back up, then apply"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "heading": "Fixing the easy ones automatically",
+      "body": [
+        "One kind of problem was purely mechanical: a missing space where a line wrapped. For those I made a separate fixer that's only allowed to add or remove spaces, never change a letter or a number. If even one change broke that rule, the whole run stopped. A dry run on all the data found 21,616 fixes and zero rule breaks."
+      ],
       "media": []
     },
     {
-      "heading": "Creating the implementation with AI",
+      "heading": "How I built it",
       "body": [
-        "I produced this tooling through an AI-generated development process. I gave the coding model representative records, explained where the data came from and what a valid transformation looked like, then used it to generate the profilers, algorithms, batch converters, validation scripts, and review interfaces.",
-        "My role was to define the problem, design the data passed between each stage, supply examples and constraints, inspect the proposed behavior, and keep iterating when the output missed an edge case. Using AI let me test several approaches quickly, but it also made independent verification especially important. The strict schemas, invariants, audit files, and human approval steps were how I made the generated implementation accountable."
+        "Most of this code was written by AI. My part was explaining where the data came from, giving it real examples, deciding what the steps should be, and checking its work. Since the AI wrote so much of it, the strict checks and the human review are what made me trust the results."
       ],
-      "codeBlocks": [],
-      "media": []
-    },
-    {
-      "heading": "What the workflow changed",
-      "body": [
-        "Instead of asking someone to manually read every table and reconstruct every fragment from scratch, the system brought likely problems and suggested repairs to them with the evidence already attached. Routine issues could be handled consistently, while uncertain cases stayed visible and required a decision.",
-        "The project taught me that automation for messy historical data should not be measured only by how many changes it can produce. The better question is how clearly it can explain each change, how safely it can refuse uncertain work, and how easy it is for a person to recover the original value."
-      ],
-      "codeBlocks": [],
       "media": []
     }
   ],

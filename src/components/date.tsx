@@ -33,7 +33,7 @@ export function formatProjectDate(date: string | null): string | null {
 
 /**
  * Renders a project's date range without repeating a shared year:
- * "June–August 2024", "2020–August 2025", or "March 2026–Present".
+ * "June–August 2024", "2020 – August 2025", or "March 2026 – Present".
  */
 export function formatProjectDateRange(
   startDate: string | null,
@@ -42,7 +42,7 @@ export function formatProjectDateRange(
   const start = formatProjectDate(startDate);
   if (!start) return null;
   if (!endDate || endDate === startDate) return start;
-  if (endDate === "present") return `${start}–Present`;
+  if (endDate === "present") return `${start} – Present`;
 
   const end = formatProjectDate(endDate);
   if (!end) return start;
@@ -53,9 +53,7 @@ export function formatProjectDateRange(
     return `${MONTHS[Number(startMonth) - 1]}–${MONTHS[Number(endMonth) - 1]} ${startYear}`;
   }
 
-  if (startYear !== endYear) {
-    return `${startYear}–${end}`;
-  }
-
-  return `${start}–${end}`;
+  // Different years: keep both full dates, so "November 2025 – April 2026"
+  // never loses its starting month.
+  return `${start} – ${end}`;
 }

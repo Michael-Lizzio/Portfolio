@@ -10,7 +10,7 @@ export type NavItem = { href: string; label: string };
  *
  * This is the site's only client component, and it is one because marking the
  * current route needs the current route: `usePathname` has no server
- * equivalent. Everything else here — including the below-`md` disclosure — is
+ * equivalent. Everything else here - including the below-`md` disclosure - is
  * plain HTML that works with JavaScript switched off.
  */
 export function NavLinks({ items, resume }: { items: NavItem[]; resume: string | null }) {

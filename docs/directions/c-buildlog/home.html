@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direction C, Build Log: Home</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+  :root{
+    --paper:#f3eee4; --card:#fffdf8; --ink:#15120e; --ink-2:#3d3830; --ink-3:#6b6458; --rule:#d8d0c0;
+    --hot:#ff5a1f;
+    --bw:#4a56d0; --bw-soft:#e9ebfb; --em:#1a3a33; --em-hot:#f08800; --rr:#2347dc;
+    --sans:"Archivo",ui-sans-serif,system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+    --b:2.5px solid var(--ink);
+  }
+  *{box-sizing:border-box} html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font:17px/1.55 var(--sans);font-stretch:100%;-webkit-font-smoothing:antialiased}
+  img{display:block;max-width:100%}
+  a{color:inherit}
+  .wrap{max-width:78rem;margin:0 auto;padding-left:28px;padding-right:28px}
+  .mono{font-family:var(--mono)}
+  .x{font-stretch:125%;font-weight:850;text-transform:uppercase;letter-spacing:-.01em}
+  /* nav */
+  .nav{border-bottom:var(--b);background:var(--paper)}
+  .nav .wrap{display:flex;align-items:stretch;justify-content:space-between;height:62px}
+  .brand{display:flex;align-items:center;font-size:17px;text-decoration:none}
+  .links{display:flex}
+  .links a{display:flex;align-items:center;padding:0 22px;border-left:var(--b);text-decoration:none;font-weight:650;font-size:15px}
+  .links a:last-child{border-right:var(--b)}
+  .links a.on{background:var(--ink);color:var(--paper)}
+  /* hero */
+  .hero{padding-top:64px;padding-bottom:56px;display:grid;grid-template-columns:1fr 360px;gap:48px;align-items:end}
+  .kicker{font:500 14px var(--mono);color:var(--ink-3);margin-bottom:18px}
+  .kicker b{color:var(--hot);font-weight:600}
+  h1{margin:0;font-size:104px;line-height:.86}
+  h1 span{display:block}
+  h1 .o{color:var(--hot)}
+  .lede{font-size:21px;line-height:1.5;color:var(--ink-2);max-width:40rem;margin:28px 0 0}
+  .now{background:var(--card);border:var(--b);box-shadow:6px 6px 0 var(--ink);padding:20px 22px}
+  .now h2{margin:0 0 10px;font:600 13px var(--mono);letter-spacing:.06em;color:var(--hot)}
+  .now ul{margin:0;padding:0;list-style:none}
+  .now li{padding:9px 0;border-top:1px solid var(--rule);font-size:16px;line-height:1.35;display:flex;gap:12px}
+  .now li:first-child{border-top:0}
+  .now li i{font:500 12.5px var(--mono);color:var(--ink-3);font-style:normal;min-width:44px;padding-top:2px}
+  .btns{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;height:48px;padding:0 22px;border:var(--b);background:var(--card);font-weight:700;text-decoration:none;box-shadow:4px 4px 0 var(--ink)}
+  .btn.hot{background:var(--hot);color:#fff;border-color:var(--ink)}
+  /* ticker */
+  .ticker{border-top:var(--b);border-bottom:var(--b);background:var(--ink);color:var(--paper);overflow:hidden;white-space:nowrap}
+  .ticker div{padding:12px 0;font:500 14px var(--mono);letter-spacing:.02em}
+  .ticker b{color:var(--hot);font-weight:600;margin:0 10px}
+  /* section heads */
+  section{padding-top:80px}
+  .sh{display:flex;justify-content:space-between;align-items:end;gap:20px;border-bottom:var(--b);padding-bottom:14px;margin-bottom:28px}
+  .sh h2{margin:0;font-size:46px;line-height:.95}
+  .sh p{margin:0;font:500 14px var(--mono);color:var(--ink-3);text-align:right}
+  /* app panels */
+  .panel{display:grid;grid-template-columns:1fr 1fr;border:var(--b);box-shadow:8px 8px 0 var(--ink);margin-bottom:34px;overflow:hidden;min-height:420px}
+  .panel .txt{padding:34px 36px;display:flex;flex-direction:column}
+  .tagrow{display:flex;gap:10px;align-items:center;font:600 12.5px var(--mono);letter-spacing:.04em}
+  .badge{border:2px solid currentColor;padding:3px 9px}
+  .badge.live:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#35c46a;margin-right:7px;vertical-align:0}
+  .badge.beta:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffb020;margin-right:7px;vertical-align:0}
+  .panel h3{margin:18px 0 6px;font-size:58px;line-height:.9;display:flex;align-items:center;gap:16px}
+  .panel h3 img{width:58px;height:58px;border-radius:14px;border:2px solid rgba(0,0,0,.15)}
+  .panel .tl{font-size:22px;font-weight:700;margin:6px 0 14px;font-stretch:110%}
+  .panel p{margin:0 0 12px;font-size:17px;line-height:1.55;max-width:34rem}
+  .panel .why{margin-top:auto;padding-top:14px;border-top:2px solid currentColor;font-size:15.5px}
+  .panel .why b{font:600 12px var(--mono);letter-spacing:.06em;display:block;margin-bottom:2px;opacity:.75}
+  .panel .pic{position:relative;border-left:var(--b);overflow:hidden}
+  .burrow{background:var(--bw-soft);color:#1b1f45}
+  .burrow .pic img{width:100%;height:100%;object-fit:cover;object-position:62% center}
+  .em{background:var(--em);color:#eef4f1}
+  .em .tl{color:var(--em-hot)}
+  .em .pic{background:#e6efec;display:flex;justify-content:center;align-items:flex-end;gap:18px;padding:34px 30px 0}
+  .em .pic img{width:43%;border:2px solid var(--ink);border-bottom:0;border-radius:14px 14px 0 0;object-fit:cover;object-position:top;height:360px}
+  .rr{background:var(--rr);color:#fff}
+  .rr h3{font-stretch:108%}
+  .rr .pic{background:#eef2fe;padding:28px;display:flex;flex-direction:column;justify-content:center;gap:14px;color:var(--ink)}
+  .sys{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:var(--b);background:#fff}
+  .sys div{padding:12px 12px 14px;border-left:2px solid var(--ink);font-size:13.5px;line-height:1.3}
+  .sys div:first-child{border-left:0}
+  .sys b{display:block;font:600 11px var(--mono);color:var(--rr);margin-bottom:4px}
+  .call{background:#fff;border:var(--b);padding:14px 16px;font-size:14px}
+  .call .ct{display:flex;justify-content:space-between;font-weight:750;margin-bottom:8px}
+  .livetag{font:600 11px var(--mono);color:#c4302b}
+  .cap{margin:0 0 7px;line-height:1.4}
+  .cap i{font:500 11px var(--mono);font-style:normal;color:var(--ink-3);margin-right:6px}
+  .q{border:2px solid var(--ink);background:#fff5e3;padding:9px 11px;margin-top:8px}
+  .q small{font:600 10.5px var(--mono);color:#8a4a00;letter-spacing:.05em}
+  .q div{font-weight:750;margin:1px 0 7px}
+  .q .opts{display:flex;gap:8px}
+  .q .opts span{flex:1;border:2px solid var(--ink);background:#fff;padding:4px 8px;display:flex;justify-content:space-between;font-size:13px}
+  /* best of the rest */
+  .best{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+  .tile{background:var(--card);border:var(--b);box-shadow:5px 5px 0 var(--ink);text-decoration:none;display:flex;flex-direction:column}
+  .tile .th{aspect-ratio:4/3;border-bottom:var(--b);overflow:hidden;position:relative}
+  .tile .th img{width:100%;height:100%;object-fit:cover;object-position:top left}
+  .tile .no{position:absolute;top:10px;left:10px;background:var(--ink);color:var(--paper);font:600 12px var(--mono);padding:4px 8px}
+  .tile .bd{padding:14px 16px 16px}
+  .tile h3{margin:0 0 4px;font-size:21px;line-height:1.1;font-stretch:110%;font-weight:800}
+  .tile p{margin:0;font-size:15px;color:var(--ink-2);line-height:1.45}
+  .tile .m{margin-top:10px;font:500 12px var(--mono);color:var(--ink-3)}
+  /* log */
+  .log{border-top:var(--b)}
+  .entry{display:grid;grid-template-columns:120px 1fr 1.3fr 120px;gap:24px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--rule);text-decoration:none}
+  .entry .d{font:500 13px var(--mono);color:var(--ink-3)}
+  .entry h3{margin:0;font-size:20px;font-stretch:108%;font-weight:800;line-height:1.2}
+  .entry p{margin:0;color:var(--ink-2);font-size:16px;line-height:1.45}
+  .entry .t{font:500 12px var(--mono);color:var(--ink-3);text-align:right}
+  .entry .t.h{color:#1f7a45}
+  .yr{font-size:15px;font:600 13px var(--mono);color:var(--hot);padding:22px 0 6px;border-bottom:var(--b);letter-spacing:.06em}
+  .loadrow{display:flex;justify-content:center;margin-top:30px}
+  /* jobs */
+  .jobs{display:grid;grid-template-columns:repeat(3,1fr);border:var(--b);background:var(--card)}
+  .job{padding:22px 22px 24px;border-left:var(--b)}
+  .job:first-child{border-left:0}
+  .job .when{font-size:40px;line-height:.9}
+  .job .when small{display:block;font:500 12.5px var(--mono);color:var(--ink-3);text-transform:none;margin-top:8px;letter-spacing:0}
+  .job h3{margin:14px 0 2px;font-size:18px;line-height:1.25;font-weight:800}
+  .job .org{font-size:14.5px;color:var(--ink-3);font-weight:600}
+  .job p{margin:10px 0 0;font-size:15.5px;color:var(--ink-2);line-height:1.5}
+  footer{margin-top:100px;background:var(--ink);color:var(--paper)}
+  footer .wrap{padding-top:54px;padding-bottom:44px}
+  footer .big{font-size:58px;line-height:.95}
+  footer .big a{color:var(--hot);text-decoration:none;display:block;font-size:.62em;margin-top:10px;font-stretch:100%;text-transform:none}
+  footer nav{margin-top:28px;display:flex;gap:22px;font:500 14px var(--mono)}
+  footer nav a{text-decoration:none}
+  @media (max-width:1000px){
+    .hero{grid-template-columns:1fr}
+    h1{font-size:76px}
+    .panel{grid-template-columns:1fr}
+    .panel .pic{border-left:0;border-top:var(--b);min-height:320px}
+    .best{grid-template-columns:repeat(2,1fr)}
+    .jobs{grid-template-columns:1fr}
+    .job{border-left:0;border-top:var(--b)} .job:first-child{border-top:0}
+  }
+  @media (max-width:560px){
+    body{font-size:16px}
+    .wrap{padding-left:16px;padding-right:16px}
+    .nav .wrap{height:auto;flex-direction:column;padding-left:0;padding-right:0}
+    .brand{padding:14px 16px;border-bottom:var(--b)}
+    .links a{flex:1;justify-content:center;padding:12px 0;font-size:14px}
+    .links a:first-child{border-left:0} .links a:last-child{border-right:0}
+    .hero{padding-top:36px;padding-bottom:36px;gap:30px}
+    h1{font-size:52px;line-height:.88}
+    .lede{font-size:18px}
+    .btn{height:44px;padding:0 16px}
+    section{padding-top:60px}
+    .sh{flex-direction:column;align-items:flex-start;gap:6px}
+    .sh h2{font-size:34px}
+    .sh p{text-align:left}
+    .panel{box-shadow:5px 5px 0 var(--ink)}
+    .panel .txt{padding:24px 20px}
+    .panel h3{font-size:36px;gap:12px}
+    .rr h3{font-stretch:100%}
+    .burrow .pic{min-height:0}
+    .burrow .pic img{height:auto}
+    .panel h3 img{width:44px;height:44px;border-radius:11px}
+    .panel .tl{font-size:19px}
+    .em .pic{padding:24px 16px 0;gap:12px}
+    .em .pic img{height:270px;width:46%}
+    .rr .pic{padding:18px 16px}
+    .sys{grid-template-columns:1fr 1fr}
+    .sys div:nth-child(3){border-left:0}
+    .sys div:nth-child(n+3){border-top:2px solid var(--ink)}
+    .best{grid-template-columns:1fr;gap:20px}
+    .tile{flex-direction:row}
+    .tile .th{width:120px;flex:none;aspect-ratio:auto;border-bottom:0;border-right:var(--b)}
+    .tile .no{top:6px;left:6px;font-size:11px}
+    .tile h3{font-size:18px}
+    .entry{grid-template-columns:1fr auto;gap:2px 12px;padding:14px 0}
+    .entry .d{grid-column:1;grid-row:1}
+    .entry .t{grid-column:2;grid-row:1}
+    .entry h3,.entry p{grid-column:1 / -1}
+    .entry p{font-size:15px}
+    footer .big{font-size:36px}
+  }
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap">
+  <a class="brand x" href="#">Michael Lizzio</a>
+  <div class="links"><a class="on" href="#">Home</a><a href="#projects">Projects</a><a href="#work">Work</a><a href="#">About</a><a href="#">Resume</a></div>
+</div></nav>
+
+<header class="wrap hero">
+  <div>
+    <div class="kicker">SOFTWARE ENGINEERING <b>/</b> RIT <b>/</b> CLASS OF 2029</div>
+    <h1 class="x"><span>I build</span><span>things<span class="o" style="display:inline">.</span></span></h1>
+    <p class="lede">Hi, I'm Michael. It started with a Raspberry Pi I got for Christmas in 2018. Since then I've built a robot foosball goalie, AI tools at my internships, and three apps of my own.</p>
+    <div class="btns"><a class="btn hot" href="#apps">See the apps</a><a class="btn" href="#projects">Projects</a><a class="btn" href="#">Resume</a></div>
+  </div>
+  <aside class="now">
+    <h2>RIGHT NOW</h2>
+    <ul>
+      <li><i>Burrow</i>On the App Store since October 19</li>
+      <li><i>Engine</i>On the App Store since October 25</li>
+      <li><i>Relay</i>In a small private beta</li>
+      <li><i>RIT</i>Back at school, after a summer of local AI work at GPI</li>
+    </ul>
+  </aside>
+</header>
+
+<div class="ticker"><div>2018 RASPBERRY PI <b>/</b> 2022 WORDLE SOLVER <b>/</b> 2022 CRYPTOGRAM SOLVER <b>/</b> 2022 KURT THE FOOSBALL GOALIE <b>/</b> 2024 TTM <b>/</b> 2025 GPI <b>/</b> 2026 GPI AGAIN <b>/</b> 2026 BURROW, ENGINE MILES, RELAYREPLY</div></div>
+
+<main>
+<section id="apps"><div class="wrap">
+  <div class="sh"><h2 class="x">The apps</h2><p>3 PRODUCTS<br>DESIGNED, CODED, SHIPPED</p></div>
+
+  <article class="panel burrow">
+    <div class="txt">
+      <div class="tagrow"><span class="badge live">ON THE APP STORE</span><span>IPHONE / OCT 2026</span></div>
+      <h3 class="x"><img src="../assets/burrow-icon.webp" alt="">Burrow</h3>
+      <div class="tl">Make time for what matters.</div>
+      <p>A habit time tracker. Tap an activity and your time starts, write a quick reflection when you finish, and set daily, weekly or monthly goals. Marko the marmot keeps you company.</p>
+      <div class="why"><b>HOW IT WORKS</b>No account. Burrow learns when you usually start, and nudges you only if you forget.</div>
+    </div>
+    <div class="pic"><img src="../assets/burrow-banner.webp" alt="Marko the marmot waving in a golden-hour meadow"></div>
+  </article>
+
+  <article class="panel em">
+    <div class="txt">
+      <div class="tagrow"><span class="badge live">ON THE APP STORE</span><span>IPHONE / OCT 2026</span></div>
+      <h3 class="x"><img src="../assets/em-icon.svg" alt="">Engine Miles</h3>
+      <div class="tl">Your odometer shows how far the car went.</div>
+      <p>A plug-in hybrid can run on electric for weeks, so the odometer says nothing about the gas engine. Engine Miles estimates engine miles from your fill-ups (gallons times gas-only MPG) and counts down to your next oil change.</p>
+      <div class="why"><b>HOW IT WORKS</b>No car connection and no account. It's an estimate, and your owner's manual still has the final say.</div>
+    </div>
+    <div class="pic"><img src="../assets/em-screen-1.webp" alt=""><img src="../assets/em-screen-2.webp" alt=""></div>
+  </article>
+
+  <article class="panel rr">
+    <div class="txt">
+      <div class="tagrow"><span class="badge beta">PRIVATE BETA</span><span>WEB APP / 2026</span></div>
+      <h3 class="x"><img src="../assets/rr-icon.svg" alt="">RelayReply</h3>
+      <div class="tl">Phone calls, without the phone.</div>
+      <p>You type what you need, an AI makes the call and talks to the business, and you read both sides as live captions. When a price, a time or anything personal comes up, you get a card and decide.</p>
+      <div class="why"><b>THE SYSTEM</b>A server places the real call, a voice model speaks, and a second model listens for questions only you can answer. Closing the tab doesn't end the call.</div>
+    </div>
+    <div class="pic">
+      <div class="sys">
+        <div><b>01</b>You type the mission</div>
+        <div><b>02</b>Server dials the business</div>
+        <div><b>03</b>AI talks, captions stream</div>
+        <div><b>04</b>Questions become cards</div>
+      </div>
+      <div class="call">
+        <div class="ct">Corner Pharmacy <span class="livetag">LIVE</span></div>
+        <p class="cap"><i>AI 0:04</i>Hi, I'm an AI assistant calling for Sam. I'd like to refill a prescription.</p>
+        <p class="cap"><i>THEM 0:11</i>Sure. Would you like a 30-day or a 90-day supply?</p>
+        <div class="q"><small>NEEDS YOUR OK</small><div>30-day or 90-day supply?</div><div class="opts"><span>30-day <b>$12</b></span><span>90-day <b>$34</b></span></div></div>
+      </div>
+    </div>
+  </article>
+</div></section>
+
+<section id="projects"><div class="wrap">
+  <div class="sh"><h2 class="x">Best of the rest</h2><p>RANKED, NOT BY DATE</p></div>
+  <div class="best">
+    <a class="tile" href="#"><div class="th"><img src="../../../content/projects/foosball/media/cover_photo.webp" alt=""><span class="no">NO. 04</span></div><div class="bd"><h3>Foosball Goalie (KURT)</h3><p>A camera-tracked robot goalie on a $50 Marketplace table.</p><div class="m">2022 / HUMAN-LED</div></div></a>
+    <a class="tile" href="#"><div class="th"><img src="../../../content/projects/calcardo/media/calcardo_cover.webp" style="object-position:25% center" alt=""><span class="no">NO. 05</span></div><div class="bd"><h3>CalCardo</h3><p>Turns chats, syllabi and emails into calendar events you approve first.</p><div class="m">2025 TO 2026 / AI-ASSISTED</div></div></a>
+    <a class="tile" href="#"><div class="th"><img src="../../../content/projects/ai-database-filter/media/filter-workspace.webp" alt=""><span class="no">NO. 06</span></div><div class="bd"><h3>AI Database Filter</h3><p>Ask a huge work database questions in plain English, on a local model.</p><div class="m">SUMMER 2026 / AT GPI</div></div></a>
+    <a class="tile" href="#"><div class="th"><img src="../../../content/projects/cryptogram/media/cryptogram_cover.webp" alt=""><span class="no">NO. 07</span></div><div class="bd"><h3>Cryptogram Solver</h3><p>My first real algorithm, worked out on a whiteboard over school break.</p><div class="m">2022 / HUMAN-LED</div></div></a>
+  </div>
+
+  <div class="sh" style="margin-top:72px"><h2 class="x">The log</h2><p>EVERYTHING ELSE<br>NEWEST FIRST</p></div>
+  <div class="log">
+    <div class="yr">2026</div>
+    <a class="entry" href="#"><span class="d">JUL TO SEP</span><h3>Document Management System</h3><p>Sorting 300,000 pages of old paper records, with a person checking the hard ones.</p><span class="t">AT GPI</span></a>
+    <div class="yr">2025</div>
+    <a class="entry" href="#"><span class="d">DEC</span><h3>Parcel Web Analyzer</h3><p>Compare Seattle homes by what's nearby, right on a map.</p><span class="t">AI-ASSISTED</span></a>
+    <a class="entry" href="#"><span class="d">FEB</span><h3>Symposium Notes</h3><p>A hackathon app that records lectures and writes the notes for you.</p><span class="t">HACKATHON</span></a>
+    <a class="entry" href="#"><span class="d">2020 TO 2025</span><h3>Automated Alarm System</h3><p>A home alarm I rebuilt three times, from hacked hardware to a web dashboard.</p><span class="t h">HUMAN-LED</span></a>
+    <div class="yr">2024</div>
+    <a class="entry" href="#"><span class="d">AUG</span><h3>Blackjack</h3><p>3,372 lines of Pygame in one file, and somehow it works.</p><span class="t h">HUMAN-LED</span></a>
+    <a class="entry" href="#"><span class="d">JUN TO AUG</span><h3>RMF Checklist Automation</h3><p>Tools that safely update security checklists. Used for five quarterly reports.</p><span class="t">AT TTM</span></a>
+    <div class="yr">2022</div>
+    <a class="entry" href="#"><span class="d">FEB</span><h3>Wordle Solver</h3><p>My first big project, and the reason the cryptogram solver happened.</p><span class="t h">HUMAN-LED</span></a>
+  </div>
+  <div class="loadrow"><a class="btn" href="#">Load 18 more entries</a></div>
+</div></section>
+
+<section id="work"><div class="wrap">
+  <div class="sh"><h2 class="x">Work</h2><p>THREE SUMMERS<br>FULL HISTORY ON THE WORK PAGE</p></div>
+  <div class="jobs">
+    <div class="job"><div class="when x">2026<small>Summer / Babylon, NY</small></div><h3>Application Development Intern, AI &amp; Automation</h3><div class="org">Greenman-Pedersen, Inc.</div><p>A local AI assistant for a big traffic database, and a system for sorting 300,000 pages of old records.</p></div>
+    <div class="job"><div class="when x">2025<small>Summer / Babylon, NY</small></div><h3>Application Development Intern, GIS &amp; Computer Vision</h3><div class="org">Greenman-Pedersen, Inc.</div><p>Road sign detection from stereo cameras and GPS, plugged into the company's existing C# app.</p></div>
+    <div class="job"><div class="when x">2024<small>Summer / Farmingdale, NY</small></div><h3>Cyber Data Management Consultant</h3><div class="org">TTM Technologies</div><p>Python tools that safely update security checklist files. The team used them for five quarterly reports.</p></div>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <div class="big x">Want to talk?<a href="#">michaeljlizzio@gmail.com</a></div>
+  <nav><a href="#">GITHUB</a><a href="#">LINKEDIN</a><a href="#">RESUME</a></nav>
+</div></footer>
+</body>
+</html>

@@ -21,7 +21,7 @@ content/
 ```
 
 One directory per project. **There is no index, manifest, or registry**, and there is no route file
-per project — `/work/<slug>` is a single dynamic route fed by `getProjectSlugs()`. Adding a project
+per project — `/projects/<slug>` is a single dynamic route fed by `getProjectSlugs()`. Adding a project
 means adding a directory; removing one means deleting a directory. Nothing else in the repo has to
 know.
 
@@ -45,9 +45,11 @@ Two consequences worth stating plainly:
 | `title` | `string` | yes | — |
 | `tagline` | `string` | yes | — |
 | `summary` | `string` | yes | — |
+| `overview` | `{ what, why, did, result } \| null` | no | `null` |
+| `ownWords` | `boolean` | no | `false` |
 
 **`slug`** — matched against `/^[a-z0-9]+(-[a-z0-9]+)*$/` and **must equal the directory name**.
-It is the URL (`/work/cryptogram`), the media namespace (`/media/cryptogram/…`), and the identity
+It is the URL (`/projects/cryptogram`), the media namespace (`/media/cryptogram/…`), and the identity
 this project carries into Supabase later, so it should never change once published. Good:
 `wordle-solver`, `cyber-ttm`, `la2028`. Bad: `Wordle_Solver`, `wordle solver`, `-foo`, `foo--bar`.
 
@@ -55,12 +57,23 @@ this project carries into Supabase later, so it should never change once publish
 `"LA28 Olympic Itinerary Planner"`.
 
 **`tagline`** — one line, `min 1`, **`max 140`**, and realistically you want under 90 because it is
-the entire body of the card on `/work`. It should say what the thing *does*, not what category it is
+the entire body of the card on `/projects`. It should say what the thing *does*, not what category it is
 in. Real example: `"A backtracking program that cracks cryptogram puzzles word by word"` — you know
 what it is and roughly how it works before you click.
 
 **`summary`** — two to four sentences at the top of the detail page. The good ones answer: what is
 it, how does it actually work, and what is on this page. It is the only prose many visitors read.
+When `overview` is set, the overview replaces the summary on the page.
+
+**`overview`** (November 2026) is the 30-second version at the top of the page, shown next to a large
+hero: `what` (what it is), `why` (why I made it), `did` (what I did) and `result` (how it turned out).
+One or two plain first-person sentences each. Every published project except the `ownWords` ones has
+one. The sections below it are the details for anyone who wants them, so they should add to the
+overview, not repeat it.
+
+**`ownWords`** marks Michael's own original pages (cryptogram, foosball, symposium). Every visible
+word on them is his, copied from his old site or README. The page shows no tagline and no summary
+(both are still his own sentences, used on the card and in search results). Never edit their text.
 
 ### Visibility and ordering
 
@@ -80,7 +93,15 @@ only, so an unpublished project has no page, no card, and no entry in `generateS
 URL 404s. `getAllProjects()` is the one function that includes unpublished projects; it exists for
 the owner's own review surfaces.
 
-**`featured`** selects a project for the homepage. It does not override chronological ordering.
+**`featured`** selects a project for "Selected work" on the homepage. Since November 2026 that is
+the three apps (Engine Miles, Burrow, RelayReply).
+
+**Ranking and "Load more".** `/projects` sorts by `RELEVANCE_ORDER` in `src/lib/project-order.ts`
+("Best first"), shows the first `INITIAL_VISIBLE` projects (12), and keeps the rest behind a
+"Load more" button. The hidden cards are still in the HTML. Sorting by date shows everything. A slug
+missing from `RELEVANCE_ORDER` falls to the end, behind "Load more". The homepage's second row
+("A few more I like") is the first three non-featured projects in that order, and previous/next
+links on a project page follow it too.
 
 **`date`** is `"YYYY"` or `"YYYY-MM"` (`/^\d{4}(-\d{2})?$/`) — a sortable string, not a `Date`,
 because half of these projects are only datable to the year. `"2022"` and `"2024-03"` are valid;
@@ -93,8 +114,8 @@ last — that is better than a guess.
 2. `date: null` last;
 3. title ascending as a stable tie-breaker.
 
-Homepage selection still uses `featured`; every ordered project list and previous/next project link
-stays chronological.
+That is the order the content API returns and what the "Date" sort on `/projects` uses. The default
+"Best first" view, the homepage rows and previous/next links use the ranking described above.
 
 **`status`** is a free-text badge — `"In progress"`, `"Archived"`, `"Shipped 2024"`. `null` when the
 project doesn't declare one; don't invent a status to fill the field.
@@ -146,10 +167,13 @@ is the standard to aim at. It costs nothing and it is the only channel to the ne
 | Field | Type | Required | Default |
 |---|---|---|---|
 | `heading` | `string \| null` | no | `null` |
+| `level` | `2 \| 3` | no | `2` |
 | `body` | `string[]` | no | `[]` |
+| `bullets` | `string[]` | no | `[]` |
 | `codeBlocks` | `string[]` | no | `[]` |
 | `layout` | `"stack" \| "media-left" \| "media-right"` | no | `"stack"` |
 | `media` | `Media[]` | no | `[]` |
+| `diagram` | `Diagram \| null` | no | `null` |
 
 **`heading`** — `null` renders an unlabelled section, useful as a lead-in.
 
@@ -166,7 +190,22 @@ a divider. Keep ordinary paragraphs in `body`.
 
 **`layout`** — controls the desktop pairing when a section has body copy and exactly one media item.
 `media-left` and `media-right` create a two-column row that stacks on smaller screens. Sections with
-other shapes fall back to `stack`.
+other shapes fall back to `stack`. `wide` puts a single media item in the full 72rem page column
+instead of the 45rem reading column (the cryptogram demo video uses it). `wide` with several media
+items shows them in two big columns in the page column (an odd count gives the first one the full
+width), which is the layout for wide screenshots.
+
+**`level`**: `3` makes the heading one size smaller and the gap above it shorter, so the section
+reads as part of the one before it (cryptogram's "Images" and the three photos under it).
+
+**`bullets`**: plain-text bullet points, shown after `body`.
+
+**`diagram`**: a flow diagram drawn as HTML from text, so it works in light and dark mode and reads
+as a list to a screen reader: `{ "label": "what it shows", "caption": null, "steps": [ { "arrow":
+null, "nodes": [ { "title": "React frontend", "detail": "TypeScript and Tailwind CSS" } ] }, ... ] }`.
+Two to seven steps, one to three boxes per step, optional short text on the arrow into a step. Up to
+four steps run left to right on a wide screen; five or more run top to bottom. Use it instead of an
+ASCII diagram in `codeBlocks` (see CalCardo, Agentic Report Generator, Legacy Data Cleanup).
 
 A section may be prose-only, media-only, or both. Sections are the only structure available — there
 are no nested subsections and no rich text. If a project seems to need more, that's a signal to
@@ -208,6 +247,10 @@ from its surroundings, but **every image should have it**, and it should describ
 frame rather than the medium. Compare the legacy site's `"Image 1"` / `"Main Image"` with the real
 entry `"Photo of the cryptogram handout from computer science class, solved twice by hand — the
 author's dad's solution alongside the author's own"`.
+
+**`autoplay`** — videos only, default `false`. When `true` the video plays muted and looped while
+at least half of it is on screen and pauses when it scrolls away. Controls stay on. Visitors who ask
+for reduced motion get a normal click-to-play video.
 
 **`caption`** — visible text rendered under the media. Optional, and genuinely optional: most media
 in the repo has `null`.
@@ -252,12 +295,27 @@ Exactly one of these, for the whole site.
 
 ---
 
+## `Work` — `content/work.json`
+
+The Work page (`/work`): an `intro` line, a list of `jobs` (`role`, `company`, `location`, `dates`
+as free text like `"Summer 2026"`, a first-person `summary`, `highlights`, and `projects`, the slugs
+of published projects that came out of that job), and `education`. `npm run validate` checks it
+against `WorkSchema` and warns about a linked slug that is not published.
+
+## Writing rules (November 2026)
+
+First person, plain words, short. 300 to 600 words per project page; the foosball page is the
+ceiling. No em dashes anywhere in content (`npm run validate` fails on one). No "this page", "the
+author" or "portfolio" in public copy. The cryptogram and foosball body text, headings and captions
+are Michael's own words and are never edited.
+
 ## The data access API
 
 `src/lib/content.ts` is the **only** module in the repo that reads the filesystem for content.
 
 ```ts
 getProfile():            Promise<Profile>
+getWork():               Promise<Work>
 getProjects():           Promise<ResolvedProject[]>          // published only, ordered
 getAllProjects():        Promise<ResolvedProject[]>          // includes unpublished, same order
 getProject(slug):        Promise<ResolvedProject | null>     // published only

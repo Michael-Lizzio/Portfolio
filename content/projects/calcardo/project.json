@@ -1,29 +1,31 @@
 {
   "slug": "calcardo",
   "title": "CalCardo",
-  "tagline": "An AI calendar assistant that turns chats, syllabi, and email into reviewable events",
-  "summary": "CalCardo was my first major full-stack project that I took from an idea to a production deployment. I built it to make keeping a real calendar feel easier: I could type a request, upload a syllabus, or let it find an event in Gmail, review what it proposed, and then push the accepted change to Google Calendar. The frontend is React and TypeScript with Tailwind CSS, the API is FastAPI and Python, and Supabase handles authentication, Postgres data, and storage.",
+  "tagline": "An AI calendar assistant that turns chats, syllabi and emails into events you approve",
+  "summary": "CalCardo was my first big full-stack project that I took all the way from an idea to a live website. You could type something like \"lunch with Jack next Tuesday at one\", upload a syllabus, or let it find events in your Gmail, and it would suggest calendar events for you to approve before they went into Google Calendar.",
+  "overview": {
+    "what": "An AI calendar assistant. You could type something like \"lunch with Jack next Tuesday at one\", upload a syllabus or connect Gmail, and it suggested events for you to approve before they went into Google Calendar.",
+    "why": "During my first year at RIT, campus events were spread across emails, apps and flyers, and it was really easy to miss things. I wanted adding an event to feel like sending a text.",
+    "did": "I built the whole thing, from the React frontend to the Python backend, and took it all the way to a live website. I wrote the early versions myself and used AI a lot to polish it.",
+    "result": "Friends tested it and it worked, but getting Google to approve Gmail and Calendar access took forever, and the big AI apps started doing calendar chat too. So I paused it in April 2026."
+  },
   "published": true,
-  "featured": true,
+  "featured": false,
   "date": "2025-11",
   "endDate": "2026-04",
   "status": "Paused",
   "development": "ai-assisted",
   "tech": [
-    "React 19",
+    "React",
     "TypeScript",
-    "Tailwind CSS 4",
+    "Tailwind CSS",
+    "Python",
     "FastAPI",
-    "Python 3.11",
-    "Supabase Auth",
-    "Supabase Postgres",
-    "Supabase Storage",
+    "Supabase",
     "Google Calendar API",
     "Gmail API",
     "OpenAI API",
-    "Google Pub/Sub",
-    "Stripe",
-    "Docker"
+    "Stripe"
   ],
   "links": [
     {
@@ -40,46 +42,14 @@
     "kind": "image",
     "poster": null,
     "alt": "CalCardo title beside a calendar icon and the phrases talk, review, and sync",
-    "caption": "The basic CalCardo flow: tell it what is happening, review the proposed change, and then sync it to Google Calendar."
+    "caption": "Tell it what's happening, check what it suggests, then sync it to Google Calendar."
   },
   "sections": [
     {
-      "heading": "Why I built it",
+      "heading": "Talking to your calendar",
       "body": [
-        "I first had the idea during my first year at RIT. Campus events were scattered across email, different apps, and other sources, so it was easy to miss something. I wanted one place that could collect those events and keep me caught up.",
-        "I also wanted calendar entry to feel less like a chore. Instead of opening Google Calendar and filling out a form, I wanted to type something like, \"Get lunch with Jack next Tuesday at one,\" or upload a syllabus with important dates and let the app prepare the events for me."
-      ],
-      "media": []
-    },
-    {
-      "heading": "What it could do",
-      "body": [
-        "CalCardo had three main ways to create an event: a normal event form, CalChat, and a Gmail pipeline. After signing in, a user could connect Google Calendar, choose which calendar CalCardo should write to, and pull existing events into the app. Changes made in CalCardo could then be written back to Google Calendar.",
-        "The demo shows the full flow with real calendar data. I import events, edit an existing lunch, ask the chat to move it, create two new plans at once, create and later change a recurring swimming event, and confirm the results in Google Calendar.",
-        "Gmail was a separate connection. When a likely event arrived by email, the app filtered it, extracted the date, time, location, and description, and placed a proposed event in an inbox. The user could inspect the original email, edit the proposal, ignore it, or accept it onto a chosen calendar."
-      ],
-      "media": [
-        {
-          "src": "media/calendar_existing_events.webp",
-          "kind": "image",
-          "poster": null,
-          "alt": "Google Calendar week view showing a lunch and recurring Linear Algebra events",
-          "caption": "The linked Google Calendar supplied the existing schedule that CalCardo could import and reason over."
-        },
-        {
-          "src": "media/event_editor.webp",
-          "kind": "image",
-          "poster": null,
-          "alt": "CalCardo event editor showing the title, descriptions, timezone, date, and time fields for a lunch",
-          "caption": "The CalCardo event editor exposed both its own display fields and the date, time, visibility, recurrence, and calendar data needed for Google synchronization."
-        }
-      ]
-    },
-    {
-      "heading": "CalChat was a proposal system, not just a chatbot",
-      "body": [
-        "The assistant received a limited snapshot of the user's real schedule instead of pretending it knew the entire calendar. Its response had to follow a structured JSON contract that separated existing event references, edits, removals, and new event drafts. That structure let the interface show the right action for each result.",
-        "The backend validated event IDs against the snapshot the model had actually seen, checked new drafts for time conflicts, and asked the user to clarify when more than one event matched. The model could suggest an action, but the user still had to apply or accept it. That review step was important because a calendar assistant should not silently change a real schedule."
+        "The main feature was CalChat. You tell it what's going on and it suggests changes, but nothing actually changes until you hit apply. That mattered to me, because an assistant that quietly moves things around on your real calendar is worse than no assistant at all.",
+        "It could move an existing event, create a few events from one message, and even change a recurring event, like ending my swim practice a week early."
       ],
       "media": [
         {
@@ -87,29 +57,30 @@
           "kind": "image",
           "poster": null,
           "alt": "CalChat showing an existing lunch beside a suggested change to move it and update its description",
-          "caption": "For an edit, CalChat showed the existing event separately from the proposed patch. Nothing changed until I pressed Apply update."
+          "caption": "Moving a lunch. Nothing changes until I hit Apply update."
         },
         {
           "src": "media/chat_multiple_drafts.webp",
           "kind": "image",
           "poster": null,
           "alt": "CalChat showing separate pending drafts for a walk in the park and lunch with a friend",
-          "caption": "One request could produce multiple structured drafts. Each event could be added, dismissed, edited manually, or revised with AI."
+          "caption": "One message, two new events to add or dismiss."
         },
         {
           "src": "media/chat_recurrence_update.webp",
           "kind": "image",
           "poster": null,
           "alt": "CalChat proposing that a recurring swimming event end one week earlier",
-          "caption": "Recurring events were handled as real recurrence changes. Here the assistant proposed ending a swimming series one week earlier while preserving the earlier dates."
+          "caption": "Ending a recurring swim event a week early."
         }
-      ]
+      ],
+      "layout": "wide"
     },
     {
-      "heading": "From Gmail to a calendar event",
+      "heading": "Finding events in your email",
       "body": [
-        "The email side became a staged pipeline rather than one large AI call. Gmail messages were ingested, scored by a heuristic filter, sent to an extraction model only when they looked calendar-related, converted into a canonical event record, and placed in an in-review state. The later code also includes duplicate detection, update and cancellation proposals, and configurable auto-accept rules.",
-        "Keeping the steps separate made failures easier to inspect and reduced unnecessary model calls. Rejected messages could have their body and snippet removed to limit retention, and CalChat was grounded on the resulting event fields rather than raw email bodies."
+        "You could also connect Gmail. When an email looked like it had an event in it, CalCardo pulled out the date, time and place and put it in an inbox for you to accept, edit or ignore. A cheap filter ran first, so the AI only looked at emails that actually seemed calendar related.",
+        "Everything synced both ways with Google Calendar, so you could keep using Google's app like normal."
       ],
       "media": [
         {
@@ -117,49 +88,85 @@
           "kind": "image",
           "poster": null,
           "alt": "CalCardo inbox showing a private campfire event extracted from an email with Edit, Ignore, and Accept controls",
-          "caption": "The Gmail pipeline extracted a two-hour campfire event, preserved a link to the source message, and placed it in a review queue instead of adding it automatically. The sender line has been removed from this portfolio screenshot."
+          "caption": "An event found in an email, waiting for me to accept it. The sender is cropped out."
         },
         {
           "src": "media/google_calendar_email_event.webp",
           "kind": "image",
           "poster": null,
           "alt": "Google Calendar showing the accepted family campfire event from 9 to 11 PM with its description and reminder",
-          "caption": "After I accepted the proposal, the extracted event appeared in Google Calendar with its time, description, calendar, and reminder intact."
+          "caption": "The same event after I accepted it, in Google Calendar."
+        },
+        {
+          "src": "media/calendar_existing_events.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Google Calendar week view showing a lunch and recurring Linear Algebra events",
+          "caption": "My existing Google Calendar, which CalCardo could import."
+        },
+        {
+          "src": "media/event_editor.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "CalCardo event editor showing the title, descriptions, timezone, date, and time fields for a lunch",
+          "caption": "The event editor."
         }
-      ]
+      ],
+      "layout": "wide"
     },
     {
-      "heading": "Full-stack architecture",
+      "heading": "How I built it",
       "body": [
-        "The frontend is a React 19 single-page app built with TypeScript, Vite, React Router, and Tailwind CSS. The Python backend is one FastAPI service split across 17 API routers for events, chat, Google connections, email processing, billing, storage, administration, and the other product areas.",
-        "Supabase provides authentication, Postgres, and private file storage. The browser signs in through Supabase and sends its JWT to FastAPI, which validates the token before handling protected requests. The database layer uses the Supabase PostgREST client, and the migrations apply row-level security to user-owned data.",
-        "The Google integration handles Calendar import and write-through updates, while Gmail can use Pub/Sub notifications or a manual sync. The code also includes Stripe subscriptions, feature entitlements, request IDs, rate limiting, error capture, and an append-only AI usage ledger that records token use and estimated cost for chat, summarization, filtering, extraction, attachments, and transcription."
+        "The frontend is React and TypeScript, the backend is Python and FastAPI, and Supabase handles accounts, the database and file storage.",
+        "I wrote the early versions myself and then used AI a lot to get it polished enough for friends to test. What worked best was treating the AI like another intern: give it one piece at a time, enough context, and a way to check its work."
       ],
-      "codeBlocks": [
-        "React + TypeScript\n        |\n        | Supabase JWT\n        v\nFastAPI API (17 routers)\n        |\n        +--> Supabase: Auth, Postgres, Storage\n        +--> Google Calendar: import and write-through\n        +--> Gmail: ingest, filter, extract, review\n        +--> OpenAI: chat, vision, extraction\n        +--> Stripe: plans and entitlements"
-      ],
-      "media": []
-    },
-    {
-      "heading": "Building it with AI",
-      "body": [
-        "I built early versions first, then used AI heavily while revising the product into something polished enough for friends to test. The most useful approach was to treat the AI like another intern: give it one bounded part of the system, enough context to understand that part, tests or a concrete way to verify the result, and feedback before moving on.",
-        "The project taught me that AI does not replace system design. I still had to decide how calendar data should move through the product, where approval boundaries belonged, how the services fit together, and how to break a large idea into pieces the model could work on safely. The better I understood the architecture, the more useful the AI became."
-      ],
-      "media": []
+      "media": [],
+      "diagram": {
+        "label": "CalCardo's stack, from the frontend to the services behind it",
+        "caption": null,
+        "steps": [
+          {
+            "arrow": null,
+            "nodes": [
+              {
+                "title": "React frontend",
+                "detail": "TypeScript and Tailwind CSS"
+              }
+            ]
+          },
+          {
+            "arrow": null,
+            "nodes": [
+              {
+                "title": "FastAPI backend",
+                "detail": "Python"
+              }
+            ]
+          },
+          {
+            "arrow": null,
+            "nodes": [
+              {
+                "title": "Supabase",
+                "detail": "Accounts, database and files"
+              },
+              {
+                "title": "Google Calendar and Gmail",
+                "detail": "Two-way sync and events from email"
+              },
+              {
+                "title": "OpenAI",
+                "detail": "Reads chats, syllabi and emails"
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "heading": "Why I paused it",
       "body": [
-        "Getting broad Google Calendar and Gmail access verified was a tedious final step. At the same time, general AI products started covering the basic use case of chatting with a calendar, which made the original idea less distinctive than it had been when I first thought of it.",
-        "CalCardo still had useful details, especially its review queue and its ability to recognize that a new email might update or cancel an existing event. I decided those narrower advantages were not enough to justify taking the entire product further, so I moved on to ideas where I saw more room to build something different."
-      ],
-      "media": []
-    },
-    {
-      "heading": "Demo",
-      "body": [
-        "The linked walkthrough covers account setup, Google Calendar authorization, calendar shortcuts, importing a date range, editing and syncing events, creating and revising events through CalChat, recurring schedules, Gmail connection, and reviewing an event extracted from a real email. The deployed frontend is still online, but the backend is currently turned off."
+        "Getting Google to approve full Calendar and Gmail access was a long, tedious process, and around the same time the big AI apps started letting you chat with your calendar too. CalCardo still did a few things better, like the review inbox, but not enough to keep going, so I moved on to other ideas. The website is still up but the backend is off. The demo video shows the whole thing working."
       ],
       "media": []
     }

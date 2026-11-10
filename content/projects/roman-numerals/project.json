@@ -3,12 +3,22 @@
   "title": "Roman Numeral Converter",
   "tagline": "An early two-way Roman numeral converter with its own validity check",
   "summary": "I wrote this on a Raspberry Pi before I even knew about while loops. It converts Roman numerals into regular numbers, checks whether the input is valid, and uses a separate conversion routine for the other direction. Looking back at it is a fun snapshot of how I solved problems before I knew the normal tools for solving them.",
+  "overview": {
+    "what": "A Python program that converts Roman numerals to regular numbers and back, and checks whether a Roman numeral is written correctly.",
+    "why": "It was one of the first things I wrote on my Raspberry Pi, before I even knew about while loops.",
+    "did": "I came up with my own way to check the input: turn it into a number, turn that back into a Roman numeral, and see if it matches what you typed.",
+    "result": "It works, and it's a fun snapshot of how I solved problems before I knew the normal tools for them. You can try it right on this page."
+  },
   "published": true,
   "featured": false,
   "date": null,
   "status": "Complete",
   "development": null,
-  "tech": ["Python", "NumPy", "Command-line interface"],
+  "tech": [
+    "Python",
+    "NumPy",
+    "Command-line interface"
+  ],
   "links": [
     {
       "label": "Cover photo: Sonse (CC BY 2.0)",
@@ -25,14 +35,16 @@
   "sections": [
     {
       "heading": "A strange but useful validator",
-      "body": ["The program decodes the Roman numeral, converts the answer back into a canonical Roman numeral, and compares that result with the original input. If the strings do not match, it can reject forms such as IIII and suggest IV instead."],
+      "body": [
+        "The program reads your Roman numeral, turns the answer back into a properly written Roman numeral, and compares the two. If they don't match, it rejects things like IIII and suggests IV instead."
+      ],
       "media": []
     },
     {
       "heading": "How the two directions work",
       "body": [
-        "Reading a Roman numeral goes from left to right. A symbol is added when it is at least as large as the symbol after it, but subtracted when a larger symbol follows it. That is why VI is 5 + 1, while IV is -1 + 5.",
-        "Writing a Roman numeral works in the other direction. The converter repeatedly takes the largest symbol or subtractive pair that fits into the number, appends it, and continues with the remainder. The playable trace above exposes each of those decisions."
+        "Reading a Roman numeral goes left to right. A symbol gets added when it's at least as big as the one after it, and subtracted when a bigger one comes next. That's why VI is 5 + 1, but IV is -1 + 5.",
+        "Writing one goes the other way. The converter keeps taking the biggest symbol or pair, like CM or IV, that fits into the number, adds it, and keeps going with what's left. You can try it in the converter above."
       ],
       "media": []
     }

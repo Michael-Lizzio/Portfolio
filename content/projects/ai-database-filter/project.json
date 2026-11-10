@@ -1,10 +1,16 @@
 {
   "slug": "ai-database-filter",
   "title": "AI Database Filter",
-  "tagline": "A local AI assistant for exploring a complex database in plain English",
-  "summary": "I built an end-to-end filtering system for a county traffic-signal management application covering more than 2,000 signals and a large network of related records. The finished feature combined a flexible visual query builder with a local AI assistant that could understand plain-English requests, propose filters for review, and help users repair filters they had already created. I also expanded it into a shared filter library, where people could save useful filters and groups to their accounts, organize them, and share them with the rest of the team. This page follows the project from the first manual controls through retrieval, model evaluation, prompt tuning, database safeguards, sharing, and production integration.",
+  "tagline": "A local AI assistant that turns plain English into database filters you can check",
+  "summary": "At my 2026 internship I built a filtering system for a county traffic signal app that covers more than 2,000 signals. You could build filters by hand, or just ask in plain English and a small AI running on our own computer would suggest filters for you to approve. Later I turned it into a shared library so the team could save and share their filters.",
+  "overview": {
+    "what": "A filtering system for a county traffic signal app with more than 2,000 signals. You can build filters by hand, or ask in plain English and a small local AI suggests filters for you to approve.",
+    "why": "At my 2026 internship at GPI, the team needed an easier way to find the right signals in a big database full of connected tables and messy free text.",
+    "did": "I built the filter builder first, then a chat panel that turns plain English into filter cards, a test harness that ran 200 requests across 8 local models, and later a shared filter library.",
+    "result": "The model I picked answered in about 8 seconds instead of 43 and got to about 91% on my tests. It started as a prototype and ended up built into the team's real app."
+  },
   "published": true,
-  "featured": true,
+  "featured": false,
   "date": "2026-06",
   "endDate": "2026-07",
   "status": "Internship project",
@@ -16,8 +22,6 @@
     "Ollama",
     "Qwen2.5 Coder 3B",
     "Retrieval-augmented generation",
-    "Text embeddings",
-    "Server-Sent Events",
     "Automated model evaluation"
   ],
   "links": [],
@@ -26,14 +30,14 @@
     "kind": "image",
     "poster": null,
     "alt": "Super Filter workspace showing searchable database fields, applied filters, and AI-generated filter proposals side by side",
-    "caption": "The finished workspace kept database exploration, active conditions, and reviewable AI suggestions in one place."
+    "caption": "The finished filter workspace: fields, active filters and AI suggestions side by side."
   },
   "sections": [
     {
-      "heading": "Starting with the real filtering problem",
+      "heading": "Starting without AI",
       "body": [
-        "The application brought together signal inventory, timing, maintenance, documents, locations, and other operational records. The tables were deeply connected, and many fields contained inconsistent or free-entry text. A useful filter could not stop at simple equals and greater-than conditions. It needed to follow relationships, search text, compare values, count related records, handle dates, rank results, and still make sense to someone who did not write SQL.",
-        "I owned this feature end to end. Before adding AI, I built the visual filter system first. That forced me to understand the full set of operations, how filters should be represented, and what the interface needed to communicate. It also gave the AI a controlled language to work with later instead of letting it generate arbitrary database queries."
+        "The database had everything about the signals: timing, maintenance, documents, locations, and a lot of tables all connected to each other. Plenty of fields were messy free text too. So before adding any AI, I built the filter builder by hand. It could search text, compare columns, count related records, handle dates, and nest AND, OR and NOT.",
+        "Doing that first meant the AI later had a safe, limited set of filters to work with, instead of writing its own SQL."
       ],
       "media": [
         {
@@ -41,23 +45,15 @@
           "kind": "image",
           "poster": null,
           "alt": "Super Filter open over the traffic-signal application with a map and signal table visible behind it",
-          "caption": "The filter workspace was integrated into the larger signal-management application instead of remaining a standalone prototype."
+          "caption": "The filter workspace inside the signal app."
         }
       ]
     },
     {
-      "heading": "Designing for imperfect data",
+      "heading": "Asking in plain English",
       "body": [
-        "Some of the hardest cases came from fields that were not as structured as their names suggested. A timing value, for example, could contain one number, several numbers, or ordinary text. I added operators that could recognize individual numbers inside mixed text, so a search for 3 could still match a record containing 3 and 5 without treating 13 as the same value.",
-        "The query builder grew to support text and regular-expression searches, relative dates, column-to-column comparisons, counts and totals across related records, top-N rankings, and nested AND, OR, and NOT logic. Users could build those conditions manually, while the same filter model became the safe target for the AI assistant."
-      ],
-      "media": []
-    },
-    {
-      "heading": "Adding a conversational assistant",
-      "body": [
-        "I added a chat interface beside the filter builder and connected it to a local language model through Ollama. A user could ask for one condition or an entire group of filters, inspect the proposed changes, and decide whether to add them. The assistant could also read the filters already on screen, explain unexpected results, and propose updates instead of starting over.",
-        "The model never directly controlled the database or silently changed the interface. It produced structured filter actions, the backend checked them against live metadata, and the user received reviewable proposal cards. That separation made the AI useful without asking anyone to trust an invisible SQL query."
+        "Next I added a chat panel next to the filters. You could ask for something like signals with vehicle detection, and it would come back with filter cards you could approve or deny. It could also read the filters already on screen and fix them.",
+        "The AI never touched the database directly. Every suggestion got checked against the real database structure, and queries only ran read-only."
       ],
       "media": [
         {
@@ -65,30 +61,29 @@
           "kind": "image",
           "poster": null,
           "alt": "AI chat panel translating a request about vehicle detection into a proposed inventory filter with Approve and Deny controls",
-          "caption": "A plain-English request became a specific filter proposal that the user could inspect, approve, or deny."
+          "caption": "A plain-English request turned into a filter I can approve or deny."
         },
         {
           "src": "media/structured-tool-call.webp",
           "kind": "image",
           "poster": null,
           "alt": "Early AI Filter Assistant interface showing a structured JSON tool call queued for a database value lookup",
-          "caption": "An earlier development view exposed the structured tool call behind the conversation while I refined the assistant workflow."
+          "caption": "An early version that showed the tool call behind the chat."
+        },
+        {
+          "src": "media/applied-filter-proposals.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Development build showing two applied filters, a parameterized SQL preview, and separate AI proposal cards awaiting review",
+          "caption": "Applied filters, the SQL they make, and new suggestions waiting for a decision."
         }
       ]
     },
     {
-      "heading": "Giving a small model the right context",
+      "heading": "Picking a model that fits",
       "body": [
-        "The full database description was too large to place in every prompt, especially on the limited hardware available. I built a retrieval system that embedded curated descriptions of the filterable tables and compared them with each request. The most relevant tables, columns, example values, and usage notes were placed into the prompt, while the central signals table and any tables already used by the current filters stayed available for continuity.",
-        "The curated descriptions helped the model understand what the data meant, but they were never trusted as executable truth. Live PostgreSQL metadata still verified the tables, columns, types, and shortest join paths. Retrieval selected the useful context; the database schema decided what was actually valid."
-      ],
-      "media": []
-    },
-    {
-      "heading": "Testing models instead of guessing",
-      "body": [
-        "The workstation had very limited GPU memory, so choosing a model was an engineering constraint rather than a preference. I built a repeatable evaluation harness and ran the same 200 requests across eight local models. The suite covered everyday filters as well as difficult combinations involving counts, rankings, dates, regular expressions, and related tables. Outputs were anonymized and graded against expected behavior, while the harness also measured response time.",
-        "The original 4B model was accurate but took roughly 43 seconds for a typical response because it could not fit fully on the GPU. The best balance was Qwen2.5 Coder 3B. It fit the hardware and responded in about 8 seconds before tuning. The result also taught me that a coder-oriented model was a good match because the task was closer to generating a strict data structure than having an open-ended conversation."
+        "The work computer had a 4 GB GPU, which is tiny for AI. The model I started with was accurate but took about 43 seconds to answer. So I built a test harness and ran the same 200 requests across 8 local models, grading every answer. The winner was Qwen2.5 Coder 3B, which fit on the GPU and answered in about 8 seconds.",
+        "After about 50 rounds of prompt tweaking, it went from about 85% to 91% on my tests. On a fresh set of messier prompts it improved less, which was a good reminder not to trust a benchmark too much."
       ],
       "media": [
         {
@@ -96,40 +91,14 @@
           "kind": "image",
           "poster": null,
           "alt": "Windows development workstation showing Ollama running a local model alongside Task Manager and NVIDIA GPU memory usage",
-          "caption": "The local model had to fit a 4 GB professional GPU, so memory use and response time became part of model selection."
+          "caption": "Ollama running next to the GPU memory meter."
         }
       ]
     },
     {
-      "heading": "Learning how to tune the system",
+      "heading": "Sharing filters",
       "body": [
-        "I used the evaluation results to find repeatable failure patterns instead of patching individual answers. The smaller model struggled most with related-record counts, rankings, and requests that combined a ranking with existing conditions. I ran about 50 controlled prompt experiments and learned that rules alone could make the model worse. Compact rules paired with carefully chosen few-shot examples worked much better.",
-        "On the matched benchmark, the tuned 3B model improved from about 85% to 91% while keeping its median response near 10 seconds. I also tested it on a fresh set of messier prompts. That holdout showed a smaller improvement and a lower real-world score, which was a useful reminder that a benchmark can overstate progress when its wording resembles the examples used for tuning."
-      ],
-      "media": []
-    },
-    {
-      "heading": "Building safety around the AI",
-      "body": [
-        "I treated generated output as untrusted input. The assistant could only propose supported filter operations, identifiers were checked against an allowlist and live schema metadata, values were passed as query parameters, and invalid actions were rejected or returned to the model for repair. The backend resolved joins rather than asking the model to invent them.",
-        "Database execution ran inside read-only transactions with timeouts, and sensitive tables and columns were excluded from the metadata shown to the assistant. Development used a local database copy, but I still designed the safeguards as if the feature were already connected to production data."
-      ],
-      "media": [
-        {
-          "src": "media/applied-filter-proposals.webp",
-          "kind": "image",
-          "poster": null,
-          "alt": "Development build showing two applied filters, a parameterized SQL preview, and separate AI proposal cards awaiting review",
-          "caption": "The development interface made the generated conditions and SQL preview visible while keeping each proposed change behind a user decision."
-        }
-      ]
-    },
-    {
-      "heading": "Turning filters into a shared library",
-      "body": [
-        "Once the filters became useful, I expanded the system so they would not disappear at the end of a session. Each user could build a personal library of saved filters, give them names and descriptions, mark favorites, and organize several conditions into reusable groups. Groups could preserve their AND, OR, and NOT logic, so someone could save an entire investigation instead of rebuilding each condition one at a time.",
-        "I also built the discovery side of the library. People could search the catalog, narrow it by table or column, and sort it alphabetically, by recency, by updates, or by how often it was used. Usage was tracked separately for each person's library and across the public catalog, which made frequently useful filters easier to find without changing the filter itself.",
-        "Creators could publish a filter to the browsable catalog or keep it unlisted and share it through a short link. Other users could add a shared filter to their own library, and if its creator improved it later, they would see an update indicator rather than silently receiving a different result. I added ownership-aware editing, favorites, duplicate protection, and update acknowledgements so the library felt like a real collaborative feature instead of a folder of saved JSON."
+        "Once people started using it, I didn't want good filters to disappear when you closed the tab. So I added a library where you can save filters and groups of filters, favorite them, and share them with the team by link or in a public catalog. If someone updates a filter you saved, you get a small update notice instead of it changing under you."
       ],
       "media": [
         {
@@ -137,29 +106,22 @@
           "kind": "image",
           "poster": null,
           "alt": "Saved Filters library showing a searchable public filter catalog and an Add button",
-          "caption": "The public catalog let teammates discover and add filters that other users had already created."
+          "caption": "The public catalog of saved filters."
         },
         {
           "src": "media/saved-filter-editor.webp",
           "kind": "image",
           "poster": null,
           "alt": "Saved filter editor showing visibility controls, a numeric range condition, description field, share link, and grouped filters",
-          "caption": "Saved filters kept their conditions, visibility, description, share link, and grouping in one editable record."
+          "caption": "Editing a saved filter."
         }
-      ]
-    },
-    {
-      "heading": "From prototype to team feature",
-      "body": [
-        "The project began as a standalone Fastify prototype and later became a production service integrated into the existing signal-management application. I built the backend, the filter and chat interfaces, streaming status updates, the shared library, and the connection between AI proposals and the existing data grid. I also packaged the frontend changes to minimize the amount of teammates' code that had to change.",
-        "I used AI-assisted development throughout the project to prototype approaches, refactor code, and review large evaluation runs. The fast feedback loop helped me explore more options, but the architecture, expected behaviors, safety boundaries, and final decisions came from testing the complete system against the actual problem. Working closely with the production and data teams also helped turn a broad idea into something that fit the larger application."
       ],
-      "media": []
+      "layout": "wide"
     },
     {
-      "heading": "What I took away",
+      "heading": "Where it ended up",
       "body": [
-        "This project changed how I think about small local models. Model size mattered less than choosing a model suited to the output, retrieving only the context it needed, and measuring the result on realistic requests. It also showed me that the most important part of an AI feature is often everything around the model: the interface, validation, database constraints, evaluation process, and the point where a person stays in control."
+        "It started as a standalone prototype and ended up built into the team's real app. The biggest thing I took from it is that the model was a small part of the work. Most of it was everything around the model: the checks, the testing, and making sure a person always gets the last word."
       ],
       "media": []
     }

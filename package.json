@@ -14,7 +14,8 @@
     "typecheck": "next typegen && tsc --noEmit",
     "validate": "node --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/validate-content.ts",
     "new:project": "node scripts/new-project.mjs",
-    "media": "node scripts/compress-media.mjs"
+    "media": "node scripts/compress-media.mjs",
+    "cards": "node scripts/card-images.mjs"
   },
   "dependencies": {
     "next": "16.3.5",

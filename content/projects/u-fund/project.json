@@ -1,8 +1,14 @@
 {
   "slug": "u-fund",
   "title": "U-Fund: A New Page",
-  "tagline": "A team-built platform for requesting, approving, and funding books for incarcerated people",
-  "summary": "U-Fund: A New Page was my SWEN 261 team project. We built a full-stack system where incarcerated people could request books, prison administrators could approve or deny them, and outside helpers could fund approved requests. It was one of my first chances to work on a fairly complex application with several roles and workflows shared across a team.",
+  "tagline": "A team project for requesting, approving and funding books for people in prison",
+  "summary": "U-Fund: A New Page was my SWEN 261 team project. We built a full-stack app where incarcerated people could request books, prison staff could approve or deny them, and people outside could pay for the approved ones. It was one of my first times working on a big app with several kinds of users across a whole team.",
+  "overview": {
+    "what": "A full-stack web app where people in prison request books, prison staff approve or deny them, and people outside pay for the approved ones.",
+    "why": "It was my SWEN 261 team project at RIT, and one of my first times building a big app with several kinds of users.",
+    "did": "I worked with Liam Pennino, Nina Sagawa and Selene Shen on both the Angular front end and the Spring Boot back end. We split up the features and made them fit together, with no AI.",
+    "result": "It all worked by the final presentation, with at least 91% test coverage on every part of the back end, plus notifications we added on top of the requirements."
+  },
   "published": true,
   "featured": false,
   "date": "2025-02",
@@ -32,24 +38,15 @@
     {
       "heading": "Working as a team",
       "body": [
-        "This was a very fun project to work on because the four of us had to collaborate on both sides of a large system. The team was Michael Lizzio, Liam Pennino, Nina Sagawa, and Selene Shen. We divided features between the Angular interface and Spring Boot API, then had to make sure all of our work fit together.",
-        "It gave me real experience coordinating responsibilities, working with code written by other people, and building features that depended on another teammate's work. There was no AI involved in the project."
+        "This was a really fun project because the four of us had to work on both sides of a big system together. I worked with Liam Pennino, Nina Sagawa and Selene Shen. We split features between the Angular front end and the Spring Boot back end, and then had to make sure everything fit together.",
+        "It was real practice at dividing up work, reading other people's code, and building features that depended on a teammate's part. We didn't use any AI on it."
       ],
       "media": []
     },
     {
-      "heading": "Three different roles",
+      "heading": "Three kinds of users",
       "body": [
-        "The system had three roles with different permissions and tasks. Inmates created profiles, requested books, and received notifications when a request was approved, denied, or funded. Administrators reviewed the request pool, managed accounts and prisons, and moved approved books into the public cupboard. Helpers searched that cupboard, added books to a funding basket, and completed a simulated checkout.",
-        "The main workflow connected all three roles. An inmate submitted a book request, an administrator reviewed it, and approval moved that book into the collection helpers could fund. Funding it then generated another notification for the inmate."
-      ],
-      "media": []
-    },
-    {
-      "heading": "The workflow in the final demo",
-      "body": [
-        "The final demo walks through the application from each role's point of view. A user could create an account as an inmate, helper, or administrator. Inmates requested books, administrators reviewed each request with an approval or denial message, and helpers browsed the approved books and added them to a funding basket.",
-        "Notifications connected the steps. The team added them as one of our feature enhancements so an inmate could see when an administrator approved a request and when a helper funded the book."
+        "Inmates request books. Admins review those requests and approve or deny them with a message. Helpers browse the approved books, add them to a basket and check out (the payment was simulated). Each step sends the inmate a notification, which was one of the features we added on top of the requirements."
       ],
       "media": [
         {
@@ -57,36 +54,36 @@
           "kind": "image",
           "poster": null,
           "alt": "A New Page login and account creation screen with username, password, name, and role fields",
-          "caption": "The shared entry screen supported login and account creation for each of the application's roles."
+          "caption": "Logging in or making an account."
         },
         {
           "src": "media/admin-review.webp",
           "kind": "image",
           "poster": null,
           "alt": "Administrator review queue showing inmate book requests with message, approve, and deny controls",
-          "caption": "Administrators reviewed each inmate request and could include a message with the decision."
+          "caption": "An admin reviewing book requests."
         },
         {
           "src": "media/helper-cupboard.webp",
           "kind": "image",
           "poster": null,
           "alt": "Helper book cupboard showing an approved book that can be added to the funding basket",
-          "caption": "Approved requests became available to helpers in the book cupboard."
+          "caption": "Approved books, ready for helpers."
         },
         {
           "src": "media/helper-basket.webp",
           "kind": "image",
           "poster": null,
           "alt": "Helper funding basket showing two requested books and a seven dollar checkout total",
-          "caption": "The funding basket collected books from different inmates before the simulated checkout."
+          "caption": "A helper's basket before checkout."
         }
-      ]
+      ],
+      "layout": "wide"
     },
     {
-      "heading": "How we structured it",
+      "heading": "How we built it",
       "body": [
-        "The backend followed a three-tier design with Spring controllers, DAO interfaces, file-backed DAO implementations, and model classes. Seven REST resources handled accounts, books, requests, funding baskets, notifications, prisons, and profiles. The Angular app had matching services and route guards for each user's role.",
-        "The backend stored its data in JSON files and rewrote those files when records changed. The project also included JUnit tests and separate JaCoCo coverage reports for the controller, model, and persistence tiers."
+        "The back end is Java and Spring Boot, split into controllers, data access and models, and it saves everything to JSON files. The front end is Angular, with a page and a set of routes for each kind of user."
       ],
       "media": [
         {
@@ -94,15 +91,15 @@
           "kind": "image",
           "poster": null,
           "alt": "U-Fund architecture diagram showing the Angular client, Spring REST controllers, Java model and persistence layers, and file storage",
-          "caption": "The project's view, controller, model, persistence, and storage layers."
+          "caption": "How the layers fit together."
         }
       ],
       "layout": "media-right"
     },
     {
-      "heading": "One complete interaction",
+      "heading": "One request, start to finish",
       "body": [
-        "This sequence diagram follows a helper searching for a book and adding it to a funding basket. The request travels from the Angular client through the Spring controller and service layer, then into the basket and book data objects before the result returns to the browser."
+        "This diagram follows a helper searching for a book and adding it to their basket, from the Angular app, through the Spring controller and services, to the saved data and back."
       ],
       "media": [
         {
@@ -110,16 +107,15 @@
           "kind": "image",
           "poster": null,
           "alt": "Sequence diagram tracing a helper's book search and add-to-basket request through the Angular client, Spring controller, services, and data access objects",
-          "caption": "Helper book search and funding-basket sequence."
+          "caption": "A helper's search and add-to-basket request."
         }
       ],
       "layout": "media-left"
     },
     {
-      "heading": "Testing and review",
+      "heading": "Testing",
       "body": [
-        "We used JUnit, manual browser testing, and curl requests while building the application. In the final presentation, the team reported at least 91 percent coverage in every backend tier and 100 percent branch coverage in the model tier.",
-        "We also ran SonarQube and discussed the issues it found instead of treating the report as a score. The presentation called out static fields changed from instance methods, unnecessary verbosity where Java's diamond operator could be used, and avoidable string concatenation as examples we would clean up next."
+        "We tested with JUnit, in the browser, and with curl. By the final presentation every part of the back end had at least 91% test coverage. We also ran SonarQube and went through what it found, and we listed the issues we'd clean up next."
       ],
       "media": []
     }

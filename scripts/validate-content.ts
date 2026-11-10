@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * validate-content — the gate. Run it before you open a PR; CI runs it too.
+ * validate-content - the gate. Run it before you open a PR; CI runs it too.
  *
  *   npm run validate
  *
@@ -12,6 +12,9 @@
  *
  * Checks
  *   - content/profile.json parses and passes ProfileSchema
+ *   - content/work.json parses and passes WorkSchema, and links real projects
+ *   - no em dash (U+2014) anywhere in content, notes included (Michael's rule)
+ *   - Michael's own pages (ownWords) still show exactly his words       (pinned)
  *   - every content/projects/*./project.json parses and passes ProjectSchema
  *   - slug equals the folder name, and no two projects share a slug
  *   - every media src/poster points at a file that is actually on disk
@@ -22,21 +25,62 @@
  *   - every file in a media folder is referenced by project.json       (warn)
  *
  * This is a .ts run through Node's native type stripping, so it can import the
- * real schemas from src/lib/schema.ts instead of restating them — one source of
+ * real schemas from src/lib/schema.ts instead of restating them - one source of
  * truth, no drift between what the site accepts and what the gate accepts.
  * Dependencies: zod and node builtins. Nothing else.
  */
+import { createHash } from "node:crypto";
 import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import type { Dirent } from "node:fs";
 import type { ZodError } from "zod";
 
-import { ProfileSchema, ProjectSchema, type Media, type Project } from "../src/lib/schema.ts";
+import {
+  ProfileSchema,
+  ProjectSchema,
+  WorkSchema,
+  type Media,
+  type Project,
+} from "../src/lib/schema.ts";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const PROJECTS_DIR = path.join(ROOT, "content", "projects");
 const PROFILE_FILE = path.join(ROOT, "content", "profile.json");
+const WORK_FILE = path.join(ROOT, "content", "work.json");
+const EM_DASH = "\u2014";
+
+/**
+ * Michael's own pages, restored word for word in November 2026 after an earlier
+ * port reworded them (cryptogram and foosball from his old site at 081ec8c,
+ * symposium from his SynapsisNotes README). The hash covers every word the
+ * site shows from the file: tagline, summary, headings, paragraphs, bullets,
+ * code blocks and captions. Alt text is not pinned. If this check fails,
+ * someone changed his words: put them back. Only update a hash when Michael
+ * himself asked for that exact change. Last update: November 9, 2026, his
+ * spelling and punctuation pass (every fix is listed in docs/REFRESH-NOV-2026.md).
+ */
+const OWN_WORDS: Record<string, string> = {
+  cryptogram: "e5dbb1a049e1c3e7",
+  foosball: "395367c79bba5e87",
+  symposium: "b3162c80bfb382cf",
+};
+
+function ownWordsHash(project: Project): string {
+  const text = [
+    project.tagline,
+    project.summary,
+    project.hero?.caption ?? "",
+    ...project.sections.flatMap((section) => [
+      section.heading ?? "",
+      ...section.body,
+      ...section.bullets,
+      ...section.codeBlocks,
+      ...section.media.map((media) => media.caption ?? ""),
+    ]),
+  ].join("\n");
+  return createHash("sha256").update(text).digest("hex").slice(0, 16);
+}
 
 const MAX_MEDIA_BYTES = 8 * 1024 * 1024;
 const IMAGE_EXTENSIONS = new Set([".webp", ".jpg", ".jpeg", ".png"]);
@@ -74,7 +118,7 @@ function formatSize(bytes: number): string {
   return `${bytes} B`;
 }
 
-/** "sections[2].media[0].alt" — the exact key to open and edit. */
+/** "sections[2].media[0].alt" - the exact key to open and edit. */
 function formatPath(segments: readonly PropertyKey[]): string {
   if (segments.length === 0) return "(root)";
   return segments.reduce<string>((acc, segment) => {
@@ -108,7 +152,7 @@ async function readJson(file: string): Promise<{ ok: true; value: unknown } | { 
   try {
     return { ok: true, value: JSON.parse(raw) as unknown };
   } catch (error) {
-    return { ok: false, why: `is not valid JSON — ${(error as Error).message}` };
+    return { ok: false, why: `is not valid JSON - ${(error as Error).message}` };
   }
 }
 
@@ -119,6 +163,26 @@ async function sizeOf(file: string): Promise<number | null> {
   } catch {
     return null;
   }
+}
+
+/** Michael's rule: no em dashes anywhere on the site. Checks the raw file text. */
+async function checkEmDashes(group: string, file: string): Promise<void> {
+  let raw: string;
+  try {
+    raw = await readFile(file, "utf8");
+  } catch {
+    return; // readJson already reported a missing file.
+  }
+  const lines = raw.split("\n");
+  lines.forEach((line, index) => {
+    if (!line.includes(EM_DASH)) return;
+    report(group, {
+      level: "ERROR",
+      file: `${rel(file)}:${index + 1}`,
+      message: "contains an em dash",
+      fix: "rewrite the sentence with a comma, a colon, a period or parentheses",
+    });
+  });
 }
 
 /* -------------------------------------------------------------------------- */
@@ -133,13 +197,15 @@ async function validateProfile(): Promise<void> {
     return;
   }
 
+  await checkEmDashes(group, PROFILE_FILE);
+
   const parsed = ProfileSchema.safeParse(json.value);
   if (!parsed.success) {
     reportZod(group, PROFILE_FILE, parsed.error);
     return;
   }
 
-  // The resume link is served straight out of public/ — catch a dead link here
+  // The resume link is served straight out of public/ - catch a dead link here
   // rather than in a recruiter's browser.
   const resume = parsed.data.resume;
   if (resume && resume.startsWith("/")) {
@@ -153,6 +219,28 @@ async function validateProfile(): Promise<void> {
       });
     }
   }
+}
+
+/* -------------------------------------------------------------------------- */
+/* work                                                                       */
+/* -------------------------------------------------------------------------- */
+
+/** Returns the project slugs work.json links to, so main() can check them. */
+async function validateWork(): Promise<string[]> {
+  const group = rel(WORK_FILE);
+  const json = await readJson(WORK_FILE);
+  if (!json.ok) {
+    report(group, { level: "ERROR", file: group, message: json.why });
+    return [];
+  }
+  await checkEmDashes(group, WORK_FILE);
+
+  const parsed = WorkSchema.safeParse(json.value);
+  if (!parsed.success) {
+    reportZod(group, WORK_FILE, parsed.error);
+    return [];
+  }
+  return parsed.data.jobs.flatMap((job) => job.projects);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -196,6 +284,8 @@ async function validateProject(folder: string): Promise<ProjectResult> {
     return result;
   }
 
+  await checkEmDashes(group, file);
+
   const parsed = ProjectSchema.safeParse(json.value);
   if (!parsed.success) {
     reportZod(group, file, parsed.error);
@@ -211,7 +301,31 @@ async function validateProject(folder: string): Promise<ProjectResult> {
       level: "ERROR",
       file: rel(file),
       message: `slug: "${project.slug}" does not match the folder name "${folder}"`,
-      fix: `media resolves to /media/${folder}/… — set slug to "${folder}" or rename the folder`,
+      fix: `media resolves to /media/${folder}/… - set slug to "${folder}" or rename the folder`,
+    });
+  }
+
+  // --- Michael's own words --------------------------------------------------
+  const pinned = OWN_WORDS[project.slug];
+  if (pinned !== undefined && !project.ownWords) {
+    report(group, {
+      level: "ERROR",
+      file: rel(file),
+      message: "ownWords must stay true: this is one of Michael's own pages",
+    });
+  } else if (pinned === undefined && project.ownWords) {
+    report(group, {
+      level: "ERROR",
+      file: rel(file),
+      message: "ownWords is only for Michael's own pages (cryptogram, foosball, symposium)",
+      fix: "remove ownWords and write an overview instead",
+    });
+  } else if (pinned !== undefined && ownWordsHash(project) !== pinned) {
+    report(group, {
+      level: "ERROR",
+      file: rel(file),
+      message: "the visible text no longer matches Michael's original words",
+      fix: "undo the text change; see docs/REFRESH-NOV-2026.md for his exact words",
     });
   }
 
@@ -230,7 +344,7 @@ async function validateProject(folder: string): Promise<ProjectResult> {
         level: "WARN",
         file: `${group}/media/${entry.name}/`,
         message: "subfolders inside media/ are not published",
-        fix: "flatten it — media paths are always \"media/<name>.<ext>\"",
+        fix: "flatten it - media paths are always \"media/<name>.<ext>\"",
       });
       continue;
     }
@@ -246,7 +360,7 @@ async function validateProject(folder: string): Promise<ProjectResult> {
       report(group, {
         level: "ERROR",
         file: `${group}/${src}`,
-        message: `${formatSize(bytes)} — over the ${formatSize(MAX_MEDIA_BYTES)} limit`,
+        message: `${formatSize(bytes)} - over the ${formatSize(MAX_MEDIA_BYTES)} limit`,
         fix: `npm run media -- ${folder}`,
       });
     }
@@ -262,7 +376,7 @@ async function validateProject(folder: string): Promise<ProjectResult> {
       report(group, {
         level: "ERROR",
         file: rel(file),
-        message: `${at}.src: "${media.src}" — no such file at ${group}/${media.src}`,
+        message: `${at}.src: "${media.src}" - no such file at ${group}/${media.src}`,
         fix: "add the file, or fix the spelling",
       });
     }
@@ -292,7 +406,7 @@ async function validateProject(folder: string): Promise<ProjectResult> {
         report(group, {
           level: "ERROR",
           file: rel(file),
-          message: `${at}.poster: "${media.poster}" — no such file at ${group}/${media.poster}`,
+          message: `${at}.poster: "${media.poster}" - no such file at ${group}/${media.poster}`,
           fix: `npm run media -- ${folder} regenerates poster frames`,
         });
       }
@@ -301,7 +415,7 @@ async function validateProject(folder: string): Promise<ProjectResult> {
           level: "ERROR",
           file: rel(file),
           message: `${at}.poster: "${media.poster}" is not an image`,
-          fix: "a poster is a still frame — .webp",
+          fix: "a poster is a still frame - .webp",
         });
       }
       if (media.kind === "image") {
@@ -315,7 +429,7 @@ async function validateProject(folder: string): Promise<ProjectResult> {
       report(group, {
         level: "WARN",
         file: rel(file),
-        message: `${at}: video has no poster — it renders as a black box until it loads`,
+        message: `${at}: video has no poster - it renders as a black box until it loads`,
         fix: `npm run media -- ${folder}`,
       });
     }
@@ -327,7 +441,7 @@ async function validateProject(folder: string): Promise<ProjectResult> {
     report(group, {
       level: "WARN",
       file: `${group}/${src}`,
-      message: "not referenced by project.json — it ships but nothing shows it",
+      message: "not referenced by project.json - it ships but nothing shows it",
       fix: "reference it from a section, or delete it",
     });
   }
@@ -341,6 +455,7 @@ async function validateProject(folder: string): Promise<ProjectResult> {
 
 async function main(): Promise<void> {
   await validateProfile();
+  const linkedFromWork = await validateWork();
 
   let folders: string[] = [];
   try {
@@ -350,7 +465,7 @@ async function main(): Promise<void> {
       .map((entry) => entry.name)
       .sort();
   } catch (error) {
-    console.error(`ERROR  content/projects — could not be listed (${(error as Error).message})`);
+    console.error(`ERROR  content/projects - could not be listed (${(error as Error).message})`);
     process.exitCode = 1;
     return;
   }
@@ -361,7 +476,7 @@ async function main(): Promise<void> {
   }
 
   // Duplicate slugs. Folder names are unique, so this only fires when two
-  // project.json files claim the same slug — which would fight over /work/<slug>.
+  // project.json files claim the same slug - which would fight over /work/<slug>.
   const byslug = new Map<string, string[]>();
   results.forEach((result, index) => {
     if (!result.slug) return;
@@ -376,9 +491,23 @@ async function main(): Promise<void> {
         level: "ERROR",
         file: `content/projects/${owner}/project.json`,
         message: `slug "${slug}" is also claimed by ${owners.filter((o) => o !== owner).join(", ")}`,
-        fix: "slugs are the URL — they have to be unique",
+        fix: "slugs are the URL - they have to be unique",
       });
     }
+  }
+
+  // Projects named on the Work page must exist and be published, or the link
+  // silently disappears from the page.
+  const publishedSlugs = new Set(
+    results.filter((result) => result.published && result.slug).map((result) => result.slug!),
+  );
+  for (const slug of linkedFromWork) {
+    if (publishedSlugs.has(slug)) continue;
+    report(rel(WORK_FILE), {
+      level: "WARN",
+      file: rel(WORK_FILE),
+      message: `projects: "${slug}" is not a published project, so the Work page skips it`,
+    });
   }
 
   // --- print ---------------------------------------------------------------
@@ -390,7 +519,8 @@ async function main(): Promise<void> {
   // bottom is reading the things that break the build first.
   const rank = (finding: Finding): number => (finding.level === "ERROR" ? 0 : 1);
   const ordered = [...groups.entries()].sort(([a], [b]) => {
-    const groupRank = (group: string): number => (group === rel(PROFILE_FILE) ? 0 : 1);
+    const groupRank = (group: string): number =>
+      group === rel(PROFILE_FILE) ? 0 : group === rel(WORK_FILE) ? 1 : 2;
     return groupRank(a) - groupRank(b) || a.localeCompare(b);
   });
 
@@ -424,12 +554,12 @@ async function main(): Promise<void> {
   console.log("");
   if (errors > 0) {
     console.log(
-      `FAILED  ${errors} error${errors === 1 ? "" : "s"}, ${warnings} warning${warnings === 1 ? "" : "s"}  —  ${scope}`,
+      `FAILED  ${errors} error${errors === 1 ? "" : "s"}, ${warnings} warning${warnings === 1 ? "" : "s"}  -  ${scope}`,
     );
     process.exitCode = 1;
   } else {
     console.log(
-      `OK  0 errors, ${warnings} warning${warnings === 1 ? "" : "s"}  —  ${scope}`,
+      `OK  0 errors, ${warnings} warning${warnings === 1 ? "" : "s"}  -  ${scope}`,
     );
   }
 }

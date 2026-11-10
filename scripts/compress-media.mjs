@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * compress-media — turn whatever came off the camera into something the web can
+ * compress-media - turn whatever came off the camera into something the web can
  * serve, in place, inside one project's media folder.
  *
  *   npm run media -- <slug>
@@ -11,7 +11,7 @@
  *
  * "In place" means the compressed file replaces the original in
  * content/projects/<slug>/media/ and the oversized original is deleted. If the
- * extension changed (screen.png -> screen.webp) the script says so — those
+ * extension changed (screen.png -> screen.webp) the script says so - those
  * paths live in project.json and have to be updated to match. `npm run validate`
  * will catch it if you forget.
  *
@@ -123,15 +123,15 @@ async function doImage(dir, name) {
 
   const alreadyWebp = path.extname(name).toLowerCase() === ".webp";
   if (alreadyWebp && info && info.width > 0 && info.width <= MAX_IMAGE_WIDTH) {
-    record(name, before, before, `skipped — already webp, ${info.width}px wide`);
+    record(name, before, before, `skipped - already webp, ${info.width}px wide`);
     return;
   }
 
   if (!alreadyWebp && source !== target) {
     try {
       await stat(target);
-      problems.push(`${stem}.webp already exists — delete ${name} yourself, or rename it first`);
-      record(name, before, before, "skipped — target name is taken");
+      problems.push(`${stem}.webp already exists - delete ${name} yourself, or rename it first`);
+      record(name, before, before, "skipped - target name is taken");
       return;
     } catch {
       /* target is free, carry on */
@@ -151,7 +151,7 @@ async function doImage(dir, name) {
   ]);
   if (!result.ok) {
     await rm(tmp, { force: true });
-    problems.push(`${name}: ffmpeg failed — ${result.why}`);
+    problems.push(`${name}: ffmpeg failed - ${result.why}`);
     record(name, before, before, "FAILED");
     return;
   }
@@ -192,7 +192,7 @@ async function makePoster(dir, stem) {
   let result = frame(1);
   if (!result.ok) result = frame(0);
   if (!result.ok) {
-    problems.push(`${stem}.poster.webp: ffmpeg could not grab a frame — ${result.why}`);
+    problems.push(`${stem}.poster.webp: ffmpeg could not grab a frame - ${result.why}`);
     return false;
   }
   return true;
@@ -210,13 +210,13 @@ async function doVideo(dir, name) {
     alreadyMp4 && info && info.codec === "h264" && info.width > 0 && info.width <= MAX_VIDEO_WIDTH;
 
   if (encoded) {
-    record(name, before, before, `skipped — already h264, ${info.width}px wide`);
+    record(name, before, before, `skipped - already h264, ${info.width}px wide`);
   } else {
     if (!alreadyMp4 && source !== target) {
       try {
         await stat(target);
-        problems.push(`${stem}.mp4 already exists — delete ${name} yourself, or rename it first`);
-        record(name, before, before, "skipped — target name is taken");
+        problems.push(`${stem}.mp4 already exists - delete ${name} yourself, or rename it first`);
+        record(name, before, before, "skipped - target name is taken");
         return;
       } catch {
         /* target is free */
@@ -239,7 +239,7 @@ async function doVideo(dir, name) {
     ]);
     if (!result.ok) {
       await rm(tmp, { force: true });
-      problems.push(`${name}: ffmpeg failed — ${result.why}`);
+      problems.push(`${name}: ffmpeg failed - ${result.why}`);
       record(name, before, before, "FAILED");
       return;
     }
@@ -270,7 +270,7 @@ async function main() {
     console.error("  macOS:   brew install ffmpeg");
     console.error("  Debian:  sudo apt install ffmpeg");
     console.error("");
-    console.error("(ffprobe ships with ffmpeg — both are needed.)");
+    console.error("(ffprobe ships with ffmpeg - both are needed.)");
     process.exitCode = 1;
     return;
   }
@@ -297,7 +297,7 @@ async function main() {
       .map((entry) => entry.name)
       .sort();
   } catch {
-    console.log(`content/projects/${slug}/media/ does not exist yet — nothing to compress.`);
+    console.log(`content/projects/${slug}/media/ does not exist yet - nothing to compress.`);
     return;
   }
 
@@ -308,18 +308,18 @@ async function main() {
     const extension = path.extname(name).toLowerCase();
     if (IMAGE_INPUTS.has(extension)) await doImage(dir, name);
     else if (VIDEO_INPUTS.has(extension)) await doVideo(dir, name);
-    else record(name, await size(path.join(dir, name)), await size(path.join(dir, name)), "skipped — not media");
+    else record(name, await size(path.join(dir, name)), await size(path.join(dir, name)), "skipped - not media");
   }
 
   if (rows.length === 0) {
-    console.log(`content/projects/${slug}/media/ is empty — drop the raw files in first.`);
+    console.log(`content/projects/${slug}/media/ is empty - drop the raw files in first.`);
     return;
   }
 
   // --- the table -----------------------------------------------------------
   const width = (pick) => Math.max(...rows.map((row) => pick(row).length));
   const nameWidth = Math.max(width((row) => row.name), 4);
-  const beforeWidth = Math.max(width((row) => (row.before ? human(row.before) : "—")), 6);
+  const beforeWidth = Math.max(width((row) => (row.before ? human(row.before) : " - ")), 6);
   const afterWidth = Math.max(width((row) => human(row.after)), 5);
 
   console.log(`content/projects/${slug}/media/`);
@@ -331,7 +331,7 @@ async function main() {
   for (const row of rows) {
     before += row.before;
     after += row.after;
-    const beforeCell = row.before ? human(row.before) : "—";
+    const beforeCell = row.before ? human(row.before) : " - ";
     const change = row.before && row.after !== row.before ? percent(row.before, row.after) : "";
     console.log(
       `  ${row.name.padEnd(nameWidth)}  ${beforeCell.padStart(beforeWidth)}  ${human(row.after).padStart(afterWidth)}  ${change.padStart(6)}  ${row.note}`,
@@ -343,7 +343,7 @@ async function main() {
 
   if (renames.length > 0) {
     console.log("");
-    console.log("These filenames changed — update project.json to match:");
+    console.log("These filenames changed - update project.json to match:");
     for (const [from, to] of renames) console.log(`  ${from}  ->  ${to}`);
   }
 

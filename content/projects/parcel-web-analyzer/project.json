@@ -1,10 +1,16 @@
 {
   "slug": "parcel-web-analyzer",
   "title": "Parcel Web Analyzer",
-  "tagline": "A geospatial tool for comparing Seattle homes by what matters nearby",
-  "summary": "The Parcel Web Analyzer is a web-based tool that helps users compare residential parcels in the Seattle area using their own proximity-based requirements. It combines King County parcel polygons with live OpenStreetMap amenities, scores each parcel with a custom weighting algorithm, and explains why a parcel scored well.",
+  "tagline": "A map tool for comparing Seattle homes by what matters nearby",
+  "summary": "For my GIS class final project, I built a web tool that compares homes in Seattle by what's nearby. You pick what matters to you, like restaurants, parks or trails, and it scores every residential parcel and shows you why each one scored the way it did.",
+  "overview": {
+    "what": "A web map that scores every home in part of Seattle by what's nearby, like restaurants, parks and trails, and shows why each one scored the way it did.",
+    "why": "My sister was house hunting in Seattle, and her list of what mattered to her turned into my GIS class final project.",
+    "did": "I prepped the King County parcel data in ArcGIS Pro, then built the app with Flask, GeoPandas and Mapbox: draw an area, pull places from OpenStreetMap, rank what matters, and score the parcels.",
+    "result": "High scores clustered in mixed-use areas near main streets, and the walking distance you pick changes the map a lot. The results export back into GIS as GeoJSON or a Shapefile."
+  },
   "published": true,
-  "featured": true,
+  "featured": false,
   "date": "2025-12",
   "status": "IGME 382 final project",
   "tech": [
@@ -34,14 +40,14 @@
     "kind": "image",
     "poster": null,
     "alt": "Mapbox map of Seattle residential parcels colored from light to dark by their suitability score",
-    "caption": "Processed parcels use a light-to-dark gradient to show relative suitability."
+    "caption": "Scored homes, from light (a weaker match) to dark (a better one)."
   },
   "sections": [
     {
       "heading": "The idea",
       "body": [
-        "This project was inspired by my sister’s recent home-buying search in Seattle and the criteria she shared: walkability to restaurants, access to parks and trails, and proximity to daily amenities. Her notes directly shaped the suitability factors I analyzed.",
-        "The question I wanted to answer was: which residential parcels in Seattle best match a person's home-buying requirements, and how does that suitability change across the city?"
+        "My sister was recently looking for a home in Seattle, and she told me what mattered to her: being able to walk to restaurants, getting to parks and trails, and having everyday things close by. Her list became the things I scored.",
+        "So the question I wanted to answer was: which homes in Seattle best match what someone is looking for, and how does that change across the city?"
       ],
       "media": [
         {
@@ -49,7 +55,7 @@
           "kind": "image",
           "poster": null,
           "alt": "Seattle map before analysis with residential parcels shown as outlines and requirement controls beside it",
-          "caption": "Before processing, parcels are outlines for context."
+          "caption": "Before scoring, the parcels are just outlines."
         }
       ],
       "layout": "media-right"
@@ -57,9 +63,9 @@
     {
       "heading": "How it works",
       "body": [
-        "Users load parcels, draw an area of interest, fetch nearby amenities from Overpass, build and reorder requirement groups, and then process the scores. Clicking a parcel shows its score and the count from each requirement group, so the result is explainable instead of just being a color on a map.",
-        "For each group, the app filters the included amenity types, buffers each amenity by the chosen distance, spatially joins those buffers to the parcels, and counts the intersections. Priority is handled with triangular weighting, so the first requirement has the most influence and each lower priority contributes less.",
-        "The original King County dataset includes more than 500,000 parcels across many land uses. I used ArcGIS Pro to clip the study area and filter it down to residential parcels before loading it into the web app."
+        "You load the parcels, draw the area you care about, grab nearby places from OpenStreetMap, set up and reorder your requirement groups, and then run the scores. Clicking a parcel shows its score and the count from each group, so you can see why it got its color instead of guessing.",
+        "For each group, the app takes the kinds of places you picked, draws a circle of the distance you chose around each one, and counts how many circles touch each parcel. Your first requirement counts the most, and each one after it counts a little less.",
+        "The full King County dataset has more than 500,000 parcels of every kind. I used ArcGIS Pro to clip it to my study area and keep only the homes before loading it into the app."
       ],
       "media": [
         {
@@ -67,7 +73,7 @@
           "kind": "image",
           "poster": null,
           "alt": "Parcel score popup listing the selected parcel's total and the amenities contributing to it",
-          "caption": "Clicking a parcel explains what contributed to its score."
+          "caption": "Clicking a parcel shows what went into its score."
         }
       ],
       "layout": "media-left"
@@ -75,9 +81,9 @@
     {
       "heading": "What the results showed",
       "body": [
-        "High scores formed clusters in mixed-use areas. Homes near main streets with many restaurants scored higher, showing where businesses and amenities are concentrated.",
-        "The chosen distance made a large difference. Smaller walking distances such as 0.25 to 0.5 miles produced sharper contrast, while larger distances spread high scores more broadly. When food was the top priority, parcels near commercial clusters could score very highly even when that conflicted with a preference for quiet streets.",
-        "The app exports the scored layer as GeoJSON or Shapefile so the output can go back into a GIS workflow."
+        "High scores showed up in clusters in mixed-use areas. Homes near main streets with a lot of restaurants scored higher, which shows where businesses are packed together.",
+        "The distance made a big difference. Short walking distances, like a quarter to half a mile, gave sharp contrast, while bigger ones spread the high scores out. When food was the top priority, homes near busy commercial streets could score really high, even though that clashes with wanting a quiet street.",
+        "The app exports the scored layer as GeoJSON or a Shapefile, so it can go right back into a GIS workflow."
       ],
       "media": [
         {
@@ -85,16 +91,16 @@
           "kind": "image",
           "poster": null,
           "alt": "Map and controls showing high parcel scores clustered near a dense group of food amenities",
-          "caption": "Restaurant-heavy priorities reveal cluster bias near commercial streets."
+          "caption": "With food first, the high scores pile up near commercial streets."
         }
       ],
       "layout": "media-right"
     },
     {
-      "heading": "What I learned",
+      "heading": "Looking back",
       "body": [
-        "Preprocessing mattered as much as the algorithm. Clipping, filtering, and exporting in ArcGIS Pro were essential to making the interactive analysis usable.",
-        "I also learned how much a good interface changes a GIS tool. Operations that feel complex in ArcGIS can become much easier in a guided workflow. Building it made me think about all the GIS tools we take for granted, such as Google Maps, and how important it is to plan the interface around what someone is trying to do."
+        "Prepping the data mattered as much as the scoring. Clipping, filtering and exporting in ArcGIS Pro is what made the app fast enough to actually use.",
+        "I also learned how much a good interface changes a GIS tool. Things that feel complicated in ArcGIS got a lot easier as a guided set of steps. It made me think about all the map tools we take for granted, like Google Maps, and how much they're planned around what you're actually trying to do."
       ],
       "media": []
     }

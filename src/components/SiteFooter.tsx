@@ -2,7 +2,7 @@ import { getProfile } from "@/lib/content";
 import { Container } from "./Container";
 
 /**
- * Name and year on the left, the profile's own links on the right — as plain
+ * Name and year on the left, the profile's own links on the right - as plain
  * text links, driven entirely by content/profile.json.
  *
  * This replaces the seven hand-coloured gradient social buttons (twenty brand

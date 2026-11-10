@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direction A, Tidy: Cryptogram Solver</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+  :root{
+    --bg:#ffffff; --bg-subtle:#f7f8fa; --border:#e4e7ec;
+    --text:#1b1f28; --muted:#535d6e; --faint:#656f81;
+    --accent:#274f91; --accent-surface:#eff3fb;
+    --r:10px; --r-lg:14px;
+    --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  }
+  *{box-sizing:border-box} html,body{margin:0}
+  body{background:var(--bg);color:var(--text);font:16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+  img,video{display:block;max-width:100%}
+  a{color:inherit}
+  .wrap{max-width:72rem;margin:0 auto;padding-left:24px;padding-right:24px}
+  .nav{border-bottom:1px solid var(--border)}
+  .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{font-weight:650;text-decoration:none}
+  .links{display:flex;gap:26px;font-size:15px}
+  .links a{text-decoration:none;color:var(--muted);padding:6px 0}
+  .links a.on{color:var(--text);box-shadow:inset 0 -2px 0 var(--accent)}
+  .links a.res{color:var(--accent);font-weight:600}
+  .head{background:var(--bg-subtle);border-bottom:1px solid var(--border)}
+  .head .wrap{padding-top:40px;padding-bottom:40px}
+  .crumb{font:500 13px var(--mono);color:var(--faint)}
+  .crumb a{text-decoration:none;color:var(--accent)}
+  h1{font-size:44px;letter-spacing:-.025em;line-height:1.1;margin:14px 0 10px}
+  .tagline{font-size:19px;color:#2d3442;margin:0 0 18px;max-width:44rem}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font:500 13px var(--mono);color:var(--faint)}
+  .pill{border:1px solid #dae5f6;background:var(--accent-surface);color:var(--accent);border-radius:99px;padding:2px 10px;font:500 12.5px var(--sans)}
+  .tag{border:1px solid #bfe0cb;color:#1f7a45;background:#f1faf4;border-radius:99px;padding:1px 9px;font-size:11.5px}
+  .sep{color:#c3c8d1}
+  /* the video */
+  .feature{padding-top:36px}
+  .vid{position:relative;border-radius:var(--r-lg);overflow:hidden;background:#111;box-shadow:0 1px 2px rgba(16,24,40,.06),0 12px 32px rgba(16,24,40,.12)}
+  .vid video{width:100%;aspect-ratio:16/9;object-fit:cover}
+  .chip{position:absolute;top:14px;left:14px;background:rgba(17,20,28,.72);color:#fff;font:500 12px var(--mono);padding:5px 10px;border-radius:99px;backdrop-filter:blur(6px)}
+  .chip:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#35c46a;margin-right:7px;vertical-align:0}
+  figcaption{font-size:14px;color:var(--faint);margin-top:10px}
+  /* prose */
+  .prose{max-width:45rem;margin:0 auto}
+  section{padding-top:64px}
+  .feature{margin:0 auto}
+  h2{font-size:26px;letter-spacing:-.015em;line-height:1.25;margin:0 0 14px}
+  p{font-size:18px;line-height:1.7;margin:0 0 18px;color:#232937}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+  .row.right .media{order:2}
+  .row img{border-radius:var(--r);border:1px solid var(--border);width:100%}
+  .row p{font-size:17px}
+  .thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .thumbs img{border-radius:var(--r);border:1px solid var(--border);aspect-ratio:4/3;object-fit:cover;object-position:top left;width:100%}
+  .next{margin-top:72px;border-top:1px solid var(--border);background:var(--bg-subtle)}
+  .next .wrap{display:flex;justify-content:space-between;gap:16px;padding-top:24px;padding-bottom:24px;font-size:15px}
+  .next a{text-decoration:none;color:var(--accent);font-weight:600}
+  .next small{display:block;color:var(--faint);font:500 12px var(--mono);font-weight:400}
+  @media (max-width:760px){
+    .wrap{padding-left:16px;padding-right:16px}
+    .nav .wrap{height:auto;flex-direction:column;align-items:flex-start;gap:4px;padding-top:12px;padding-bottom:6px}
+    .links{gap:20px}
+    h1{font-size:34px} .tagline{font-size:17px}
+    .row{grid-template-columns:1fr;gap:16px}
+    .row.right .media{order:0}
+    .thumbs{grid-template-columns:repeat(2,1fr)}
+    p{font-size:17px}
+    .vid{border-radius:12px}
+    .vid video{aspect-ratio:16/10}
+    .next .wrap{flex-direction:column}
+  }
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="home.html">Michael Lizzio</a>
+  <div class="links"><a href="home.html">Home</a><a class="on" href="#">Projects</a><a href="#">Work</a><a href="#">About</a><a class="res" href="#">Resume</a></div>
+</div></nav>
+
+<header class="head"><div class="wrap">
+  <div class="crumb"><a href="#">Projects</a> / Cryptogram Solver</div>
+  <h1>Cryptogram Solver</h1>
+  <p class="tagline">A backtracking program that cracks cryptogram puzzles word by word</p>
+  <div class="meta">February 2022 <span class="sep">|</span> <span class="tag">Human-led</span> <span class="pill">Backtracking algorithm</span><span class="pill">Brute-force search</span><span class="pill">Frequency-ordered word lists</span></div>
+</div></header>
+
+<main>
+<figure class="wrap feature" style="margin:0 auto">
+  <div class="vid">
+    <video data-autoplay-in-view muted playsinline loop controls preload="metadata"
+      poster="../../../content/projects/cryptogram/media/compressed_splitscreen_cryptogram.poster.webp"
+      src="../../../content/projects/cryptogram/media/compressed_splitscreen_cryptogram.mp4"></video>
+    <span class="chip">Plays while on screen, muted</span>
+  </div>
+  <figcaption>This shows a modified version of my code solving cryptograms on a puzzle website I found.</figcaption>
+</figure>
+
+<section class="wrap"><div class="prose">
+  <h2>The Backstory</h2>
+  <p>First, let me explain how this all started. It was just before February school break 2022 and I had just finished my first big project, a Wordle solver, and had learned a lot in the process (this is another one of my projects that will soon be displayed on the home page). The day before school break, my computer science teacher had an optional fun lesson about cryptography; I already knew about cryptograms from my dad and wanted to do some more work on my other projects, but, as class ended I grabbed an unsolved puzzle on my way out, because I knew my dad likes doing them.</p>
+<p>After I got home I showed it to my dad and he challenged me to solve it with him. So I made another copy and we began. My dad was flying through it; I started to solve it, only to get lost in the idea of creating a computer algorithm to solve one. So during the school break I spent most of my time in front of my white board creating a backtracking algorithm without even knowing what one was!</p>
+<p>I got really far and almost had it working. I showed what I had to my dad and he suggested that I try a very simple puzzle with only one long word to see if it would work. I used the encrypted version of the word “BEGINNING”… AND IT WORKED! I was so happy, it was already late at night but I was willing to stay up until I got it to work. The next day I got a rough version to solve all sorts of puzzles. From there I only continued to improve and optimize the program.</p>
+</div></section>
+
+<section class="wrap"><div class="row">
+  <div class="media"><img src="../../../content/projects/cryptogram/media/original_quote.webp" alt="The class handout, solved by hand twice"><figcaption>The original handout, solved independently by my dad and me.</figcaption></div>
+  <div><h2>Teacher's Original Handout</h2><p>The photo to the left is the exact cryptogram that started this. The solved puzzle to the left in the photo is my dad's work, and the other one is mine. I'm very happy that I had my dad to encourage me, though he was pretty skeptical after he saw what looked like hieroglyphics on my white board. After school break when I went back to school I was excited to show my computer science teacher the completed program and tell her that she inspired me to make it.</p></div>
+</div></section>
+
+<section class="wrap"><div class="row right">
+  <div class="media"><img src="../../../content/projects/cryptogram/media/solved_original_quote.webp" alt="The program's output with the handout solved"><figcaption>The same handout solved by the program.</figcaption></div>
+  <div><h2>Solved Quote</h2><p>The snapshot of my program on the right is the solved cryptogram puzzle from above. It was solved by my computer program rather than a human (my dad). If you would like to know more on how this works check out the epilogue at the bottom of this page which goes into the overall functionality.</p></div>
+</div></section>
+
+<section class="wrap"><div class="row">
+  <div class="media"><img src="../../../content/projects/cryptogram/media/whiteboard.webp" alt="The whiteboard covered in planning notes" style="max-height:620px;object-fit:cover"><figcaption>The whiteboard I used to work out the search process.</figcaption></div>
+  <div><h2>My Whiteboard</h2><p>I don't know what I would do without my whiteboard! The whiteboard in the photo was on its way to the curb before I saved it. Now it's in my room in an unobtrusive spot. It is a crucial part of my planning process, I often write my quick thoughts on it before I finalize them on paper.</p></div>
+</div></section>
+
+<section class="wrap">
+  <h2>Cryptogram Examples</h2>
+  <div class="thumbs">
+    <img src="../../../content/projects/cryptogram/media/example_quote_0.webp" alt="">
+    <img src="../../../content/projects/cryptogram/media/example_quote_1.webp" alt="">
+    <img src="../../../content/projects/cryptogram/media/example_quote_2.webp" alt="">
+    <img src="../../../content/projects/cryptogram/media/example_quote_3.webp" alt="">
+  </div>
+</section>
+
+<section class="wrap"><div class="prose">
+  <h2>Epilogue</h2>
+  <p>My program uses what some would call a brute force approach and consists of a few main parts. First we have the organizer; this organizes the words in a way to make more efficient guesses. It usually starts with the largest words of the puzzle first, contrary to a typical human’s strategy.</p>
+<p>My code has access to 22 word lists organized by word length. The lists are optimized in order of common to uncommon words; this is one of my optimization strategies. For example the beginning of word_list2 would have AS, AT, BE, BY, DO, GO…</p>
+<p>My code starts with an encrypted word like BWGQHFTL, and then tries every 8 letter word to see if their letters match up. For example, QUESTION would work. Then it would move onto the next word like OFLWHGQ and find that MINUTES works with QUESTION because their letters line up. The more we progress through the puzzle, the less likely a word will work because our vocabulary expands. For example right now we have (QUESTION = BWGQHFTL and MINUTES = OFLWHGQ) F=I, H=T, L=N, Q=S, G=E, W=U in both words.</p>
+<p>The issue is when there are no more possibilities. At some point there were 2 or more possibilities and the algorithm just chose the first one it came across. We would then have to back track to where we made that wrong guess and try to find another one that would work further along in the program. It does this until it makes it to the end, where in some cases there might be a wrong word or two. For example, FP could be either IF or ID (my program doesn't take apostrophes into account). My program handles this by allowing the user to say which word they would like to try again, and then it usually fixes it.</p>
+  <h2 style="margin-top:36px">Worked Example</h2>
+  <p>Just by guessing QUESTION for the first encoded word (BWGQHFTL), it partially fills in a bunch of the other encrypted words.</p>
+</div></section>
+</main>
+
+<div class="next"><div class="wrap">
+  <a href="#"><small>Previous</small>Wordle Solver</a>
+  <a href="#" style="text-align:right"><small>Next</small>Foosball Goalie (KURT)</a>
+</div></div>
+
+<script>
+  // Autoplay muted while at least half the video is on screen; pause when it leaves.
+  // Skipped for people who ask for reduced motion: they get the poster and controls.
+  (function () {
+    var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.querySelectorAll("video[data-autoplay-in-view]").forEach(function (v) {
+      if (reduce || !("IntersectionObserver" in window)) return;
+      new IntersectionObserver(function (es) {
+        es.forEach(function (e) { e.isIntersecting ? v.play().catch(function () {}) : v.pause(); });
+      }, { threshold: 0.5 }).observe(v);
+    });
+  })();
+</script>
+</body>
+</html>

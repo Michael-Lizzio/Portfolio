@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { getProfile } from "@/lib/content";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
@@ -23,6 +24,20 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 /**
+ * Caveat, for the few handwritten notes (HandNote). Bundled in the repo (Latin
+ * subset, OFL) so the build never needs to fetch it. Not preloaded: only the
+ * home page uses it, so other pages shouldn't download its 73 KB. The browser
+ * fetches it when a note is on the page.
+ */
+const caveat = localFont({
+  src: "./fonts/caveat.woff2",
+  variable: "--font-caveat",
+  weight: "500 700",
+  display: "swap",
+  preload: false,
+});
+
+/**
  * Set NEXT_PUBLIC_SITE_URL to the production origin before deploying; without
  * it, Open Graph image URLs resolve against localhost.
  */
@@ -34,27 +49,27 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(siteUrl),
     title: {
-      default: `${profile.name} — ${profile.headline}`,
+      default: `${profile.name} · ${profile.headline}`,
       template: `%s · ${profile.name}`,
     },
-    description: profile.headline,
+    description: profile.bio,
     openGraph: {
       type: "website",
       siteName: profile.name,
-      title: `${profile.name} — ${profile.headline}`,
-      description: profile.headline,
+      title: `${profile.name} · ${profile.headline}`,
+      description: profile.bio,
     },
     twitter: {
       card: "summary_large_image",
-      title: `${profile.name} — ${profile.headline}`,
-      description: profile.headline,
+      title: `${profile.name} · ${profile.headline}`,
+      description: profile.bio,
     },
   };
 }
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} h-full`}>
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} ${caveat.variable} h-full`}>
       <body className="flex min-h-full flex-col bg-bg text-fg">
         <a
           href="#main"

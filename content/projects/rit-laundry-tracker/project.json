@@ -2,7 +2,13 @@
   "slug": "rit-laundry-tracker",
   "title": "RIT Dorm Laundry Tracker",
   "tagline": "My first team prototype for checking dorm washers and dryers before walking downstairs",
-  "summary": "This was one of my first team software projects at RIT. We made a prototype where students could choose their residence hall, see which washers and dryers were available, and start a 55-minute laundry timer. It was also where I met my friend Jimmy, who I am still friends with today, and it gave me my first real experience building software with other people.",
+  "summary": "This was one of my first team software projects at RIT. We made a prototype where students could pick their dorm, see which washers and dryers were free, and start a 55-minute laundry timer. It's also where I met my friend Jimmy, who I'm still friends with today.",
+  "overview": {
+    "what": "A prototype website where RIT students pick their dorm, see which washers and dryers are free, and start a 55-minute laundry timer.",
+    "why": "It was our team project for SWEN 101: check if a machine is free before you walk downstairs.",
+    "did": "I worked with my team to plan the app, split up the pages, share our code and put it all together, in plain HTML, CSS and JavaScript.",
+    "result": "It was only a front end, not connected to real machines, but it was my first real team project, and it's where I met my friend Jimmy."
+  },
   "published": true,
   "featured": false,
   "date": "2024-10",
@@ -26,21 +32,21 @@
     "kind": "image",
     "poster": null,
     "alt": "RIT dorm laundry page showing Kate Gleason Hall washers outlined in green when available and red when in use",
-    "caption": "The washer and dryer availability screen running locally."
+    "caption": "Which washers and dryers are free."
   },
   "sections": [
     {
       "heading": "My first team experience",
       "body": [
-        "The most important part of this project for me was learning how to work on software with a team for the first time. We had to agree on what the app should do, divide the pages and features, share our code, and bring everything back together into one flow.",
-        "It was a great introduction to collaborating instead of building everything alone. I also met my friend Jimmy through the project, and we are still friends today."
+        "The most important part of this project for me was learning how to work on software with a team for the first time. We had to agree on what the app should do, divide up the pages and features, share our code, and bring it all back together into one flow.",
+        "It was a great intro to working with people instead of building everything alone. I also met my friend Jimmy through this project, and we're still friends today."
       ],
       "media": []
     },
     {
       "heading": "Choosing a dorm",
       "body": [
-        "The prototype starts with a simple RIT email login and then asks the student to choose one of thirteen residence halls. The selected dorm is saved in localStorage and carried to the machine page."
+        "It starts with a simple RIT email login and then asks you to pick one of thirteen residence halls. The dorm you pick is saved in localStorage and carried over to the machine page."
       ],
       "media": [
         {
@@ -48,7 +54,7 @@
           "kind": "image",
           "poster": null,
           "alt": "Dorm selection page listing RIT residence halls over a campus photograph",
-          "caption": "Students choose their residence hall before viewing its machines."
+          "caption": "Pick your residence hall first."
         }
       ],
       "layout": "media-right"
@@ -56,8 +62,8 @@
     {
       "heading": "Availability and timers",
       "body": [
-        "The machine screen uses a green outline for available washers and dryers and a red outline for machines that are in use. Choosing an available machine opens a status page with a 55-minute countdown.",
-        "This was a front-end prototype rather than a connected campus system. We designed a JSON structure for thirteen dorms and eight machines per dorm, but the final pages still used hardcoded machine states and the timer reset if the page was refreshed."
+        "Free washers and dryers have a green outline, and machines in use have a red one. Picking a free machine opens a status page with a 55-minute countdown.",
+        "It was only a front end, not hooked up to anything on campus. We designed a JSON layout for thirteen dorms with eight machines each, but the final pages still had the machine states hardcoded, and the timer reset if you refreshed the page."
       ],
       "media": [
         {
@@ -65,7 +71,7 @@
           "kind": "image",
           "poster": null,
           "alt": "Orange washer status page showing a 55-minute countdown and a button to start the timer",
-          "caption": "The washer countdown before it starts."
+          "caption": "The washer countdown, before it starts."
         }
       ],
       "layout": "media-left"

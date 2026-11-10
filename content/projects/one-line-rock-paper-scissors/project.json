@@ -2,13 +2,22 @@
   "slug": "one-line-rock-paper-scissors",
   "title": "One-Line Rock Paper Scissors",
   "tagline": "A tiny Python game squeezed into two deliberately ridiculous lines",
-  "summary": "This was a small code-golf experiment to see how much game logic I could compress without breaking it. The result fits the outcome logic on one line and the entire input loop on another. It is not the cleanest way to write a game, but finding the little Python tricks that made it possible was the whole point.",
+  "summary": "A small code golf experiment to see how much game logic I could squeeze into as little code as possible without breaking it. The win, lose or tie logic fits on one line and the whole game loop on another. It's not a clean way to write a game, but finding the little Python tricks that made it fit was the whole point.",
+  "overview": {
+    "what": "A rock paper scissors game in Python where the whole thing fits on two lines: one for the win, lose or tie logic and one for the game loop.",
+    "why": "I wanted to see how much game logic I could squeeze into as little code as possible without breaking it.",
+    "did": "I turned the rock, paper, scissors triangle into list positions so a little math decides who wins, then used chained conditional expressions and semicolons to cram it all in.",
+    "result": "It works, and it's a terrible way to write a game, but finding the Python tricks that made it fit was the whole point. You can play it right on this page."
+  },
   "published": true,
   "featured": false,
   "date": null,
   "status": "Complete",
   "development": null,
-  "tech": ["Python", "Conditional expressions"],
+  "tech": [
+    "Python",
+    "Conditional expressions"
+  ],
   "links": [],
   "hero": {
     "src": "media/rock_paper_scissors_line_cover.webp",
@@ -21,11 +30,13 @@
     {
       "heading": "The two lines",
       "body": [
-        "The game is a triangle rather than a straight ranking: rock beats scissors, scissors beats paper, and paper beats rock. The code turns that triangle into the numbered list [paper, rock, scissors], or [0, 1, 2]. Each choice beats the item one step ahead, with scissors wrapping from 2 back to paper at 0.",
-        "For paper and rock, adding one finds the choice they beat: 0 + 1 is rock, and 1 + 1 is scissors. Scissors is the wraparound case, so subtracting two turns its index 2 into paper's index 0. If neither test matches, equal indexes mean a tie and the remaining case is a loss.",
-        "Chained conditional expressions select the result text, while semicolons keep the input and output loop on one physical line. It is intentionally compressed code, but the triangle is the simple idea underneath it."
+        "Rock paper scissors is a triangle, not a ranking: rock beats scissors, scissors beats paper, and paper beats rock. My code puts the choices in the list [paper, rock, scissors], so they're 0, 1 and 2, and each one beats the item one step ahead of it.",
+        "For paper and rock, adding one gives the choice they beat: 0 + 1 is rock, and 1 + 1 is scissors. Scissors wraps around, so subtracting two turns its 2 into paper's 0. If neither test matches, the same number means a tie, and anything else is a loss.",
+        "Chained conditional expressions pick the result text, and semicolons keep the whole input loop on one line. It's squished on purpose, but the triangle is the simple idea underneath it."
       ],
-      "codeBlocks": ["def get_res(str,c_num): return \"You Win!!, I chose \" + [\"paper\", \"rock\", \"scissors\"][c_num] if([\"paper\", \"rock\", \"scissors\"].index(str) - 2 == c_num or [\"paper\", \"rock\", \"scissors\"].index(str) + 1 == c_num) else \"We Tied, I chose \" + [\"paper\", \"rock\", \"scissors\"][c_num] if [\"paper\", \"rock\", \"scissors\"].index(str) == c_num else \"You Lose, HaHa!, I chose \" + [\"paper\", \"rock\", \"scissors\"][c_num]\nchoice = \"\"\nwhile choice.lower() != 'q': choice = input(\"Rock Paper or Scissors (Q) - Quit: \" ).lower(); print(get_res(choice, randint(0, 2)) if choice != 'q' else \"Thanks for Playing!!\")"],
+      "codeBlocks": [
+        "def get_res(str,c_num): return \"You Win!!, I chose \" + [\"paper\", \"rock\", \"scissors\"][c_num] if([\"paper\", \"rock\", \"scissors\"].index(str) - 2 == c_num or [\"paper\", \"rock\", \"scissors\"].index(str) + 1 == c_num) else \"We Tied, I chose \" + [\"paper\", \"rock\", \"scissors\"][c_num] if [\"paper\", \"rock\", \"scissors\"].index(str) == c_num else \"You Lose, HaHa!, I chose \" + [\"paper\", \"rock\", \"scissors\"][c_num]\nchoice = \"\"\nwhile choice.lower() != 'q': choice = input(\"Rock Paper or Scissors (Q) - Quit: \" ).lower(); print(get_res(choice, randint(0, 2)) if choice != 'q' else \"Thanks for Playing!!\")"
+      ],
       "media": []
     }
   ],

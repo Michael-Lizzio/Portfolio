@@ -5,22 +5,25 @@ import { Fragment } from "react";
 
 import { Container } from "@/components/Container";
 import { DevelopmentBadge } from "@/components/DevelopmentBadge";
+import { FlowDiagram } from "@/components/FlowDiagram";
 import { MediaFigure } from "@/components/MediaFigure";
 import { PageHeader } from "@/components/PageHeader";
 import { Prose } from "@/components/Prose";
 import { ProjectLightbox } from "@/components/ProjectLightbox";
+import { ProjectOverview } from "@/components/ProjectOverview";
 import { RockPaperScissorsGame } from "@/components/RockPaperScissorsGame";
 import { RomanNumeralConverter } from "@/components/RomanNumeralConverter";
 import { TechPill } from "@/components/TechPill";
 import { formatProjectDateRange } from "@/components/date";
 import { getProject, getProjectSlugs, getProjects } from "@/lib/content";
+import { compareProjectsByRelevance } from "@/lib/project-order";
 import type { ResolvedMedia, ResolvedProject, ResolvedSection } from "@/lib/schema";
 
 /**
  * One project.
  *
- * This route replaces six hand-written project pages — three of whose
- * stylesheets were byte-identical — with a single template driven by the
+ * This route replaces six hand-written project pages - three of whose
+ * stylesheets were byte-identical - with a single template driven by the
  * content model. The shape of the data varies a lot and every variation has to
  * look intentional, not merely not-crash:
  *
@@ -44,7 +47,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({
   params,
-}: PageProps<"/work/[slug]">): Promise<Metadata> {
+}: PageProps<"/projects/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const project = await getProject(slug);
 
@@ -53,19 +56,19 @@ export async function generateMetadata({
     return { title: "Not found" };
   }
 
-  // A video hero has no still of its own — its poster frame is the share image.
+  // A video hero has no still of its own - its poster frame is the share image.
   const image =
     project.hero?.kind === "image" ? project.hero.src : (project.hero?.poster ?? null);
 
   return {
     title: project.title,
     description: project.tagline,
-    alternates: { canonical: `/work/${project.slug}` },
+    alternates: { canonical: `/projects/${project.slug}/` },
     openGraph: {
       type: "article",
       title: project.title,
       description: project.tagline,
-      url: `/work/${project.slug}`,
+      url: `/projects/${project.slug}/`,
       images: image ? [{ url: image, alt: project.hero?.alt ?? project.title }] : undefined,
     },
     twitter: {
@@ -77,7 +80,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProjectPage({ params }: PageProps<"/work/[slug]">) {
+export default async function ProjectPage({ params }: PageProps<"/projects/[slug]">) {
   const { slug } = await params;
   const project = await getProject(slug);
 
@@ -85,7 +88,8 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
   // so a draft is a 404 rather than a secret URL.
   if (!project) notFound();
 
-  const projects = await getProjects();
+  // Previous and next follow the same "best first" order as /projects.
+  const projects = [...(await getProjects())].sort(compareProjectsByRelevance);
   const index = projects.findIndex((candidate) => candidate.slug === project.slug);
   const previous = index > 0 ? projects[index - 1] : null;
   const next = index >= 0 && index < projects.length - 1 ? projects[index + 1] : null;
@@ -101,8 +105,8 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
         <Container className="pt-10">
           <ol className="flex items-center gap-2 font-mono text-xs text-fg-faint">
             <li>
-              <Link className="rounded-sm hover:text-accent motion-safe:transition" href="/work">
-                Work
+              <Link className="rounded-sm hover:text-accent motion-safe:transition" href="/projects">
+                Projects
               </Link>
             </li>
             <li aria-hidden="true">/</li>
@@ -115,12 +119,16 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
 
       <PageHeader
         title={project.title}
-        tagline={project.tagline}
+        // An ownWords page is Michael's text only; its tagline is for cards.
+        tagline={project.ownWords ? undefined : project.tagline}
         meta={
+          // Michael's own pages show no tags or date, so they may have no meta row at all.
+          project.ownWords && project.links.length === 0 && !project.development ? undefined : (
           <>
             {/* The card caps the pill list at four; here the full stack is the
-                point, so all of it shows — la2028 has twelve. */}
-            {project.tech.length > 0 ? (
+                point, so all of it shows - la2028 has twelve. Michael's own pages
+                had no tags or date line, so they show neither. */}
+            {!project.ownWords && project.tech.length > 0 ? (
               <ul className="flex flex-wrap gap-2">
                 {project.tech.map((tech) => (
                   <li key={tech}>
@@ -130,7 +138,7 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
               </ul>
             ) : null}
 
-            {date || project.status ? (
+            {!project.ownWords && (date || project.status) ? (
               <p className="font-mono text-xs text-fg-faint">
                 {date}
                 {date && project.status ? <span aria-hidden="true"> · </span> : null}
@@ -161,20 +169,40 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
               </ul>
             ) : null}
           </>
+          )
         }
       />
 
       <article className="py-14 md:py-20">
-        {/* Only the hero is priority: it is the LCP candidate when it exists. */}
-        {project.hero ? (
-          <Container size="prose">
-            <MediaFigure media={project.hero} gallery={gallery} priority />
-          </Container>
-        ) : null}
+        {project.overview ? (
+          <>
+            {/* The 30-second version, then the details for anyone who wants them. */}
+            <ProjectOverview overview={project.overview} hero={project.hero} gallery={gallery} />
+            {project.sections.length > 0 ? (
+              <Container size="prose" className="mt-16 md:mt-20">
+                <p className="border-t border-border-default pt-6 font-mono text-xs uppercase tracking-wide text-fg-faint">
+                  The details
+                </p>
+              </Container>
+            ) : null}
+          </>
+        ) : (
+          <>
+            {/* Only the hero is priority: it is the LCP candidate when it exists. */}
+            {project.hero ? (
+              <Container size="prose">
+                <MediaFigure media={project.hero} gallery={gallery} priority />
+              </Container>
+            ) : null}
 
-        <Container size="prose" className={project.hero ? "mt-12" : undefined}>
-          <Prose paragraphs={[project.summary]} />
-        </Container>
+            {/* An ownWords page shows only Michael's text; its summary is for cards. */}
+            {project.ownWords ? null : (
+              <Container size="prose" className={project.hero ? "mt-12" : undefined}>
+                <Prose paragraphs={[project.summary]} />
+              </Container>
+            )}
+          </>
+        )}
 
         {project.slug === "one-line-rock-paper-scissors" ? (
           <RockPaperScissorsGame />
@@ -195,7 +223,7 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
 }
 
 /**
- * A section is any combination of heading, body and media — including a
+ * A section is any combination of heading, body and media - including a
  * heading with only a gallery under it (cryptogram) and a heading with only
  * prose (la2028, all four of them). A section that is entirely empty renders
  * nothing at all rather than an unexplained gap.
@@ -221,27 +249,56 @@ function ProjectSection({
   gallery: ImageMedia[];
 }) {
   const hasBody = section.body.length > 0;
+  const hasBullets = section.bullets.length > 0;
   const hasMedia = section.media.length > 0;
   const hasCode = section.codeBlocks.length > 0;
+  const diagram = section.diagram;
 
-  if (!section.heading && !hasBody && !hasCode && !hasMedia) return null;
+  if (!section.heading && !hasBody && !hasBullets && !hasCode && !hasMedia && !diagram) return null;
 
   const split =
-    section.layout !== "stack" && hasBody && !hasCode && section.media.length === 1;
+    (section.layout === "media-left" || section.layout === "media-right") &&
+    hasBody &&
+    !hasBullets &&
+    !hasCode &&
+    !diagram &&
+    section.media.length === 1;
+  const wide = section.layout === "wide";
+
+  // A level-3 section belongs to the one above it: a smaller heading and a
+  // shorter gap, so "Images" and the three parts under it read as one group.
+  const sub = section.level === 3;
+  const sectionClass = sub ? "mt-10 md:mt-12" : "mt-14 md:mt-20";
+  const Heading = sub ? "h3" : "h2";
+  const headingClass = sub
+    ? "text-xl font-semibold tracking-tight text-fg"
+    : "text-2xl font-semibold tracking-tight text-fg";
 
   if (split) {
     const mediaFirst = section.layout === "media-left";
+    // On wide screens the heading sits at the top of the text column, so it
+    // lines up with the text it introduces instead of floating over the
+    // picture. The picture spans both rows; heading and text meet in the middle
+    // of it. On phones it is one column: heading, picture, text.
+    const textColumn = mediaFirst ? "md:col-start-2" : "md:col-start-1";
+    const mediaColumn = mediaFirst ? "md:col-start-1" : "md:col-start-2";
     return (
-      <section className="mt-14 md:mt-20">
+      <section className={sectionClass}>
         <Container>
-          {section.heading ? (
-            <h2 className="text-2xl font-semibold tracking-tight text-fg">{section.heading}</h2>
-          ) : null}
-          <div className="mt-6 grid items-center gap-8 md:grid-cols-2 md:gap-12">
-            <div className={mediaFirst ? "md:order-1" : "md:order-2"}>
+          <div className="grid gap-6 md:grid-cols-2 md:gap-x-12 md:gap-y-0">
+            {section.heading ? (
+              <Heading className={`${headingClass} ${textColumn} md:row-start-1 md:self-end`}>
+                {section.heading}
+              </Heading>
+            ) : null}
+            <div className={`${mediaColumn} md:row-span-2 md:row-start-1 md:self-center`}>
               <MediaFigure media={section.media[0]} gallery={gallery} />
             </div>
-            <div className={mediaFirst ? "md:order-2" : "md:order-1"}>
+            <div
+              className={`${textColumn} ${
+                section.heading ? "md:row-start-2 md:mt-5 md:self-start" : "md:row-span-2 md:row-start-1 md:self-center"
+              }`}
+            >
               <Prose paragraphs={section.body} />
             </div>
           </div>
@@ -251,12 +308,10 @@ function ProjectSection({
   }
 
   return (
-    <section className="mt-14 md:mt-20">
-      {section.heading || hasBody || hasCode ? (
+    <section className={sectionClass}>
+      {section.heading || hasBody || hasBullets || hasCode ? (
         <Container size="prose">
-          {section.heading ? (
-            <h2 className="text-2xl font-semibold tracking-tight text-fg">{section.heading}</h2>
-          ) : null}
+          {section.heading ? <Heading className={headingClass}>{section.heading}</Heading> : null}
 
           {hasBody ? (
             <div className={section.heading ? "mt-5" : undefined}>
@@ -264,11 +319,31 @@ function ProjectSection({
             </div>
           ) : null}
 
+          {hasBullets ? (
+            <ul
+              className={`${section.heading || hasBody ? "mt-5" : ""} max-w-prose list-disc space-y-2 pl-6 text-lg text-fg marker:text-fg-faint`}
+            >
+              {section.bullets.map((bullet, i) => (
+                <li key={i}>{bullet}</li>
+              ))}
+            </ul>
+          ) : null}
+
           {hasCode ? <CodeBlocks blocks={section.codeBlocks} /> : null}
         </Container>
       ) : null}
 
-      {hasMedia ? <SectionMedia media={section.media} gallery={gallery} /> : null}
+      {/* A little wider than the reading column, so three boxes in a row
+          still have room for their words. */}
+      {diagram ? (
+        <Container className="mt-8">
+          <div className="mx-auto max-w-4xl">
+            <FlowDiagram diagram={diagram} />
+          </div>
+        </Container>
+      ) : null}
+
+      {hasMedia ? <SectionMedia media={section.media} gallery={gallery} wide={wide} /> : null}
     </section>
   );
 }
@@ -291,7 +366,7 @@ function CodeBlocks({ blocks }: { blocks: string[] }) {
 /**
  * Media widens with its count, and never nests containers:
  *
- *   one    the reading column, full width — a figure inside the argument
+ *   one    the reading column, full width - a figure inside the argument
  *   two    the reading column, side by side at md and up
  *   three+ the page column as a gallery, because a 15-photo contact sheet in a
  *          720px column is a scroll, not a gallery
@@ -302,10 +377,47 @@ function CodeBlocks({ blocks }: { blocks: string[] }) {
 function SectionMedia({
   media,
   gallery,
+  wide = false,
 }: {
   media: ResolvedMedia[];
   gallery: ImageMedia[];
+  /** layout "wide": one item, full page column, so a demo video can be read. */
+  wide?: boolean;
 }) {
+  if (wide && media.length === 1) {
+    return (
+      <Container className="mt-8">
+        <MediaFigure media={media[0]} gallery={gallery} sizes="(min-width: 72rem) 72rem, 100vw" />
+      </Container>
+    );
+  }
+
+  // layout "wide" with several items: two big columns in the page column, for
+  // wide screenshots that are unreadable at a third of the page. An odd count
+  // gives the first item the full width.
+  if (wide) {
+    const odd = media.length % 2 === 1;
+    return (
+      <Container className="mt-10">
+        <ul className="grid gap-6 md:grid-cols-2">
+          {media.map((item, i) => (
+            <li key={`${i}-${item.src}`} className={odd && i === 0 ? "md:col-span-2" : undefined}>
+              <MediaFigure
+                media={item}
+                gallery={gallery}
+                sizes={
+                  odd && i === 0
+                    ? "(min-width: 72rem) 72rem, 100vw"
+                    : "(min-width: 72rem) 35rem, (min-width: 48rem) 50vw, 100vw"
+                }
+              />
+            </li>
+          ))}
+        </ul>
+      </Container>
+    );
+  }
+
   if (media.length === 1) {
     return (
       <Container size="prose" className="mt-8">
@@ -356,7 +468,7 @@ function SectionMedia({
 
 /**
  * The end of a project is the one place a reader is certain to reach, so it is
- * where the next route in belongs — in the site's own order, not "related
+ * where the next route in belongs - in the site's own order, not "related
  * projects" invented from tags.
  */
 function ProjectFooterNav({
@@ -378,8 +490,8 @@ function ProjectFooterNav({
           <span className="hidden sm:block" />
         )}
 
-        <Link className="btn btn-outline self-start sm:self-auto" href="/work">
-          All work
+        <Link className="btn btn-outline self-start sm:self-auto" href="/projects">
+          All projects
         </Link>
 
         {next ? (
@@ -404,7 +516,7 @@ function AdjacentProject({
   return (
     <Link
       className={`group block max-w-xs ${isNext ? "sm:text-right" : ""}`}
-      href={`/work/${project.slug}`}
+      href={`/projects/${project.slug}`}
     >
       <span className="font-mono text-xs text-fg-faint">
         {isNext ? "Next" : "Previous"}

@@ -1,0 +1,65 @@
+{
+  "intro": "I've spent three summers working as a software intern: two at Greenman Pedersen (GPI) and one at TTM Technologies. Here's what I did at each.",
+  "jobs": [
+    {
+      "role": "Application Development Intern, AI & Automation",
+      "company": "Greenman Pedersen, Inc.",
+      "location": "Babylon, NY",
+      "dates": "Summer 2026",
+      "summary": "My second summer at GPI, this time on the AI side. Most of what I built helps people use a small local AI on traffic signal data without having to trust it blindly.",
+      "highlights": [
+        "Built a filter assistant that turns plain English into database filters, which people check before anything runs (JavaScript, Fastify, PostgreSQL, Ollama).",
+        "Wrote a test harness that ran the same 200 prompts across 8 local models, then picked and tuned a 3B model that fit on a 4 GB GPU.",
+        "Prototyped a tool that reads, sorts and names scanned signal records for a 300,000-page digitization project, with a person approving every file.",
+        "Made tools that find and fix messy records left over from an old DOS system, with dry runs and a person signing off on every change."
+      ],
+      "projects": [
+        "ai-database-filter",
+        "document-management-system",
+        "legacy-data-cleanup",
+        "agentic-report-generator"
+      ]
+    },
+    {
+      "role": "Application Development Intern, GIS & Computer Vision",
+      "company": "Greenman Pedersen, Inc.",
+      "location": "Babylon, NY",
+      "dates": "Summer 2025",
+      "summary": "My first summer at GPI. Most of it went into a road sign survey: finding signs in video and working out exactly where each one is on a map.",
+      "highlights": [
+        "Used YOLO-E to find signs in survey video, then stereo vision, tracking and GPS to place each sign on the map.",
+        "Connected my Python code to the team's existing C# app through a small TCP server, and helped with field testing.",
+        "Built a tool for sorting and grouping GIS intersection data, and a multi-user Flask app for checking results and making a QA summary PDF.",
+        "Tested a virtual tunnel inspection app built in Unity and wrote up the bugs I found."
+      ],
+      "projects": []
+    },
+    {
+      "role": "Cyber Data Management Consultant",
+      "company": "TTM Technologies",
+      "location": "Farmingdale, NY",
+      "dates": "Summer 2024",
+      "summary": "My first real software job, at a defense contractor. I learned how cybersecurity compliance reporting works and then automated the slowest part of it.",
+      "highlights": [
+        "Learned the NIST Risk Management Framework and the DISA tools used to check systems against it.",
+        "Built Python and Tkinter apps that let the cybersecurity team update checklist XML files safely, with a review step before anything changes.",
+        "Tested them with lots of odd inputs to find the edge cases. The tools were used for five quarterly reports."
+      ],
+      "projects": [
+        "cyber-ttm"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "school": "Rochester Institute of Technology",
+      "degree": "B.S. in Software Engineering",
+      "dates": "2024 to 2029",
+      "details": [
+        "Immersion in Geographic Information Systems (GIS)",
+        "GPA 3.8",
+        "Coursework: Software Development and Problem Solving I and II, Personal Software Engineering, Engineering Software Systems, Engineering Web-based Software Systems, Discrete Math, Calculus I and II, Statistics"
+      ]
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "name": "Michael Lizzio",
-  "headline": "Software Engineering Major at RIT",
-  "bio": "Aspiring software engineer with strong communication skills and a passion for sharing knowledge and collaborating on complex and challenging problems. I work mostly in Python, with a foundational understanding of several other languages, and I'm eager to expand my knowledge and keep learning new skills.",
+  "headline": "Software engineering student at RIT",
+  "bio": "I'm a software engineering student at RIT, and I like building things people actually use. I have two iPhone apps on the App Store, Engine Miles and Burrow, and I'm working on a third, RelayReply, an AI that makes phone calls for you.",
   "location": null,
   "email": "michaeljlizzio@gmail.com",
   "resume": "/resume.pdf",
@@ -32,8 +32,8 @@
     }
   ],
   "about": [
-    "I'm a passionate computer programmer. When I got a Raspberry Pi for Christmas of 2018, I was super excited. Looking back on it, I am grateful that I had the unique opportunity to learn computer programming by just messing around and exploring the environment while making silly and sometimes complex projects.",
-    "As my knowledge of computer science has grown over the years I have gradually realized how crucial syntax, code structure, and careful planning gives you the ability to create anything you can imagine.",
-    "What I find exciting about computer science is that there's always something new to learn. I'm looking forward to picking up more programming skills to improve my abilities."
+    "I got a Raspberry Pi for Christmas in 2018 and I was super excited. I didn't really know what I was doing, so I just messed around with it and made silly projects, and some that were a lot more complicated than they needed to be. Looking back, I'm really glad I learned that way.",
+    "Since then I've built a Wordle solver, a cryptogram solver, a robot foosball goalie (with some help from my dad), and a lot more. Now I'm studying software engineering at RIT, and I spend my summers interning. The last two were at Greenman Pedersen, working on AI and GIS tools.",
+    "These days most of my free time goes into my own apps. Engine Miles and Burrow are on the App Store, and RelayReply is in a public beta. What I liked about that first Raspberry Pi is still what I like now: there's always something new to figure out."
   ]
 }

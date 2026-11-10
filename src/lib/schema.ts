@@ -6,7 +6,7 @@
  *   - `npm run validate`, to check every project  (scripts/validate-content.ts)
  *   - `npm run new:project`, to scaffold one      (scripts/new-project.mjs)
  *
- * If you are an agent adding a project, you do not need to read this file —
+ * If you are an agent adding a project, you do not need to read this file  - 
  * read AGENTS.md, then run `npm run validate` and fix what it tells you.
  */
 import { z } from "zod";
@@ -16,7 +16,7 @@ const MediaPath = z
   .string()
   .regex(
     /^media\/[A-Za-z0-9._-]+\.(webp|jpg|jpeg|png|mp4|webm)$/,
-    'must look like "media/name.webp" — relative to the project folder, no subfolders',
+    'must look like "media/name.webp", relative to the project folder, no subfolders',
   );
 
 export const MediaSchema = z.object({
@@ -27,17 +27,75 @@ export const MediaSchema = z.object({
   /** Required on images for accessibility. Describe what is shown, not "screenshot of app". */
   alt: z.string().min(1).nullable().default(null),
   caption: z.string().nullable().default(null),
+  /**
+   * Videos only. Plays muted and looped while it is on screen and pauses when it
+   * scrolls away. Controls stay available, and reduced-motion users get a
+   * normal click-to-play video instead.
+   */
+  autoplay: z.boolean().default(false),
+});
+
+/**
+ * A simple flow diagram drawn from text, so it reads in light and dark mode and
+ * a screen reader gets it as a list. Steps run left to right on a wide screen
+ * (top to bottom from five steps, and always on a phone). A step holds one to
+ * three boxes side by side.
+ */
+export const DiagramSchema = z.object({
+  /** Read by screen readers before the steps. Say what the diagram shows. */
+  label: z.string().min(1),
+  caption: z.string().min(1).nullable().default(null),
+  steps: z
+    .array(
+      z.object({
+        /** Short text on the arrow that leads into this step. Ignored on the first step. */
+        arrow: z.string().min(1).max(40).nullable().default(null),
+        nodes: z
+          .array(
+            z.object({
+              title: z.string().min(1).max(40),
+              detail: z.string().min(1).max(90).nullable().default(null),
+            }),
+          )
+          .min(1)
+          .max(3),
+      }),
+    )
+    .min(2)
+    .max(7),
 });
 
 export const SectionSchema = z.object({
   heading: z.string().min(1).nullable().default(null),
-  /** One string per paragraph. Plain text — no HTML, no markdown. */
+  /** 3 renders the heading one size down, as a part of the section above it. */
+  level: z.union([z.literal(2), z.literal(3)]).default(2),
+  /** One string per paragraph. Plain text: no HTML, no markdown. */
   body: z.array(z.string().min(1)).default([]),
+  /** Optional bullet points, shown after the paragraphs. Plain text, one string each. */
+  bullets: z.array(z.string().min(1)).default([]),
   /** Optional fixed-width blocks for output, code, and alignment-sensitive text. */
   codeBlocks: z.array(z.string().min(1)).default([]),
-  /** Desktop relationship between a section's prose and its single media item. */
-  layout: z.enum(["stack", "media-left", "media-right"]).default("stack"),
+  /**
+   * Desktop relationship between a section's prose and its media. "wide" puts
+   * the media in the full page column instead of the reading column: one item
+   * at full width, several in two big columns.
+   */
+  layout: z.enum(["stack", "media-left", "media-right", "wide"]).default("stack"),
   media: z.array(MediaSchema).default([]),
+  /** Optional diagram, shown after the text and before the media. */
+  diagram: DiagramSchema.nullable().default(null),
+});
+
+/**
+ * The 30-second version of a project, shown at the top of its page next to the
+ * hero: what it is, why I made it, what I did, and how it turned out. One or
+ * two plain sentences each, in first person.
+ */
+export const OverviewSchema = z.object({
+  what: z.string().min(1),
+  why: z.string().min(1),
+  did: z.string().min(1),
+  result: z.string().min(1),
 });
 
 export const LinkSchema = z.object({
@@ -55,12 +113,20 @@ export const ProjectSchema = z.object({
   title: z.string().min(1),
   /** One line, shown on the card. Keep under ~90 characters. */
   tagline: z.string().min(1).max(140),
-  /** Two to four sentences. Shown at the top of the detail page. */
+  /** Two to four sentences. Shown at the top of the detail page when there is no overview. */
   summary: z.string().min(1),
+  /** The short top block of the detail page. When it is set, it replaces the summary there. */
+  overview: OverviewSchema.nullable().default(null),
+  /**
+   * Michael's own original page, kept word for word (cryptogram, foosball,
+   * symposium). The page shows only his text: the tagline and summary are still
+   * used on cards and in search results, but not repeated on the page itself.
+   */
+  ownWords: z.boolean().default(false),
 
   /** false hides the project from the site entirely, without deleting it. */
   published: z.boolean().default(false),
-  /** Promotes the project to the top of the work page and onto the homepage. */
+  /** Puts the project in "Selected work" on the homepage. Ordering lives in src/lib/project-order.ts. */
   featured: z.boolean().default(false),
 
   /** Start date. "YYYY" or "YYYY-MM". null sorts after dated work. */
@@ -74,7 +140,7 @@ export const ProjectSchema = z.object({
 
   /**
    * What it is actually built with. Not file formats it happens to read.
-   * Each entry renders as a pill, so it is a label, not a sentence — put the
+   * Each entry renders as a pill, so it is a label, not a sentence. Put the
    * explanation in a section instead.
    */
   tech: z.array(z.string().min(1).max(40, "a tech entry is a pill label, not a sentence")).default([]),
@@ -121,11 +187,43 @@ export const ProfileSchema = z.object({
   about: z.array(z.string().min(1)).default([]),
 });
 
+/** One job on the Work page. Dates are free text as they read on the resume ("Summer 2026"). */
+export const JobSchema = z.object({
+  role: z.string().min(1),
+  company: z.string().min(1),
+  location: z.string().nullable().default(null),
+  dates: z.string().min(1),
+  /** One or two plain sentences in first person. */
+  summary: z.string().min(1),
+  /** Short points, one string each. */
+  highlights: z.array(z.string().min(1)).default([]),
+  /** Slugs of published projects that came out of this job. */
+  projects: z.array(z.string().min(1)).default([]),
+});
+
+export const EducationSchema = z.object({
+  school: z.string().min(1),
+  degree: z.string().min(1),
+  dates: z.string().min(1),
+  details: z.array(z.string().min(1)).default([]),
+});
+
+/** content/work.json: the work-experience half of the resume. */
+export const WorkSchema = z.object({
+  intro: z.string().min(1),
+  jobs: z.array(JobSchema).default([]),
+  education: z.array(EducationSchema).default([]),
+});
+
 export type Media = z.infer<typeof MediaSchema>;
 export type Section = z.infer<typeof SectionSchema>;
+export type Diagram = z.infer<typeof DiagramSchema>;
+export type Overview = z.infer<typeof OverviewSchema>;
 export type Link = z.infer<typeof LinkSchema>;
 export type Project = z.infer<typeof ProjectSchema>;
 export type Profile = z.infer<typeof ProfileSchema>;
+export type Job = z.infer<typeof JobSchema>;
+export type Work = z.infer<typeof WorkSchema>;
 
 /** Intrinsic image dimensions are read from the media file during content loading. */
 export type ResolvedMedia = Media & {

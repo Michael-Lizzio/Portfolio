@@ -6,7 +6,7 @@ import { getProfile } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Email, resume and every account worth linking to.",
+  description: "How to reach me: email, my resume and my other accounts.",
 };
 
 /**
@@ -31,7 +31,7 @@ export default async function ContactPage() {
     <>
       <PageHeader
         title="Contact"
-        tagline="Email is the surest way to reach me. Everything else below works too."
+        tagline="Email is the best way to reach me, but any of these work."
       />
 
       <section className="py-14 md:py-20">
