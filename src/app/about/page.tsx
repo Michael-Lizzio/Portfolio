@@ -4,9 +4,10 @@ import Link from "next/link";
 import { Container } from "@/components/Container";
 import { MediaFigure } from "@/components/MediaFigure";
 import { PageHeader } from "@/components/PageHeader";
+import { ProjectLightbox } from "@/components/ProjectLightbox";
 import { Prose } from "@/components/Prose";
 import { getProfile } from "@/lib/content";
-import type { Media } from "@/lib/schema";
+import type { ResolvedMedia } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "About",
@@ -18,15 +19,19 @@ export const metadata: Metadata = {
  * The collage is site furniture rather than project media, so it lives in
  * /public/images and is handed to MediaFigure as an already-resolved Media
  * object. Same figure treatment as everything else on the site; no second way
- * of framing a picture.
+ * of framing a picture. It opens in the same lightbox as project images, so
+ * the click on it goes somewhere (it used to point at a viewer that was never
+ * on this page).
  */
-const COLLAGE: Media = {
+const COLLAGE: ResolvedMedia & { kind: "image" } = {
   src: "/images/collage.webp",
   kind: "image",
   poster: null,
   alt: "A six-photo collage: skiing through falling snow, two swimmers standing in the surf, a beach at dusk, family and a dog beside a lighthouse, skis held overhead on a foggy slope, and a foosball table at home rigged with an overhead camera mount.",
   caption: "Skiing, the ocean, home, and the foosball table that became KURT.",
   autoplay: false,
+  width: 1800,
+  height: 1170,
 };
 
 export default async function AboutPage() {
@@ -50,8 +55,9 @@ export default async function AboutPage() {
           <Prose paragraphs={paragraphs} />
 
           <div className="mt-12">
-            <MediaFigure media={COLLAGE} />
+            <MediaFigure media={COLLAGE} gallery={[COLLAGE]} />
           </div>
+          <ProjectLightbox gallery={[COLLAGE]} />
 
           <p className="mt-12 text-lg text-fg-muted">
             You can see what I&apos;ve built on{" "}

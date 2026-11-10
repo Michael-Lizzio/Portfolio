@@ -3,6 +3,12 @@
   "title": "Cryptogram Solver",
   "tagline": "My program uses what some would call a brute force approach and consists of a few main parts.",
   "summary": "So during the school break I spent most of my time in front of my whiteboard creating a backtracking algorithm without even knowing what one was!",
+  "overview": {
+    "what": "A program that solves cryptograms, the puzzles where every letter in a quote is swapped for a different one. You give it the scrambled quote and it works out the real words.",
+    "why": "The day before February break in 2022, I grabbed my computer science teacher's cryptogram handout for my dad. He was flying through it, and I got lost in the idea of making a computer solve it instead.",
+    "did": "I spent most of the break at my whiteboard building a backtracking algorithm without even knowing what one was. It guesses the longest words first from 22 word lists, sorted common to uncommon, and backs up when a guess stops working.",
+    "result": "My first test was the scrambled word \"BEGINNING\", and it worked. By the next day it could solve all sorts of puzzles, including the handout that started it, and I got to show my teacher she inspired it."
+  },
   "ownWords": true,
   "published": true,
   "featured": false,

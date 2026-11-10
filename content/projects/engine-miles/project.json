@@ -1,13 +1,13 @@
 {
   "slug": "engine-miles",
   "title": "Engine Miles",
-  "tagline": "An iPhone app that estimates how far a hybrid's gas engine has actually gone",
-  "summary": "Engine Miles is an iPhone app for hybrid and plug-in hybrid owners. You log your fill-ups, and it estimates how many miles the gas engine has run, so you can track oil changes by engine miles instead of the odometer. It's been on the App Store since October 2026.",
+  "tagline": "An iPhone app that estimates how far your plug-in hybrid's gas engine actually got",
+  "summary": "Engine Miles is an iPhone app for plug-in hybrid owners, and it works for regular hybrids too. You log your fill-ups, and it estimates how many miles the gas engine has run, so you can track oil changes by engine miles instead of the odometer. It's been on the App Store since October 2026.",
   "overview": {
-    "what": "An iPhone app for hybrid and plug-in hybrid owners. You log your fill-ups, and it estimates how many miles the gas engine has actually run.",
+    "what": "An iPhone app for plug-in hybrid owners, and it works for regular hybrids too. You log your fill-ups, and it estimates how far your gas engine actually got.",
     "why": "My dad keeps a paper logbook for his plug-in hybrid to work out how many miles are on the gas engine, because the car doesn't really tell you. I wanted to turn his notebook into an app.",
     "did": "I designed and built it in Swift and SwiftUI, using AI as a coding tool. Everything stays on your phone, with no account and no server, and my dad tested every build.",
-    "result": "It's been live on the App Store since October 2026, with a free version and Engine Miles Pro. Now I'm working on getting it in front of more hybrid owners."
+    "result": "It's been live on the App Store since October 2026, with a free version and Engine Miles Pro. Now I'm working on getting it in front of more plug-in hybrid owners."
   },
   "published": true,
   "featured": true,
@@ -106,7 +106,7 @@
     {
       "heading": "Where it's at",
       "body": [
-        "Engine Miles went live on the App Store in October 2026. It's still early, so right now I'm mostly working on getting it in front of more hybrid owners. There's a lot more I want to add, and my dad keeps finding things for the list."
+        "Engine Miles went live on the App Store in October 2026. It's still early, so right now I'm mostly working on getting it in front of more plug-in hybrid owners. There's a lot more I want to add, and my dad keeps finding things for the list."
       ],
       "media": []
     }

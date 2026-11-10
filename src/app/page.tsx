@@ -130,8 +130,8 @@ export default async function HomePage() {
                 <p className="mt-2 text-fg-muted">Three products I designed, built and shipped myself.</p>
               </div>
               {/* A marker aside, so it stays out of the heading's accessible name. */}
-              <HandNote marker="red" tilt={-3} className="pb-1 pr-2 text-[1.75rem] md:text-[2rem]">
-                Apps I&apos;ve <Circled className="ml-2">shipped</Circled>
+              <HandNote marker="ink" tilt={-3} className="pb-2 pr-5 text-[1.75rem] md:text-[2rem]">
+                Apps I&apos;ve <Circled className="ml-3">shipped</Circled>
               </HandNote>
             </div>
 

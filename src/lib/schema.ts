@@ -121,6 +121,9 @@ export const ProjectSchema = z.object({
    * Michael's own original page, kept word for word (cryptogram, foosball,
    * symposium). The page shows only his text: the tagline and summary are still
    * used on cards and in search results, but not repeated on the page itself.
+   * An overview may sit on top as a separate short summary (cryptogram and
+   * foosball have one, November 10); his text follows under "My original
+   * write-up", and the word lock in validate-content.ts does not cover it.
    */
   ownWords: z.boolean().default(false),
 

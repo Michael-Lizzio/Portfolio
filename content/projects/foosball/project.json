@@ -3,6 +3,12 @@
   "title": "Automated Foosball Goalie",
   "tagline": "Finally, I was able to combine the ball tracking software with the motor controller to create a functional foosball goalie.",
   "summary": "Below are some videos and descriptions detailing the process of constructing my automated foosball goalie, KURT (Killer.Ultimate.Robot.Teammate). I started the project after being inspired by a similar project that I saw on a college tour.",
+  "overview": {
+    "what": "KURT (Killer.Ultimate.Robot.Teammate), a robot goalie for a real foosball table. A camera watches the ball and a stepper motor slides the goalie over to block it.",
+    "why": "I saw a similar project on a college tour and wanted to build my own, so in October 2022 we picked up a foosball table from Facebook Marketplace for $50.",
+    "did": "I tracked the ball with OpenCV on a Raspberry Pi, using a camera on a mount made of dowels and a Chinese food container, plus a Kalman filter to guess where it was headed. Then I built the motor circuit and controller with some guidance from my dad, and the side mount after Lego and cardboard prototypes.",
+    "result": "By Christmas 2022 KURT was blocking shots on his own. He still has flaws, but he makes more saves than I would, and I learned a ton building him."
+  },
   "ownWords": true,
   "published": true,
   "featured": false,

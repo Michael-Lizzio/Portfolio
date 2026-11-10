@@ -169,6 +169,8 @@
   --marker-blue: #1d5fd1;
   --marker-red: #c63a28;
   --marker-green: #13784f;
+  /* The red loop around "shipped". Decoration, so no text contrast rule. */
+  --marker-loop: #d92b17;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -209,6 +211,7 @@
     --marker-blue: #7fa8f0;
     --marker-red: #f08a7a;
     --marker-green: #5fcf9c;
+    --marker-loop: #ff4f3d;
   }
 }
 
@@ -247,6 +250,7 @@
   --marker-blue: #7fa8f0;
   --marker-red: #f08a7a;
   --marker-green: #5fcf9c;
+  --marker-loop: #ff4f3d;
 }
 
 @theme inline {
@@ -274,6 +278,7 @@
   --color-marker-blue: var(--marker-blue);
   --color-marker-red: var(--marker-red);
   --color-marker-green: var(--marker-green);
+  --color-marker-loop: var(--marker-loop);
 }
 
 /* ========================================================================== */
