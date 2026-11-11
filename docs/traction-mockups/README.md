@@ -1,7 +1,9 @@
 # Traction mockups (November 11, 2026)
 
-Branch `traction-mockups`, cut from `engine-miles-phev` (e0a9871) so the screenshots show the new plug-in
-hybrid banner. Nothing is merged and nothing is live. Cloudflare Pages deploys from `main` only.
+Branch `traction-mockups`, based on `origin/main` at b5e4af2 ("Publish Engine Miles: plug-in hybrid banner,
+screenshots and wording"), so the screenshots show the plug-in hybrid banner. That banner and wording are already
+live from that `main` commit; the traction work on this branch (the "How it went" section, the stats lines and
+`public/stats.json`) is not merged and not live. Cloudflare Pages deploys from `main` only.
 
 What's on the branch:
 
@@ -52,7 +54,11 @@ the header.
 > quit right there, because every answer needed a number they didn't have.
 >
 > So in version 1.2 I added "Not sure yet: start now", which lets you skip it and estimates those miles after
-> your first tank. Now about 3 in 4 people who reach that step finish setup.
+> your first tank. The early numbers look better: of the first 15 people on 1.2 who reached that step, 11
+> finished setup, about 3 in 4.
+
+The second paragraph names the sample (15 people, early) in the sentence itself, so a reader who skips the chart
+caption still sees how small it is.
 
 **Chart:** "Setting up the app, before and after the fix"
 

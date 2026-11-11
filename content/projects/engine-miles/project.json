@@ -59,7 +59,7 @@
     ],
     "story": [
       "In PostHog I could see that almost half the people who got to the step asking for their engine miles so far quit right there, because every answer needed a number they didn't have.",
-      "So in version 1.2 I added \"Not sure yet: start now\", which lets you skip it and estimates those miles after your first tank. Now about 3 in 4 people who reach that step finish setup."
+      "So in version 1.2 I added \"Not sure yet: start now\", which lets you skip it and estimates those miles after your first tank. The early numbers look better: of the first 15 people on 1.2 who reached that step, 11 finished setup, about 3 in 4."
     ],
     "funnel": {
       "title": "Setting up the app, before and after the fix",
