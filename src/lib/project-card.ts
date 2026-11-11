@@ -38,7 +38,8 @@ export function toProjectCardData(project: ResolvedProject): ProjectCardData {
   // A hero may be a video; its poster frame is the still we want on the card.
   const hero = project.hero;
   const heroSrc = hero?.kind === "image" ? hero.src : (hero?.poster ?? null);
-  const coverSrc = heroSrc ? cardImage(project.slug, heroSrc) : null;
+  const cardSrc = APP_SHOWCASE[project.slug]?.cardSrc ?? null;
+  const coverSrc = cardSrc ?? (heroSrc ? cardImage(project.slug, heroSrc) : null);
 
   return {
     slug: project.slug,
@@ -48,6 +49,6 @@ export function toProjectCardData(project: ResolvedProject): ProjectCardData {
     endDate: project.endDate,
     development: project.development,
     cover: hero && coverSrc ? { src: coverSrc, alt: hero.alt ?? "" } : null,
-    coverPosition: APP_SHOWCASE[project.slug]?.cardPosition ?? null,
+    coverPosition: cardSrc ? null : (APP_SHOWCASE[project.slug]?.cardPosition ?? null),
   };
 }

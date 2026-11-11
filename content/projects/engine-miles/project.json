@@ -2,9 +2,9 @@
   "slug": "engine-miles",
   "title": "Engine Miles",
   "tagline": "An iPhone app that estimates the split between electric miles versus gas-engine miles for your plug-in hybrid",
-  "summary": "Engine Miles is an iPhone app for plug-in hybrid owners, and it works for regular hybrids too. You log your fill-ups, and it estimates how many miles the gas engine has run, so you can track oil changes by engine miles instead of the odometer. It's been on the App Store since October 2026.",
+  "summary": "Engine Miles is an iPhone app made for plug-in hybrids. You log your fill-ups, and it estimates how many of your miles were on the gas engine, so you can track oil changes by engine miles instead of the odometer. Regular hybrids work too. It's been on the App Store since October 2026.",
   "overview": {
-    "what": "An iPhone app for plug-in hybrid owners, and it works for regular hybrids too. You log your fill-ups, and it estimates how far your gas engine actually got.",
+    "what": "An iPhone app for plug-in hybrid owners. You log your fill-ups, and it estimates how many of your miles were electric and how many were on the gas engine. It works for regular hybrids too, just without the electric split.",
     "why": "My dad keeps a paper logbook for his plug-in hybrid to work out how many miles are on the gas engine, because the car doesn't really tell you. I wanted to turn his notebook into an app.",
     "did": "I designed and built it in Swift and SwiftUI, using AI as a coding tool. Everything stays on your phone, with no account and no server, and my dad tested every build.",
     "result": "It's been live on the App Store since October 2026, with a free version and Engine Miles Pro. Now I'm working on getting it in front of more plug-in hybrid owners."
@@ -37,7 +37,7 @@
     "src": "media/engine_miles_cover.webp",
     "kind": "image",
     "poster": null,
-    "alt": "Engine Miles banner with the app icon, the line Your hybrid journey. A clearer story., and an iPhone showing an estimated 5,925 engine miles and an oil change countdown",
+    "alt": "Engine Miles banner for plug-in hybrids with the line Your odometer tells you how far the car has gone. EngineMiles tells you how far the engine has gone., and a sample year of 12,892 odometer miles with about 5,245 on the gas engine and 7,647 on electric",
     "caption": null,
     "autoplay": false
   },
@@ -53,7 +53,7 @@
           "src": "media/engine_miles_home.webp",
           "kind": "image",
           "poster": null,
-          "alt": "Engine Miles home screen showing an estimated 5,925 engine miles, an oil change due in about 1,901 engine miles, the last fill-up and the odometer",
+          "alt": "Engine Miles home screen with an estimated 17,837 engine miles, about 59% electric over the car's lifetime, an oil change due in about 1,911 engine miles, the last fill-up and the odometer",
           "caption": "The home screen, with example data.",
           "autoplay": false
         }
@@ -71,7 +71,7 @@
           "src": "media/engine_miles_oil.webp",
           "kind": "image",
           "poster": null,
-          "alt": "Engine Miles oil change screen with 1,901 estimated engine miles to go, a goal of 5,000 miles or 12 months, and a history of past oil changes",
+          "alt": "Engine Miles oil change screen with 1,911 estimated engine miles to go, around late December, a goal of 5,000 miles or 12 months, and a history of past oil changes",
           "caption": "The oil change countdown.",
           "autoplay": false
         }
@@ -89,15 +89,15 @@
           "src": "media/engine_miles_log.webp",
           "kind": "image",
           "poster": null,
-          "alt": "Engine Miles log screen listing fill-ups by month, each with gallons and the estimated engine miles it added",
-          "caption": "Every fill-up, by month.",
+          "alt": "Engine Miles log screen listing fill-ups and month-end odometer check-ins by month, with the estimated engine miles for each month",
+          "caption": "Fill-ups and month-end check-ins, by month.",
           "autoplay": false
         },
         {
           "src": "media/engine_miles_insights.webp",
           "kind": "image",
           "poster": null,
-          "alt": "Engine Miles Insights screen with a year recap, fuel bought by month and an estimated electric share by tank",
+          "alt": "Engine Miles Insights screen with a 2026 year recap, about 69% electric this year split into electric and estimated engine miles, and Fuel and MPG and Money cards",
           "caption": "Insights, part of Pro.",
           "autoplay": false
         }
@@ -111,5 +111,5 @@
       "media": []
     }
   ],
-  "notes": "Added in the November 2026 refresh. Facts from Business/SocialDiffusion/config/facts/engine_miles.yaml (checked 2026-11-04/05) and EngineMiles/HANDOFF.md (2026-10-31): live since Oct 2026 (1.2 since 2026-10-25), App Store id 6819898617, Pro $1.99/$9.99/$29.99. The TooAvid site still says private beta and $2.99/$19.99/$59.99; that site is stale. Origin story (dad's 2022 RAV4 Prime paper logbook) is from the EngineMiles press drafts in docs/marketing. 'Whole car' anecdote is D-136 in docs/DECISIONS.md. Never say: connects to the car, exact measurement, safe to stretch oil changes. Hero is the TooAvid og.png with its 'Android coming soon' line painted out (not in the checked facts). development is null until Michael classifies it. Date 2026-09 is the repo's first commit."
+  "notes": "Added in the November 2026 refresh. Facts from Business/SocialDiffusion/config/facts/engine_miles.yaml (checked 2026-11-04/05) and EngineMiles/HANDOFF.md (2026-10-31): live since Oct 2026 (1.2 since 2026-10-25), App Store id 6819898617, Pro $1.99/$9.99/$29.99. The TooAvid site still says private beta and $2.99/$19.99/$59.99; that site is stale. Origin story (dad's 2022 RAV4 Prime paper logbook) is from the EngineMiles press drafts in docs/marketing. 'Whole car' anecdote is D-136 in docs/DECISIONS.md. Never say: connects to the car, exact measurement, safe to stretch oil changes. Hero (Nov 11, 2026) is the plug-in hybrid banner from EngineMiles 'App Media/Brand/website-social-preview-1200x630-v2.png' (source: EngineMiles scripts/marketing/social-preview/social-preview.html, commit 4af8c9e, D-143: plug-in hybrids first, regular hybrids secondary). The four screenshots are the en-US 6.1-inch cards from 'App Media/AppStore-1.2-phev/' (made for plug-in hybrids). The 4:3 carousel version and 16:10 card version of the banner are in public/images/apps/, rendered from the same source. development is null until Michael classifies it. Date 2026-09 is the repo's first commit."
 }
