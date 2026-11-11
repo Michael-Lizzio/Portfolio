@@ -9,6 +9,10 @@ after, so you can check the wording line by line. The new look (November 9) is d
 
 ## Quick summary
 
+**November 11:** Engine Miles now leads with plug-in hybrids: the site's new banner, the plug-in
+hybrid App Store screenshots, and an overview that says what it does for each kind of car. See
+"November 11: Engine Miles leads with plug-in hybrids" near the end (before the appendix).
+
 **November 10:** Work links fixed (a redirect rule sent every click on them to a 404), a 30-second
 overview on the cryptogram and foosball pages above your original words, the "Apps I've shipped"
 note in black or white with a bigger red loop, and Engine Miles now says plug-in hybrid. See
@@ -785,6 +789,59 @@ were used.
 | "My original write-up" divider | `src/app/projects/[slug]/page.tsx`, `src/lib/schema.ts` (comment) |
 | Note colours and loop | `src/components/HandNote.tsx`, `src/app/globals.css`, `src/app/page.tsx` |
 | Engine Miles wording | `content/projects/engine-miles/project.json` |
+
+## November 11: Engine Miles leads with plug-in hybrids
+
+Branch `engine-miles-phev`, cut from `main` at d873678. The Engine Miles site and press kit now lead
+with plug-in hybrids, with regular hybrids second (EngineMiles commit 4af8c9e, decision D-143), so
+the portfolio follows.
+
+**Banner.** The Engine Miles banner is now the site's new plug-in hybrid image
+(`App Media/Brand/website-social-preview-1200x630-v2.png`): "For plug-in hybrids", "Your odometer
+tells you how far the car has gone. EngineMiles tells you how far the engine has gone", and a sample
+year of 12,892 odometer miles, about 5,245 on the gas engine and 7,647 on electric. It is the project
+page hero, the share image, the first carousel slide and the Projects card.
+
+That banner keeps its numbers on the right, so the usual crops (4:3 on a phone, 16:10 on a card)
+would cut them off. Instead of cropping, there are two more versions of the same banner, rendered
+from the site's own source file (`EngineMiles/scripts/marketing/social-preview/social-preview.html`)
+with the same fonts and numbers:
+
+- `public/images/apps/engine-miles-banner-phone.webp`, 4:3, which the carousel shows on phones
+  (the top line drops "enginemiles.com" to fit).
+- `public/images/apps/engine-miles-banner-card.webp`, 16:10, for the Projects card.
+
+**Screenshots.** The four App Store screenshots said "Your hybrid journey" at the top. They are now
+the plug-in hybrid versions ("Made for plug-in hybrids") from `App Media/AppStore-1.2-phev/en-US`,
+same four screens in the same places: home, oil change, log and Insights. The home and oil ones are
+also the two phones on the home page's app card. The sample numbers in them changed, so every alt
+text was rewritten to match. These are the cards the Engine Miles agent made for the next App Store
+update; they are not on the App Store yet.
+
+**Words.**
+
+| Where | Before | After |
+|---|---|---|
+| Summary (search results) | Engine Miles is an iPhone app for plug-in hybrid owners, and it works for regular hybrids too. You log your fill-ups, and it estimates how many miles the gas engine has run, ... | Engine Miles is an iPhone app made for plug-in hybrids. You log your fill-ups, and it estimates how many of your miles were on the gas engine, ... Regular hybrids work too. ... |
+| What it is | An iPhone app for plug-in hybrid owners, and it works for regular hybrids too. You log your fill-ups, and it estimates how far your gas engine actually got. | An iPhone app for plug-in hybrid owners. You log your fill-ups, and it estimates how many of your miles were electric and how many were on the gas engine. It works for regular hybrids too, just without the electric split. |
+| Log caption | Every fill-up, by month. | Fill-ups and month-end check-ins, by month. |
+
+The tagline is yours from November 10 and is unchanged. "Just without the electric split" is there
+because the app really doesn't show a split for regular hybrids, so the overview would be wrong for
+them otherwise.
+
+**Nothing left that says "hybrid" on its own** on the Engine Miles page or its pictures. The App
+Store name is still "Engine Miles: Hybrid Tracker", which the page doesn't show.
+
+### Files changed in this part
+
+| What | Where |
+|---|---|
+| Banner and screenshots | `content/projects/engine-miles/media/` |
+| Phone and card versions of the banner | `public/images/apps/engine-miles-banner-{phone,card}.webp` |
+| Card image (regenerated, now only a fallback) | `public/images/cards/engine-miles--engine_miles_cover.webp` |
+| `phoneSrc` (carousel) and `cardSrc` (Projects card) | `src/lib/apps.ts`, `src/components/HeroCarousel.tsx`, `src/lib/project-card.ts` |
+| Words and alt text | `content/projects/engine-miles/project.json` |
 
 ---
 

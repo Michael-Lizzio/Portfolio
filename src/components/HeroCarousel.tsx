@@ -24,7 +24,12 @@ export type HeroSlide = {
   position?: string;
   /** Which part the phone's 4:3 crop keeps. Default: same as `position`. */
   phonePosition?: string;
+  /** A 4:3 version of the picture that phones show instead of a crop. */
+  phoneSrc?: string;
 };
+
+/** Phones are below Tailwind's `sm` (40rem); from there up the slide is 1200:630. */
+const PHONE_MEDIA = "(max-width: 39.99rem)";
 
 /** Slow on purpose: long enough to read the name and look at the picture. */
 const ADVANCE_MS = 6500;
@@ -185,23 +190,38 @@ export function HeroCarousel({ slides, label }: { slides: HeroSlide[]; label: st
                   className="mt-3 block overflow-hidden rounded-lg border border-border-default bg-surface"
                   draggable={false}
                 >
-                  <Image
-                    className="aspect-[4/3] w-full object-cover object-[var(--pos-phone)] sm:aspect-[1200/630] sm:object-[var(--pos)]"
-                    style={
-                      {
-                        "--pos": slide.position ?? "center",
-                        "--pos-phone": slide.phonePosition ?? slide.position ?? "center",
-                      } as CSSProperties
-                    }
-                    src={slide.src}
-                    alt={slide.alt}
-                    width={slide.width}
-                    height={slide.height}
-                    sizes="(min-width: 64rem) 36rem, 100vw"
-                    priority={i === 0}
-                    loading={i === 0 ? undefined : loadRest ? "eager" : "lazy"}
-                    draggable={false}
-                  />
+                  {(() => {
+                    const picture = (
+                      <Image
+                        className="aspect-[4/3] w-full object-cover object-[var(--pos-phone)] sm:aspect-[1200/630] sm:object-[var(--pos)]"
+                        style={
+                          {
+                            "--pos": slide.position ?? "center",
+                            "--pos-phone": slide.phonePosition ?? slide.position ?? "center",
+                          } as CSSProperties
+                        }
+                        src={slide.src}
+                        alt={slide.alt}
+                        width={slide.width}
+                        height={slide.height}
+                        sizes="(min-width: 64rem) 36rem, 100vw"
+                        // A preload would fetch the wide picture on phones too, so a slide
+                        // with a phone version asks for priority on the <img> instead.
+                        priority={i === 0 && !slide.phoneSrc}
+                        fetchPriority={i === 0 && slide.phoneSrc ? "high" : undefined}
+                        loading={i === 0 ? (slide.phoneSrc ? "eager" : undefined) : loadRest ? "eager" : "lazy"}
+                        draggable={false}
+                      />
+                    );
+                    return slide.phoneSrc ? (
+                      <picture>
+                        <source media={PHONE_MEDIA} srcSet={slide.phoneSrc} />
+                        {picture}
+                      </picture>
+                    ) : (
+                      picture
+                    );
+                  })()}
                 </Link>
 
                 <div className="mt-4 flex h-10 items-center">
