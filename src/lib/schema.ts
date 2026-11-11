@@ -98,6 +98,104 @@ export const OverviewSchema = z.object({
   result: z.string().min(1),
 });
 
+/**
+ * "How it went": a short traction block under the overview of a shipped app
+ * (Engine Miles first, November 2026). A three-step timeline, one funnel chart
+ * comparing two app versions, a few sentences about the change between them,
+ * and one or two lines on what I watch. Every number in it is a fixed fact as
+ * of `asOf`; the live totals live in public/stats.json instead.
+ */
+const FunnelSeriesSchema = z.object({
+  /** "Before", "After". Short: it is the legend and the bar label. */
+  label: z.string().min(1).max(24),
+  /** "1.0, Oct 20 to 26". Shown under the label in the legend. */
+  detail: z.string().min(1).max(60),
+  /** People at each step, in step order. The first is the 100% everyone else is measured against. */
+  counts: z.array(z.number().int().nonnegative()).min(2),
+});
+
+export const FunnelSchema = z
+  .object({
+    title: z.string().min(1).max(80),
+    /** Step names, in order. */
+    steps: z.array(z.string().min(1).max(32)).min(2).max(6),
+    /** Index of the step the story is about. Its row gets a note. */
+    focus: z.number().int().nonnegative().nullable().default(null),
+    /** Short note beside the focus row, e.g. "Lost here: 43% before, 27% after". */
+    focusNote: z.string().min(1).max(80).nullable().default(null),
+    /** Exactly two series: the old version (drawn in grey) and the new one (in the app's colour). */
+    series: z.tuple([FunnelSeriesSchema, FunnelSeriesSchema]),
+    /** Under the chart. Say the sample size honestly. */
+    caption: z.string().min(1),
+    /** Where the numbers came from. Shown small under the caption. */
+    source: z.string().min(1),
+  })
+  .superRefine((funnel, context) => {
+    funnel.series.forEach((series, index) => {
+      if (series.counts.length !== funnel.steps.length) {
+        context.addIssue({
+          code: "custom",
+          path: ["series", index, "counts"],
+          message: `needs one count per step (${funnel.steps.length})`,
+        });
+      }
+      series.counts.forEach((count, step) => {
+        if (step > 0 && count > series.counts[step - 1]) {
+          context.addIssue({
+            code: "custom",
+            path: ["series", index, "counts", step],
+            message: "a funnel step can't have more people than the step before it",
+          });
+        }
+      });
+    });
+    if (funnel.focus !== null && funnel.focus >= funnel.steps.length) {
+      context.addIssue({ code: "custom", path: ["focus"], message: "is past the last step" });
+    }
+  });
+
+export const HowItWentSchema = z.object({
+  /** "YYYY-MM-DD" the numbers were checked. Internal, for the next update. */
+  asOf: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  timeline: z
+    .array(
+      z.object({
+        /** "Oct 20, 2026". Short. */
+        when: z.string().min(1).max(32),
+        title: z.string().min(1).max(60),
+      }),
+    )
+    .min(2)
+    .max(4),
+  /** The fix, in one or two short paragraphs next to the chart. */
+  story: z.array(z.string().min(1)).min(1).max(2),
+  funnel: FunnelSchema.nullable().default(null),
+  /** One line each: what I watch, and how I'm getting it out there. */
+  watch: z
+    .array(z.object({ label: z.string().min(1).max(24), text: z.string().min(1) }))
+    .max(3)
+    .default([]),
+});
+
+/**
+ * public/stats.json: rounded totals per app, written once a day by Social
+ * Diffusion from RevenueCat and PostHog. Keyed by project slug. No keys, no
+ * revenue, nothing per person: only what the site shows.
+ */
+export const AppStatsSchema = z.object({
+  /** Already rounded down, with a plus: "90+", "10+". */
+  users_rounded: z.string().regex(/^\d+\+$/, 'a rounded count like "90+"'),
+  /** Paid purchases (subscriptions started plus lifetime), exact. Gifts and promos don't count. */
+  sales: z.number().int().nonnegative(),
+  /** ISO 8601 date or date-time of the last update. */
+  updated_at: z.string().regex(/^\d{4}-\d{2}-\d{2}(T[\d:.]+(Z|[+-]\d{2}:?\d{2})?)?$/),
+});
+
+export const StatsFileSchema = z.record(
+  z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "a project slug"),
+  AppStatsSchema,
+);
+
 export const LinkSchema = z.object({
   label: z.string().min(1),
   href: z.string().url(),
@@ -150,6 +248,8 @@ export const ProjectSchema = z.object({
   links: z.array(LinkSchema).default([]),
 
   hero: MediaSchema.nullable().default(null),
+  /** Optional traction block, shown right under the overview. */
+  howItWent: HowItWentSchema.nullable().default(null),
   sections: z.array(SectionSchema).default([]),
 
   /** Internal. Never rendered. Use it to leave notes for yourself or the next agent. */
@@ -223,6 +323,10 @@ export type Section = z.infer<typeof SectionSchema>;
 export type Diagram = z.infer<typeof DiagramSchema>;
 export type Overview = z.infer<typeof OverviewSchema>;
 export type Link = z.infer<typeof LinkSchema>;
+export type HowItWent = z.infer<typeof HowItWentSchema>;
+export type Funnel = z.infer<typeof FunnelSchema>;
+export type AppStats = z.infer<typeof AppStatsSchema>;
+export type StatsFile = z.infer<typeof StatsFileSchema>;
 export type Project = z.infer<typeof ProjectSchema>;
 export type Profile = z.infer<typeof ProfileSchema>;
 export type Job = z.infer<typeof JobSchema>;

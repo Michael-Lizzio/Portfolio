@@ -3,9 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Fragment } from "react";
 
+import { AppStats } from "@/components/AppStats";
 import { Container } from "@/components/Container";
 import { DevelopmentBadge } from "@/components/DevelopmentBadge";
 import { FlowDiagram } from "@/components/FlowDiagram";
+import { HowItWent } from "@/components/HowItWent";
 import { MediaFigure } from "@/components/MediaFigure";
 import { PageHeader } from "@/components/PageHeader";
 import { Prose } from "@/components/Prose";
@@ -15,7 +17,7 @@ import { RockPaperScissorsGame } from "@/components/RockPaperScissorsGame";
 import { RomanNumeralConverter } from "@/components/RomanNumeralConverter";
 import { TechPill } from "@/components/TechPill";
 import { formatProjectDateRange } from "@/components/date";
-import { getProject, getProjectSlugs, getProjects } from "@/lib/content";
+import { getAppStats, getProject, getProjectSlugs, getProjects } from "@/lib/content";
 import { compareProjectsByRelevance } from "@/lib/project-order";
 import type { ResolvedMedia, ResolvedProject, ResolvedSection } from "@/lib/schema";
 
@@ -96,6 +98,8 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
 
   const date = formatProjectDateRange(project.date, project.endDate);
   const gallery = projectImageGallery(project);
+  // Only the shipped apps have live totals; everything else gets null and no line.
+  const stats = project.featured ? await getAppStats(project.slug) : null;
 
   return (
     <>
@@ -150,6 +154,9 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
               <DevelopmentBadge development={project.development} />
             ) : null}
 
+            {/* Rounded live totals from public/stats.json, on a line of their own. */}
+            {stats ? <AppStats stats={stats} className="basis-full" /> : null}
+
             {/* basis-full puts links on their own line under the meta row,
                 whatever wrapped above them. */}
             {project.links.length > 0 ? (
@@ -180,6 +187,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
                 On Michael's own pages the overview is a short summary added on
                 top, and everything under the divider is his original page. */}
             <ProjectOverview overview={project.overview} hero={project.hero} gallery={gallery} />
+            {project.howItWent ? <HowItWent data={project.howItWent} /> : null}
             {project.sections.length > 0 ? (
               <Container size="prose" className="mt-16 md:mt-20">
                 <p className="border-t border-border-default pt-6 font-mono text-xs uppercase tracking-wide text-fg-faint">

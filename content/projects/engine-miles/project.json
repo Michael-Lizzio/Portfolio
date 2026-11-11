@@ -41,6 +41,72 @@
     "caption": null,
     "autoplay": false
   },
+  "howItWent": {
+    "asOf": "2026-11-11",
+    "timeline": [
+      {
+        "when": "September 2026",
+        "title": "Built it in a month"
+      },
+      {
+        "when": "Oct 20, 2026",
+        "title": "Launched on the App Store"
+      },
+      {
+        "when": "First three weeks",
+        "title": "90+ users and 9 sales"
+      }
+    ],
+    "story": [
+      "In PostHog I could see that almost half the people who got to the step asking for their engine miles so far quit right there, because every answer needed a number they didn't have.",
+      "So in version 1.2 I added \"Not sure yet: start now\", which lets you skip it and estimates those miles after your first tank. Now about 3 in 4 people who reach that step finish setup."
+    ],
+    "funnel": {
+      "title": "Setting up the app, before and after the fix",
+      "steps": [
+        "Started setup",
+        "Added their car",
+        "Asked for engine miles so far",
+        "Finished setup"
+      ],
+      "focus": 2,
+      "focusNote": "Quit at this step: 43% before (23 of 53), 27% after (4 of 15)",
+      "series": [
+        {
+          "label": "Before (1.0)",
+          "detail": "Oct 20 to 26, 66 people",
+          "counts": [
+            66,
+            59,
+            53,
+            33
+          ]
+        },
+        {
+          "label": "After (1.2)",
+          "detail": "since Oct 25, 18 people",
+          "counts": [
+            18,
+            17,
+            15,
+            11
+          ]
+        }
+      ],
+      "caption": "Share of people who started setup. The 1.2 group is still small (18 people), so the after numbers are early and will move.",
+      "source": "PostHog, App Store installs that share usage data, checked Nov 11, 2026"
+    },
+    "watch": [
+      {
+        "label": "What I watch",
+        "text": "I use PostHog and RevenueCat to see where people get stuck and where they decide to buy, and I ship updates based on that."
+      },
+      {
+        "label": "Marketing",
+        "text": "I've been posting in plug-in hybrid communities to get it in front of more owners."
+      }
+    ]
+  },
   "sections": [
     {
       "heading": "Why I built it",
@@ -111,5 +177,5 @@
       "media": []
     }
   ],
-  "notes": "Added in the November 2026 refresh. Facts from Business/SocialDiffusion/config/facts/engine_miles.yaml (checked 2026-11-04/05) and EngineMiles/HANDOFF.md (2026-10-31): live since Oct 2026 (1.2 since 2026-10-25), App Store id 6819898617, Pro $1.99/$9.99/$29.99. The TooAvid site still says private beta and $2.99/$19.99/$59.99; that site is stale. Origin story (dad's 2022 RAV4 Prime paper logbook) is from the EngineMiles press drafts in docs/marketing. 'Whole car' anecdote is D-136 in docs/DECISIONS.md. Never say: connects to the car, exact measurement, safe to stretch oil changes. Hero (Nov 11, 2026) is the plug-in hybrid banner from EngineMiles 'App Media/Brand/website-social-preview-1200x630-v2.png' (source: EngineMiles scripts/marketing/social-preview/social-preview.html, commit 4af8c9e, D-143: plug-in hybrids first, regular hybrids secondary). The four screenshots are the en-US 6.1-inch cards from 'App Media/AppStore-1.2-phev/' (made for plug-in hybrids). The 4:3 carousel version and 16:10 card version of the banner are in public/images/apps/, rendered from the same source. development is null until Michael classifies it. Date 2026-09 is the repo's first commit."
+  "notes": "Added in the November 2026 refresh. Facts from Business/SocialDiffusion/config/facts/engine_miles.yaml (checked 2026-11-04/05) and EngineMiles/HANDOFF.md (2026-10-31): live since Oct 2026 (1.2 since 2026-10-25), App Store id 6819898617, Pro $1.99/$9.99/$29.99. The TooAvid site still says private beta and $2.99/$19.99/$59.99; that site is stale. Origin story (dad's 2022 RAV4 Prime paper logbook) is from the EngineMiles press drafts in docs/marketing. 'Whole car' anecdote is D-136 in docs/DECISIONS.md. Never say: connects to the car, exact measurement, safe to stretch oil changes. Hero (Nov 11, 2026) is the plug-in hybrid banner from EngineMiles 'App Media/Brand/website-social-preview-1200x630-v2.png' (source: EngineMiles scripts/marketing/social-preview/social-preview.html, commit 4af8c9e, D-143: plug-in hybrids first, regular hybrids secondary). The four screenshots are the en-US 6.1-inch cards from 'App Media/AppStore-1.2-phev/' (made for plug-in hybrids). The 4:3 carousel version and 16:10 card version of the banner are in public/images/apps/, rendered from the same source. development is null until Michael classifies it. Date 2026-09 is the repo's first commit. How it went (Nov 11, 2026, branch traction-mockups): numbers checked read-only that day, sources in docs/traction-mockups/README.md. On the App Store Oct 20 (D-100; Oct 7 was the App Review submission). Sales are paid purchases only (RevenueCat revenue chart: 9 transactions); the 4 promotional gift grants are not sales. Funnel = people whose first onboarding event was on that version, TestFlight excluded, first seen on or after Oct 20; the skip shipped in 1.2 (D-109), released Oct 25."
 }

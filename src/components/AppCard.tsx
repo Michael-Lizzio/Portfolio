@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { AppShowcase } from "@/lib/apps";
-import type { ResolvedProject } from "@/lib/schema";
+import type { AppStats as AppStatsData, ResolvedProject } from "@/lib/schema";
+import { AppStats } from "./AppStats";
 import { DevelopmentBadge } from "./DevelopmentBadge";
 
 /** Each card is a third of the page column from lg up, full width below md. */
@@ -17,9 +18,12 @@ const SHOT_SIZES = "(min-width: 64rem) 22rem, (min-width: 48rem) 40vw, 90vw";
 export function AppCard({
   project,
   showcase,
+  stats = null,
 }: {
   project: ResolvedProject;
   showcase: AppShowcase | undefined;
+  /** Rounded users and sales from public/stats.json. No stats, no line. */
+  stats?: AppStatsData | null;
 }) {
   const statusLine = [showcase?.platform, project.status].filter(Boolean).join(" · ");
 
@@ -55,6 +59,8 @@ export function AppCard({
           </div>
 
           <p className="mt-4 text-fg-muted">{project.tagline}</p>
+
+          <AppStats stats={stats} className="mt-4 border-t border-border-default pt-4" />
 
           <div className="mt-auto flex items-center justify-between gap-3 pt-5">
             {project.development ? <DevelopmentBadge development={project.development} /> : <span />}

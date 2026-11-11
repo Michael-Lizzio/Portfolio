@@ -171,6 +171,14 @@
   --marker-green: #13784f;
   /* The red loop around "shipped". Decoration, so no text contrast rule. */
   --marker-loop: #d92b17;
+
+  /* The "How it went" funnel: the old version in grey, the new one in Engine
+     Miles amber. Checked with the dataviz validator against --surface: both
+     clear 3:1, and they are 19 apart for normal vision and 17 for deutan.
+     The grey is deliberately colourless (it is the baseline), and every bar
+     also carries its value as text. */
+  --chart-before: #7d8698;
+  --chart-after: #a3470b;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -212,6 +220,11 @@
     --marker-red: #f08a7a;
     --marker-green: #5fcf9c;
     --marker-loop: #ff4f3d;
+
+    /* Not --app-engine-miles (#ffb03b): too light for a filled bar on the dark
+       surface. Same hue, inside the validator's dark lightness band. */
+    --chart-before: #6c7689;
+    --chart-after: #c98128;
   }
 }
 
@@ -251,6 +264,9 @@
   --marker-red: #f08a7a;
   --marker-green: #5fcf9c;
   --marker-loop: #ff4f3d;
+
+  --chart-before: #6c7689;
+  --chart-after: #c98128;
 }
 
 @theme inline {

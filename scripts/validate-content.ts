@@ -24,6 +24,8 @@
  *   - videos have a poster frame                                       (warn)
  *   - every file in a media folder is referenced by project.json       (warn)
  *   - no public/_redirects placeholder rule catches a page or its data files
+ *   - public/stats.json, when present, passes StatsFileSchema and names only
+ *     published projects (it is optional: no file means no stats lines)
  *
  * This is a .ts run through Node's native type stripping, so it can import the
  * real schemas from src/lib/schema.ts instead of restating them - one source of
@@ -41,6 +43,7 @@ import type { ZodError } from "zod";
 import {
   ProfileSchema,
   ProjectSchema,
+  StatsFileSchema,
   WorkSchema,
   type Media,
   type Project,
@@ -51,6 +54,7 @@ const PROJECTS_DIR = path.join(ROOT, "content", "projects");
 const PROFILE_FILE = path.join(ROOT, "content", "profile.json");
 const WORK_FILE = path.join(ROOT, "content", "work.json");
 const REDIRECTS_FILE = path.join(ROOT, "public", "_redirects");
+const STATS_FILE = path.join(ROOT, "public", "stats.json");
 const EM_DASH = "\u2014";
 
 /**
@@ -498,6 +502,38 @@ async function validateProject(folder: string): Promise<ProjectResult> {
 }
 
 /* -------------------------------------------------------------------------- */
+/* stats                                                                      */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * public/stats.json is written by Social Diffusion once a day. The site hides
+ * the stats lines when it is missing or broken, so this is where a bad write
+ * gets caught.
+ */
+async function validateStats(publishedSlugs: Set<string>): Promise<void> {
+  const group = rel(STATS_FILE);
+  if ((await sizeOf(STATS_FILE)) === null) return; // Optional.
+  const json = await readJson(STATS_FILE);
+  if (!json.ok) {
+    report(group, { level: "ERROR", file: group, message: json.why });
+    return;
+  }
+  const parsed = StatsFileSchema.safeParse(json.value);
+  if (!parsed.success) {
+    reportZod(group, STATS_FILE, parsed.error);
+    return;
+  }
+  for (const slug of Object.keys(parsed.data)) {
+    if (publishedSlugs.has(slug)) continue;
+    report(group, {
+      level: "WARN",
+      file: group,
+      message: `"${slug}" is not a published project, so its stats never show`,
+    });
+  }
+}
+
+/* -------------------------------------------------------------------------- */
 /* run                                                                        */
 /* -------------------------------------------------------------------------- */
 
@@ -559,6 +595,7 @@ async function main(): Promise<void> {
   }
 
   validateRedirects([...publishedSlugs]);
+  await validateStats(publishedSlugs);
 
   // --- print ---------------------------------------------------------------
   let errors = 0;

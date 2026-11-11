@@ -27,7 +27,9 @@ import type { ZodError } from "zod";
 import {
   ProfileSchema,
   ProjectSchema,
+  StatsFileSchema,
   WorkSchema,
+  type AppStats,
   type Media,
   type Profile,
   type Project,
@@ -41,6 +43,8 @@ const CONTENT_DIR = path.join(process.cwd(), "content");
 const PROJECTS_DIR = path.join(CONTENT_DIR, "projects");
 const PROFILE_FILE = path.join(CONTENT_DIR, "profile.json");
 const WORK_FILE = path.join(CONTENT_DIR, "work.json");
+/** Written daily by Social Diffusion. Not authored content: see getAppStats(). */
+const STATS_FILE = path.join(process.cwd(), "public", "stats.json");
 
 /* -------------------------------------------------------------------------- */
 /* failing loudly                                                             */
@@ -254,6 +258,30 @@ const loadProjects = cache(async (): Promise<ResolvedProject[]> => {
   return projects.sort((a, b) => compareProjectsByDate(a, b, "desc"));
 });
 
+/**
+ * public/stats.json is generated, not written by hand: Social Diffusion
+ * rewrites it once a day from RevenueCat and PostHog. So unlike content it
+ * never breaks the build. A missing file means no stats lines anywhere; a file
+ * that fails its schema is logged and treated as missing (`npm run validate`
+ * still fails on it, so it gets fixed).
+ */
+const loadStats = cache(async (): Promise<Record<string, AppStats>> => {
+  let raw: string;
+  try {
+    raw = await readFile(STATS_FILE, "utf8");
+  } catch {
+    return {};
+  }
+  try {
+    const parsed = StatsFileSchema.safeParse(JSON.parse(raw));
+    if (parsed.success) return parsed.data;
+    console.warn(`[stats] ${rel(STATS_FILE)} ignored:\n${formatIssues(parsed.error)}`);
+  } catch (cause) {
+    console.warn(`[stats] ${rel(STATS_FILE)} ignored: ${(cause as Error).message}`);
+  }
+  return {};
+});
+
 /* -------------------------------------------------------------------------- */
 /* public API - the whole surface the rest of the app is allowed to use        */
 /* -------------------------------------------------------------------------- */
@@ -289,4 +317,10 @@ export async function getProject(slug: string): Promise<ResolvedProject | null> 
 export async function getProjectSlugs(): Promise<string[]> {
   const projects = await getProjects();
   return projects.map((project) => project.slug);
+}
+
+/** Rounded users and sales for one app, or null when there are none to show. */
+export async function getAppStats(slug: string): Promise<AppStats | null> {
+  const stats = await loadStats();
+  return stats[slug] ?? null;
 }

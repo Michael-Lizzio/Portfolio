@@ -7,7 +7,7 @@ import { Circled, HandNote } from "@/components/HandNote";
 import { HeroCarousel, type HeroSlide } from "@/components/HeroCarousel";
 import { ProjectGrid } from "@/components/ProjectGrid";
 import { APP_SHOWCASE, APP_SLIDE_ART, EXTRA_SLIDES } from "@/lib/apps";
-import { getProfile, getProjects, getWork } from "@/lib/content";
+import { getAppStats, getProfile, getProjects, getWork } from "@/lib/content";
 import { toProjectCardData } from "@/lib/project-card";
 import { compareProjectsByRelevance } from "@/lib/project-order";
 import { jobAnchor } from "@/lib/work-anchor";
@@ -30,6 +30,7 @@ export default async function HomePage() {
   const ranked = [...projects].sort(compareProjectsByRelevance);
   const apps = ranked.filter((project) => project.featured);
   const others = ranked.filter((project) => !project.featured);
+  const appStats = await Promise.all(apps.map((project) => getAppStats(project.slug)));
 
   const github = profile.links.find((link) => link.label.toLowerCase() === "github") ?? null;
 
@@ -136,9 +137,13 @@ export default async function HomePage() {
             </div>
 
             <ul className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {apps.map((project) => (
+              {apps.map((project, index) => (
                 <li key={project.slug}>
-                  <AppCard project={project} showcase={APP_SHOWCASE[project.slug]} />
+                  <AppCard
+                    project={project}
+                    showcase={APP_SHOWCASE[project.slug]}
+                    stats={appStats[index]}
+                  />
                 </li>
               ))}
             </ul>
