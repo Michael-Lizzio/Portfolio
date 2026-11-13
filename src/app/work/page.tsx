@@ -6,12 +6,16 @@ import { Container } from "@/components/Container";
 import { PageHeader } from "@/components/PageHeader";
 import { getProfile, getProjects, getWork } from "@/lib/content";
 import { jobAnchor } from "@/lib/work-anchor";
+import { siteOpenGraph } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Work",
-  description: "Where I've worked: two summers at Greenman Pedersen and one at TTM Technologies.",
-  alternates: { canonical: "/work/" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Work",
+    description: "Where I've worked: two summers at Greenman Pedersen and one at TTM Technologies.",
+    alternates: { canonical: "/work/" },
+    openGraph: await siteOpenGraph("/work/"),
+  };
+}
 
 /**
  * Work experience: the job half of the resume, from content/work.json. Each job

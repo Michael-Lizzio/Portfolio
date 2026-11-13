@@ -1,3 +1,7 @@
+import type { Metadata } from "next";
+
+import { getProfile } from "./content";
+
 /**
  * The site's public origin, used for every absolute URL the build writes:
  * canonical links, og:url, og:image / twitter:image, and the sitemap.
@@ -19,3 +23,23 @@ export const DEFAULT_SHARE_IMAGE = {
   width: 1200,
   height: 630,
 } as const;
+
+/**
+ * The site-wide Open Graph block. A page that sets openGraph replaces the
+ * layout's whole block (Next.js does not merge nested metadata), so pages that
+ * need their own og:url build it here instead of losing the title, image and
+ * site name. Pass the page's path for an absolute og:url (via metadataBase).
+ */
+export async function siteOpenGraph(url?: string): Promise<NonNullable<Metadata["openGraph"]>> {
+  const profile = await getProfile();
+  const title = `${profile.name} · ${profile.headline}`;
+
+  return {
+    type: "website",
+    siteName: profile.name,
+    title,
+    description: profile.bio,
+    ...(url ? { url } : {}),
+    images: [{ ...DEFAULT_SHARE_IMAGE, alt: title }],
+  };
+}

@@ -11,6 +11,7 @@ import { APP_SHOWCASE, APP_SLIDE_ART, EXTRA_SLIDES } from "@/lib/apps";
 import { getProfile, getProjects, getWork } from "@/lib/content";
 import { toProjectCardData } from "@/lib/project-card";
 import { compareProjectsByRelevance } from "@/lib/project-order";
+import { siteOpenGraph } from "@/lib/site";
 import { jobAnchor } from "@/lib/work-anchor";
 
 /**
@@ -22,9 +23,12 @@ import { jobAnchor } from "@/lib/work-anchor";
  * the order everywhere comes from src/lib/project-order.ts.
  */
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    alternates: { canonical: "/" },
+    openGraph: await siteOpenGraph("/"),
+  };
+}
 
 /** How many non-app projects the home grid shows before "Load more". Two rows of four. */
 const HOME_VISIBLE = 8;

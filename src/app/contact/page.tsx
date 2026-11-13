@@ -3,12 +3,16 @@ import type { Metadata } from "next";
 import { Container } from "@/components/Container";
 import { PageHeader } from "@/components/PageHeader";
 import { getProfile } from "@/lib/content";
+import { siteOpenGraph } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Contact",
-  description: "How to reach me: email, my resume and my other accounts.",
-  alternates: { canonical: "/contact/" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Contact",
+    description: "How to reach me: email, my resume and my other accounts.",
+    alternates: { canonical: "/contact/" },
+    openGraph: await siteOpenGraph("/contact/"),
+  };
+}
 
 /**
  * "github.com/michael-lizzio" under the label, so a link says where it goes

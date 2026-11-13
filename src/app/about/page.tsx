@@ -8,13 +8,17 @@ import { ProjectLightbox } from "@/components/ProjectLightbox";
 import { Prose } from "@/components/Prose";
 import { getProfile } from "@/lib/content";
 import type { ResolvedMedia } from "@/lib/schema";
+import { siteOpenGraph } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "About",
-  description:
-    "How a Raspberry Pi I got for Christmas in 2018 turned into years of building things.",
-  alternates: { canonical: "/about/" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "About",
+    description:
+      "How a Raspberry Pi I got for Christmas in 2018 turned into years of building things.",
+    alternates: { canonical: "/about/" },
+    openGraph: await siteOpenGraph("/about/"),
+  };
+}
 
 /**
  * The collage is site furniture rather than project media, so it lives in

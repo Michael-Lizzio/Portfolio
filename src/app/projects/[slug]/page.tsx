@@ -18,6 +18,7 @@ import { formatProjectDateRange } from "@/components/date";
 import { getProject, getProjectSlugs, getProjects } from "@/lib/content";
 import { compareProjectsByRelevance } from "@/lib/project-order";
 import type { ResolvedMedia, ResolvedProject, ResolvedSection } from "@/lib/schema";
+import { DEFAULT_SHARE_IMAGE } from "@/lib/site";
 
 /**
  * One project.
@@ -57,8 +58,10 @@ export async function generateMetadata({
   }
 
   // A video hero has no still of its own - its poster frame is the share image.
+  // A project with only a placeholder cover shares the default site card.
   const image =
-    project.hero?.kind === "image" ? project.hero.src : (project.hero?.poster ?? null);
+    (project.hero?.kind === "image" ? project.hero.src : project.hero?.poster) ??
+    DEFAULT_SHARE_IMAGE.url;
 
   return {
     title: project.title,
@@ -69,13 +72,13 @@ export async function generateMetadata({
       title: project.title,
       description: project.tagline,
       url: `/projects/${project.slug}/`,
-      images: image ? [{ url: image, alt: project.hero?.alt ?? project.title }] : undefined,
+      images: [{ url: image, alt: project.hero?.alt ?? project.title }],
     },
     twitter: {
-      card: image ? "summary_large_image" : "summary",
+      card: "summary_large_image",
       title: project.title,
       description: project.tagline,
-      images: image ? [image] : undefined,
+      images: [image],
     },
   };
 }

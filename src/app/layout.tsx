@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { getProfile } from "@/lib/content";
-import { DEFAULT_SHARE_IMAGE, SITE_URL } from "@/lib/site";
+import { DEFAULT_SHARE_IMAGE, SITE_URL, siteOpenGraph } from "@/lib/site";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
 import "./globals.css";
@@ -48,13 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s · ${profile.name}`,
     },
     description: profile.bio,
-    openGraph: {
-      type: "website",
-      siteName: profile.name,
-      title: `${profile.name} · ${profile.headline}`,
-      description: profile.bio,
-      images: [{ ...DEFAULT_SHARE_IMAGE, alt: `${profile.name} · ${profile.headline}` }],
-    },
+    openGraph: await siteOpenGraph(),
     twitter: {
       card: "summary_large_image",
       title: `${profile.name} · ${profile.headline}`,

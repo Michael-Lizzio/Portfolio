@@ -5,18 +5,22 @@ import { PageHeader } from "@/components/PageHeader";
 import { ProjectGrid } from "@/components/ProjectGrid";
 import { getProjects } from "@/lib/content";
 import { toProjectCardData } from "@/lib/project-card";
+import { siteOpenGraph } from "@/lib/site";
 
 /**
  * The project index. It is generated from the content directory itself, so a
  * project appears here the moment `published` is true. The order, and where
  * "Load more" starts, come from src/lib/project-order.ts.
  */
-export const metadata: Metadata = {
-  title: "Projects",
-  description:
-    "Apps I've shipped, things I built at my internships, and a lot of side projects, best first.",
-  alternates: { canonical: "/projects/" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Projects",
+    description:
+      "Apps I've shipped, things I built at my internships, and a lot of side projects, best first.",
+    alternates: { canonical: "/projects/" },
+    openGraph: await siteOpenGraph("/projects/"),
+  };
+}
 
 export default async function ProjectsPage() {
   const projects = await getProjects();
