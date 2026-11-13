@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -20,6 +21,10 @@ import { jobAnchor } from "@/lib/work-anchor";
  * small ones behind "Load more"), where I've worked, and school. The apps are the `featured` projects;
  * the order everywhere comes from src/lib/project-order.ts.
  */
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 /** How many non-app projects the home grid shows before "Load more". Two rows of four. */
 const HOME_VISIBLE = 8;

@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   title: "About",
   description:
     "How a Raspberry Pi I got for Christmas in 2018 turned into years of building things.",
+  alternates: { canonical: "/about/" },
 };
 
 /**

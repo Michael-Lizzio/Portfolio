@@ -15,6 +15,7 @@ export const metadata: Metadata = {
   title: "Projects",
   description:
     "Apps I've shipped, things I built at my internships, and a lot of side projects, best first.",
+  alternates: { canonical: "/projects/" },
 };
 
 export default async function ProjectsPage() {

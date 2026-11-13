@@ -10,6 +10,7 @@ import { jobAnchor } from "@/lib/work-anchor";
 export const metadata: Metadata = {
   title: "Work",
   description: "Where I've worked: two summers at Greenman Pedersen and one at TTM Technologies.",
+  alternates: { canonical: "/work/" },
 };
 
 /**

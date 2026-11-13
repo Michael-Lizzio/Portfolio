@@ -7,6 +7,7 @@ import { getProfile } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Contact",
   description: "How to reach me: email, my resume and my other accounts.",
+  alternates: { canonical: "/contact/" },
 };
 
 /**

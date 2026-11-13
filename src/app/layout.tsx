@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { getProfile } from "@/lib/content";
+import { DEFAULT_SHARE_IMAGE, SITE_URL } from "@/lib/site";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
 import "./globals.css";
@@ -37,17 +38,11 @@ const caveat = localFont({
   preload: false,
 });
 
-/**
- * Set NEXT_PUBLIC_SITE_URL to the production origin before deploying; without
- * it, Open Graph image URLs resolve against localhost.
- */
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
 export async function generateMetadata(): Promise<Metadata> {
   const profile = await getProfile();
 
   return {
-    metadataBase: new URL(siteUrl),
+    metadataBase: new URL(SITE_URL),
     title: {
       default: `${profile.name} · ${profile.headline}`,
       template: `%s · ${profile.name}`,
@@ -58,11 +53,13 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: profile.name,
       title: `${profile.name} · ${profile.headline}`,
       description: profile.bio,
+      images: [{ ...DEFAULT_SHARE_IMAGE, alt: `${profile.name} · ${profile.headline}` }],
     },
     twitter: {
       card: "summary_large_image",
       title: `${profile.name} · ${profile.headline}`,
       description: profile.bio,
+      images: [DEFAULT_SHARE_IMAGE.url],
     },
   };
 }
