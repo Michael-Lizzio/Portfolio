@@ -7,12 +7,14 @@ import { getProfile } from "./content";
  * canonical links, og:url, og:image / twitter:image, and the sitemap.
  *
  * The same out/ folder is served from two places - Cloudflare Pages (the
- * primary) and the michael-lizzio.github.io mirror - so this is always the
- * primary. On the mirror, canonical points back to the primary on purpose:
- * search engines index one copy, and share images load from a domain that is
- * always up to date. NEXT_PUBLIC_SITE_URL overrides it (e.g. a custom domain).
+ * primary, at the custom domain michaeljlizzio.com, which michaeljlizzio.pages.dev
+ * also serves and michaellizzio.com redirects to) and the
+ * michael-lizzio.github.io mirror - so this is always the primary. On the
+ * mirror, canonical points back to the primary on purpose: search engines
+ * index one copy, and share images load from a domain that is always up to
+ * date. NEXT_PUBLIC_SITE_URL overrides it.
  */
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://michaeljlizzio.pages.dev").replace(
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://michaeljlizzio.com").replace(
   /\/+$/,
   "",
 );
