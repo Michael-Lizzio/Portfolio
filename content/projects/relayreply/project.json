@@ -2,12 +2,12 @@
   "slug": "relayreply",
   "title": "RelayReply",
   "tagline": "Type what you need, and RelayReply makes the phone call, speaks for you, and asks you first when there's a decision to make.",
-  "summary": "RelayReply is a web app that makes phone calls for you. You type what you need, RelayReply makes the call and speaks for you, and you read every word as a caption. When there's a decision to make, it asks you first. It's in a public beta now.",
+  "summary": "RelayReply is a web app that makes phone calls for you. You type what you need, an AI makes the call and says it's an AI, and you read every word as a caption. When there's a decision to make, it asks you on a card. It's in a public beta now.",
   "overview": {
-    "what": "A web app that makes phone calls for you. You type what you need, RelayReply makes the call and speaks for you, and you read every word as a caption.",
-    "why": "For a lot of people the phone call is the hardest part of getting something done, like people who are Deaf or hard of hearing, or who have trouble speaking on the phone.",
-    "did": "I'm building all of it, using AI as a coding tool: the web app, the server that runs every call, and the part that turns each decision into a card for you.",
-    "result": "It's in a public beta at relayreply.com, free to start with free practice calls."
+    "what": "A web app that makes everyday phone calls for you. You type what you need, an AI makes the call and does the talking, and you read both sides as captions. Decisions come to you as cards you tap to answer.",
+    "why": "A lot of everyday things still only happen by phone, and for people who are Deaf or hard of hearing, or who have trouble speaking on the phone, that one call can be the thing that stops them.",
+    "did": "I designed and built all of it, using AI as a coding tool: the web app, the server that runs every call, the cards and limits that keep you in charge, and the public site and guides. I rebuilt it from scratch in September 2026.",
+    "result": "It went into a public beta at relayreply.com about seven weeks after the rebuild. It's free to start, with six free practice calls."
   },
   "published": true,
   "featured": true,
@@ -21,7 +21,7 @@
     "Python",
     "FastAPI",
     "Twilio",
-    "OpenAI realtime voice",
+    "Realtime voice AI",
     "Supabase",
     "Stripe"
   ],
@@ -41,22 +41,41 @@
   },
   "sections": [
     {
+      "heading": "Why I built it",
+      "body": [
+        "It started with a phone call to an auto repair shop near me. I needed my car checked over, so I called, explained what was going on, and booked an appointment. Afterwards I kept thinking about how hard that one call would have been if I couldn't hear the person on the other end, or couldn't speak on the phone. A lot of everyday things still only happen by phone.",
+        "My cousin is a speech therapist for kids, which made me think about a second group: people who can hear fine but find speaking on the phone hard. For a lot of them, that alone is enough to avoid making calls. So I built RelayReply."
+      ],
+      "media": []
+    },
+    {
+      "heading": "Who it's for",
+      "body": [
+        "Anyone the phone gets in the way of, but mostly these three groups:"
+      ],
+      "bullets": [
+        "Deaf and hard-of-hearing people, who can read the whole call as captions instead of straining to hear it or asking someone else to make it.",
+        "People who have trouble speaking on the phone. They type what they need, the AI does the talking, and they follow along word by word.",
+        "Anyone who'd rather not make the call. Booking, ordering, or checking on a prescription or a bill, while still making every decision."
+      ],
+      "media": []
+    },
+    {
       "heading": "How a call works",
       "body": [
-        "You type who to call and what you need, like refilling a prescription. RelayReply places a real phone call and does the talking, and you read both sides as captions while it happens.",
-        "When there's a decision to make, like a 30-day or a 90-day supply, you get a card with the options. You tap one or type your own answer, and the AI says it for you."
+        "You don't hand the call over and wait. You read the whole call while it happens, the decisions come to you, and you can step in at any point. Here's one whole call, using the free practice call to Main Street Pharmacy, a pretend pharmacy. A real call works the same way, except the business and the voices are real."
       ],
       "media": [],
       "diagram": {
-        "label": "How a RelayReply call works, in three steps",
+        "label": "How a RelayReply call works, in four steps",
         "caption": null,
         "steps": [
           {
             "arrow": null,
             "nodes": [
               {
-                "title": "You type what you need",
-                "detail": "Who to call and what you want done"
+                "title": "You prep the call",
+                "detail": "Who to call, what you need, and a few answers up front"
               }
             ]
           },
@@ -64,8 +83,8 @@
             "arrow": "calls",
             "nodes": [
               {
-                "title": "RelayReply makes the call",
-                "detail": "It speaks for you, and you read every word"
+                "title": "The AI calls and talks",
+                "detail": "It says it's an AI, and you read every word as captions"
               }
             ]
           },
@@ -73,8 +92,17 @@
             "arrow": "asks",
             "nodes": [
               {
-                "title": "You decide on a card",
+                "title": "You decide on cards",
                 "detail": "Tap or type, and the AI says your answer"
+              }
+            ]
+          },
+          {
+            "arrow": "ends",
+            "nodes": [
+              {
+                "title": "You get the outcome",
+                "detail": "What happened and every decision you made"
               }
             ]
           }
@@ -82,12 +110,249 @@
       }
     },
     {
+      "heading": "1. Prep the call",
+      "level": 3,
+      "body": [
+        "You type what you need the way you'd say it, like \"Refill my allergy prescription and ask when I can pick it up,\" and pick the business from your contacts or type its number.",
+        "Before it dials, RelayReply works out what it will need to know and asks you now, so the call doesn't stall on something you could have answered. For the refill that's whether the generic is OK and when you want to pick it up. You can answer, or choose to be asked during the call. Then you check the plan and tap Call."
+      ],
+      "media": [
+        {
+          "src": "media/relayreply_request.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The first step of the pharmacy practice call on a phone: the heading Who are you calling, and what do you need?, Main Street Pharmacy in the To field, and the typed request to refill an allergy prescription and ask when it can be picked up",
+          "caption": "Say who to call and what you need.",
+          "autoplay": false
+        },
+        {
+          "src": "media/relayreply_plan.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The plan screen on a phone: a short summary of the refill call, how the AI will introduce itself as an AI assistant that is transcribing the call, and a Call Main Street Pharmacy button",
+          "caption": "Check the plan, then tap Call.",
+          "autoplay": false
+        }
+      ]
+    },
+    {
+      "heading": "2. The AI calls, and you read along",
+      "level": 3,
+      "body": [
+        "When someone answers, the AI says who it's calling for, that it's an AI assistant, and that it's transcribing the call so you can follow along and make the decisions. Then it explains what you need.",
+        "Both sides show up as captions as they speak. You can tap Hear to listen on your device too, but you never have to answer anyone live. You read at your own pace."
+      ],
+      "layout": "media-right",
+      "media": [
+        {
+          "src": "media/relayreply_captions.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "A test call to a pretend doctor's office on a computer: the receptionist's words and the AI's words as captions down the middle, the Hear menu open to pick a speaker, and a question card on the right asking Tuesday 9:15 or Thursday 11:00?",
+          "caption": "A test call to a pretend doctor's office. Both sides show as captions, and Hear lets you listen too.",
+          "autoplay": false
+        }
+      ]
+    },
+    {
+      "heading": "3. Decisions come to you as cards",
+      "level": 3,
+      "body": [
+        "When the business offers a time, names a price, or asks for a detail like your date of birth, a card pops up with the options. You tap one or type your own answer, and the AI says it for you. Anything that costs money or shares a detail needs your Approve first.",
+        "Phone menus become cards too. \"Press 2 for pharmacy\" shows up as options, and tapping one presses the key for you. If a price changes after you said yes, you get a new card, because your OK was for the old amount."
+      ],
+      "layout": "wide",
+      "media": [
+        {
+          "src": "media/relayreply_copay_card.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The pharmacy practice call on a computer: the call's captions in the middle, and on the right a money card that reads The copay is $12. Fill it?, quoting the pharmacist, with Fill it $12, Not now and a box to type your own answer",
+          "caption": "A money card on the pharmacy practice call. The pharmacy is made up, and nothing was dialed.",
+          "autoplay": false
+        },
+        {
+          "src": "media/relayreply_menu_card.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "A phone menu card asking Press 2 for pharmacy?, quoting the recorded menu, with Pharmacy and Store hours as options and a note that the AI never presses a key without you",
+          "caption": "A phone menu, turned into a card.",
+          "autoplay": false
+        },
+        {
+          "src": "media/relayreply_price_changed.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "A test call to a pretend plumber: the price went from $100 to $120, so a new money card asks Approve the $120 visit fee? and says the earlier OK was only for $100",
+          "caption": "When the price changes, it asks again.",
+          "autoplay": false
+        }
+      ]
+    },
+    {
+      "heading": "4. Limits you set up front",
+      "level": 3,
+      "body": [
+        "If you don't want a card for every little thing, you can set a limit for one thing before the call, like up to $120 for a car rental. Inside that limit the AI can say yes for you, and it shows you a card with Stop, so you can still take it back. Anything outside the limit, like an add-on they try to sell you, still comes to you as a card."
+      ],
+      "media": [
+        {
+          "src": "media/relayreply_limit_set.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Setting a limit before a call to a pretend car rental: the question How much is OK for the car rental?, with Up to $120 picked, and a box explaining what the limit covers",
+          "caption": "Set a limit for one thing.",
+          "autoplay": false
+        },
+        {
+          "src": "media/relayreply_limit_approving.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "During the car rental call, a card reads Approving $102 for the car rental, says the AI told them yes, and offers Stop to have the AI hold off or undo it",
+          "caption": "Inside the limit, the AI says yes and shows you, with Stop.",
+          "autoplay": false
+        },
+        {
+          "src": "media/relayreply_limit_extra.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "Later in the car rental call, a money card asks They added the protection plan: $159. Keep it?, because the limit only covers the car itself",
+          "caption": "Extras still come to you.",
+          "autoplay": false
+        }
+      ]
+    },
+    {
+      "heading": "5. Step in whenever you want",
+      "level": 3,
+      "body": [
+        "The controls sit under the captions for the whole call:"
+      ],
+      "bullets": [
+        "Talk: take over in your own voice. Your words are captioned too.",
+        "Pause AI: the AI stops talking and keeps listening until you resume.",
+        "Add context: type a note, and the AI says it when it fits.",
+        "Keypad: press the keys yourself, for a menu or an extension.",
+        "Wrap up or End: let the AI say goodbye, or hang up right away."
+      ],
+      "media": [
+        {
+          "src": "media/relayreply_ai_paused.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The pharmacy practice call with the AI paused: the status reads AI paused, the captions keep running, and the row of controls under them shows Hear, Talk, Resume, Wrap up, Nudge, Keypad and End",
+          "caption": "The AI paused. It keeps listening, and the captions keep running.",
+          "autoplay": false
+        }
+      ]
+    },
+    {
+      "heading": "6. The outcome",
+      "level": 3,
+      "body": [
+        "When the call ends you see what happened, every decision you made, and what you shared. For the practice refill it says the generic is ordered, it'll be ready after 4 pm, and the $12 copay is due at pickup. If you keep transcripts, you can read the whole call again later."
+      ],
+      "media": [
+        {
+          "src": "media/relayreply_outcome_refill.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The end screen of the pharmacy practice call: Call ended, an outcome that reads Refill ordered with the pickup time and copay, and the decisions made on the call",
+          "caption": "A refill, ordered.",
+          "autoplay": false
+        },
+        {
+          "src": "media/relayreply_outcome_doctor.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The end screen of the doctor's office practice call: an outcome that reads Appointment booked with the date and time, and the answers and details shared on the call",
+          "caption": "An appointment, booked.",
+          "autoplay": false
+        }
+      ]
+    },
+    {
+      "heading": "Safety and consent",
+      "body": [
+        "The person on the other end of the call didn't sign up for anything, so RelayReply is honest with them on every call, and the person using it stays in charge."
+      ],
+      "bullets": [
+        "Every call starts by saying it's an AI and that the call is transcribed. You can pick wording that says why you use it, like being Deaf, but during the beta the announcement can't be turned off.",
+        "If they don't want to talk with an AI, the AI pauses and asks you what to do. If they don't want the call transcribed, the captions stop and you choose: talk yourself, call through 711, or end the call.",
+        "The first time you call a mobile phone or a landline, the app asks you to confirm they've said it's OK to call them.",
+        "It never gives out a full card number, a PIN, a password or a one-time code, even if you approve it.",
+        "It doesn't keep audio recordings of calls. Transcripts are encrypted, and you can turn them off or delete them at any time.",
+        "It isn't a relay service (TRS or 711), and it can't call 911. It's for people in the US who are 18 or older."
+      ],
+      "media": [
+        {
+          "src": "media/relayreply_terms.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The Terms screen during sign-up, titled The short version: You're the caller, Honest on every call, and Not for emergencies, above an I agree button",
+          "caption": "Three things to agree to before your first real call.",
+          "autoplay": false
+        },
+        {
+          "src": "media/relayreply_announcement.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The announcement setting: Say it's helping set to Deaf, and a preview of what the business hears first, where the AI says it's calling on someone's behalf, is their AI assistant, and is transcribing the call",
+          "caption": "The announcement can say why you use it.",
+          "autoplay": false
+        },
+        {
+          "src": "media/relayreply_objection.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "A call where the business says they don't want the call recorded: the AI is paused, and a card titled They don't want the call transcribed offers Talk and listen yourself, Call through 711, or End the call",
+          "caption": "When they say no to the transcript, you decide what happens.",
+          "autoplay": false
+        }
+      ]
+    },
+    {
+      "heading": "Public beta and pricing",
+      "body": [
+        "RelayReply has been in a public beta since November 2026. Some features are still experimental, and I keep improving it with what people tell me.",
+        "It's free to start. There are six scripted practice calls of about 5 minutes each, like a pizza order, a prescription refill and a doctor's appointment, where nothing is dialed. Real calls are 50¢ a minute pay as you go, or a plan from $19.99 a month with included minutes and a RelayReply number that takes voicemail. Calls are billed by the second, and ringing is free."
+      ],
+      "media": [
+        {
+          "src": "media/relayreply_practice.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The practice call picker during setup: Try a practice call, with Order a pizza from a pretend pizza place, about 5 minutes, a list of what it shows, and a Start practice call button",
+          "caption": "Pick a practice call. They're free, and nothing is dialed.",
+          "autoplay": false
+        },
+        {
+          "src": "media/relayreply_practice_pizza.webp",
+          "kind": "image",
+          "poster": null,
+          "alt": "The pizza practice call on a phone: captions of the AI ordering a large pepperoni and garlic knots, and a question card asking 6 or 12 garlic knots? with 6 knots, 12 knots and a box to type your own answer",
+          "caption": "A question card on the pizza practice call.",
+          "autoplay": false
+        }
+      ]
+    },
+    {
+      "heading": "What I built and learned",
+      "body": [
+        "I built the whole thing myself, using AI as a coding tool: the web app, the server that places and runs every call, sign-up and billing, and the public site with its guides and comparisons. I rebuilt it from scratch in September 2026, and it went into the public beta about seven weeks later.",
+        "On the product side, a call happens in real time, but the person using RelayReply is reading, not listening, so everything had to give them time to decide: the questions before the call, the cards, the limits, and a Stop button that actually stops things.",
+        "On the design side, a lot of trust comes from small words. A card quotes what the business said, so you can see why it's asking, and a money card says exactly what you're agreeing to.",
+        "Then there's running it for real people. It runs on two always-on servers that update one at a time, so a new version never drops a live call, and every production deploy has to pass more than 5,000 automated tests first."
+      ],
+      "media": []
+    },
+    {
       "heading": "Where it's at",
       "body": [
-        "RelayReply is in a public beta. It isn't a relay service (TRS or 711), and it can't call 911. More about it is on relayreply.com."
+        "RelayReply is in a public beta at relayreply.com, and you can try a practice call there for free. It isn't a relay service (TRS or 711), and it can't call 911. In an emergency, call 911 from your own phone."
       ],
       "media": []
     }
   ],
-  "notes": "Words pass 2026-11-09 (Michael's decisions, Nov 9): RelayReply is a PUBLIC beta, AI-assisted, and the page stays light and brief because he is publishing his own site and guides soon. Wording follows relayreply.com's current homepage source (startups/RelayReply, branch v3.3, web/src/features/onboarding/home: the lead 'Type what you need. RelayReply makes the call, speaks for you, and shows every word as a caption. When there's a decision to make, it asks you first.', his short phone lead, 'Free to start, with free practice calls.', and the not-a-relay-service notice). The old 'Phone calls, without the phone' line and 'private beta' are gone. Left out on purpose: prices, model names, how the AI introduces itself on a call, recordings, and the deep architecture. The hero and card image are the look agent's job (real product screenshots from a local build of the site). Date 2026-04 is the repo's first commit (older iOS app); the v3 web restart was late September 2026. Look pass 2026-11-09 (Michael's final notes): the hero (relayreply_cover.webp) is relayreply.com's home page as first seen, a 1200x630 window at 2x, captured the moment the typing box holds the whole first sentence (Main Street Pharmacy) before it clears. Rendered from origin/v3.3 (20435635c) with SITE_PUBLIC_BETA=1 node site/build.mjs and site/serve.mjs on 127.0.0.1 only, with the page clock frozen for the shot. The home page app card uses one crop of the same picture (public/images/apps/relayreply_home.webp). Michael asked to keep RelayReply light: no other screenshots."
+  "notes": "Full build-out 2026-11-18 (Michael asked for the whole page, at the depth of relayreply.com's homepage and guides, light on internals). Source: the public site's own source in startups/RelayReply at fa6378d2196e, the commit deployed to relayreply.com on 2026-11-13 18:50 (docs/ops/releases.md); its text matches origin/beta-server. Pages read: home (web/src/features/onboarding/home, WelcomeBox, HomeSections), site/pages/how-it-works.html and its four sub-pages, about.html. 'Why I built it' is Michael's own words from his public About page (auto repair shop call, cousin the speech therapist), lightly trimmed. All 17 new pictures are the site's own published screenshots from site/pages/assets/pages/shots (renamed relayreply_*.webp, not re-encoded), all of practice calls or test calls to pretend businesses with made-up names. Prices as on the public site: 50 cents a minute pay as you go, Starter $19.99/month (45 min), Plus $59.99/month (200 min); the page names only the pay-as-you-go price and 'from $19.99 a month'. Resume facts kept (none contradicted by the site): rebuilt Sept 2026, public beta about 7 weeks later, two always-on servers that update one at a time, 5,000+ automated tests before every production deploy. Left out on purpose: the AI provider and model names (tech pill now says 'Realtime voice AI'), prompts, routing, architecture, admin and internal tooling, the business's name for the hosting, exact plan minutes. The stealth browser could not be used for a live read (its lease was shared with another session's pending login handoff), so the deployed source was used instead. Hero unchanged from the Nov 9 look pass (relayreply.com home page)."
 }
