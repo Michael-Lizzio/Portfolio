@@ -19,8 +19,6 @@
     "React",
     "TypeScript",
     "Python",
-    "FastAPI",
-    "Twilio",
     "Realtime voice AI",
     "Supabase",
     "Stripe"
@@ -232,6 +230,7 @@
         "Talk: take over in your own voice. Your words are captioned too.",
         "Pause AI: the AI stops talking and keeps listening until you resume.",
         "Add context: type a note, and the AI says it when it fits.",
+        "Nudge: the AI says something to them now.",
         "Keypad: press the keys yourself, for a menu or an extension.",
         "Wrap up or End: let the AI say goodbye, or hang up right away."
       ],
@@ -354,5 +353,5 @@
       "media": []
     }
   ],
-  "notes": "Full build-out 2026-11-18 (Michael asked for the whole page, at the depth of relayreply.com's homepage and guides, light on internals). Source: the public site's own source in startups/RelayReply at fa6378d2196e, the commit deployed to relayreply.com on 2026-11-13 18:50 (docs/ops/releases.md); its text matches origin/beta-server. Pages read: home (web/src/features/onboarding/home, WelcomeBox, HomeSections), site/pages/how-it-works.html and its four sub-pages, about.html. 'Why I built it' is Michael's own words from his public About page (auto repair shop call, cousin the speech therapist), lightly trimmed. All 17 new pictures are the site's own published screenshots from site/pages/assets/pages/shots (renamed relayreply_*.webp, not re-encoded), all of practice calls or test calls to pretend businesses with made-up names. Prices as on the public site: 50 cents a minute pay as you go, Starter $19.99/month (45 min), Plus $59.99/month (200 min); the page names only the pay-as-you-go price and 'from $19.99 a month'. Resume facts kept (none contradicted by the site): rebuilt Sept 2026, public beta about 7 weeks later, two always-on servers that update one at a time, 5,000+ automated tests before every production deploy. Left out on purpose: the AI provider and model names (tech pill now says 'Realtime voice AI'), prompts, routing, architecture, admin and internal tooling, the business's name for the hosting, exact plan minutes. The stealth browser could not be used for a live read (its lease was shared with another session's pending login handoff), so the deployed source was used instead. Hero unchanged from the Nov 9 look pass (relayreply.com home page)."
+  "notes": "Full build-out 2026-11-18 (Michael asked for the whole page, at the depth of relayreply.com's homepage and guides, light on internals). Source: the public site's own source in startups/RelayReply at fa6378d2196e, the commit deployed to relayreply.com on 2026-11-13 18:50 (docs/ops/releases.md); its text matches origin/beta-server. Pages read: home (web/src/features/onboarding/home, WelcomeBox, HomeSections), site/pages/how-it-works.html and its four sub-pages, about.html. 'Why I built it' is Michael's own words from his public About page (auto repair shop call, cousin the speech therapist), lightly trimmed. All 17 new pictures are the site's own published screenshots from site/pages/assets/pages/shots (renamed relayreply_*.webp, not re-encoded), all of practice calls or test calls to pretend businesses with made-up names. Prices as on the public site: 50 cents a minute pay as you go, Starter $19.99/month (45 min), Plus $59.99/month (200 min); the page names only the pay-as-you-go price and 'from $19.99 a month'. Resume facts kept (none contradicted by the site): rebuilt Sept 2026, public beta about 7 weeks later, two always-on servers that update one at a time, 5,000+ automated tests before every production deploy. Left out on purpose: the AI provider and model names (tech pill now says 'Realtime voice AI'), prompts, routing, architecture, admin and internal tooling, the business's name for the hosting, exact plan minutes. The stealth browser could not be used for a live read (its lease was shared with another session's pending login handoff), so the deployed source was used instead. Hero unchanged from the Nov 9 look pass (relayreply.com home page). Before publishing (2026-11-18): added Nudge to the controls list to match the screenshot and the public guide (its line is the guide's own: 'The AI says something to them now.'), and dropped the FastAPI and Twilio tech pills to stay light on internals."
 }
