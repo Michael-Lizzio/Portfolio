@@ -30,8 +30,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-/** How many non-app projects the home grid shows before "Load more". Two rows of four. */
-const HOME_VISIBLE = 8;
+/** How many non-app projects the home grid shows before "Load more". Three rows of four. */
+const HOME_VISIBLE = 12;
 
 export default async function HomePage() {
   const [profile, projects, work] = await Promise.all([getProfile(), getProjects(), getWork()]);
